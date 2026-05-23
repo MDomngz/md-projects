@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI for VA Design & Research</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── THEME TOKENS ── */
+:root {
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --radius: 10px;
+  --radius-lg: 16px;
+  --sidebar-w: 264px;
+  --topbar-h: 60px;
+  --transition: 0.2s ease;
+
+  /* accent palette (theme-invariant) */
+  --gold: #c4a040;
+  --gold-dim: rgba(196,160,64,0.12);
+  --gold-border: rgba(196,160,64,0.25);
+  --blue: #3b82c4;
+  --blue-dim: rgba(59,130,196,0.12);
+  --sage: #5b9e85;
+  --sage-dim: rgba(91,158,133,0.12);
+  --rose: #b8605a;
+  --rose-dim: rgba(184,96,90,0.10);
+  --violet: #7a6ec4;
+  --violet-dim: rgba(122,110,196,0.12);
+  --teal: #4ab5a8;
+  --teal-dim: rgba(74,181,168,0.12);
+  --coral: #d07060;
+  --coral-dim: rgba(208,112,96,0.10);
+}
+
+/* DARK THEME */
+[data-theme="dark"] {
+  --bg: #0e1014;
+  --bg2: #131519;
+  --surface: #181c24;
+  --surface2: #1e2330;
+  --surface3: #252c3c;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.14);
+  --text: #ede9e1;
+  --text-mid: #98a0ae;
+  --text-muted: #5a6170;
+  --shadow: rgba(0,0,0,0.4);
+  --scrollbar: rgba(255,255,255,0.08);
+}
+
+/* LIGHT THEME */
+[data-theme="light"] {
+  --bg: #f5f4f1;
+  --bg2: #efede9;
+  --surface: #ffffff;
+  --surface2: #f0eee9;
+  --surface3: #e8e5df;
+  --border: rgba(0,0,0,0.09);
+  --border-hover: rgba(0,0,0,0.18);
+  --text: #1a1d24;
+  --text-mid: #4a5260;
+  --text-muted: #8a9098;
+  --shadow: rgba(0,0,0,0.10);
+  --scrollbar: rgba(0,0,0,0.12);
+}
+
+/* ── BASE ── */
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow: hidden;
+  transition: background var(--transition), color var(--transition);
+}
+
+/* ── APP SHELL ── */
+.app { display: flex; height: 100vh; }
+
+/* ══════════════════════════════
+   SIDEBAR
+══════════════════════════════ */
+.sidebar {
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.28s cubic-bezier(.4,0,.2,1), background var(--transition), border-color var(--transition);
+  z-index: 50;
+}
+
+.sidebar-header {
+  padding: 20px 18px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wordmark { display: flex; align-items: flex-start; gap: 9px; }
+
+.wordmark-flag {
+  width: 20px; height: 20px;
+  background: linear-gradient(135deg, var(--gold) 50%, var(--blue) 50%);
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.wordmark-text {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.wordmark-sub {
+  font-size: 9.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+/* Theme toggle */
+.theme-toggle {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.theme-toggle:hover { border-color: var(--border-hover); color: var(--text); background: var(--surface2); }
+
+/* Search */
+.search-wrap { padding: 12px 14px 8px; flex-shrink: 0; }
+.search-box {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 11px;
+  transition: border-color 0.15s;
+}
+.search-box:focus-within { border-color: var(--gold-border); }
+.search-icon { color: var(--text-muted); font-size: 12px; }
+#search-input {
+  flex: 1; background: transparent; border: none; outline: none;
+  color: var(--text); font-family: var(--font-sans); font-size: 13px;
+}
+#search-input::placeholder { color: var(--text-muted); }
+
+/* Sidebar scrollable nav */
+.sidebar-nav { flex: 1; overflow-y: auto; padding-bottom: 12px; }
+
+.nav-section { padding: 10px 14px 4px; }
+
+.nav-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--text-muted);
+  padding: 0 6px; margin-bottom: 4px;
+}
+
+.nav-btn {
+  display: flex; align-items: center; gap: 9px; width: 100%;
+  padding: 7px 10px; border: none; background: transparent;
+  color: var(--text-mid); border-radius: 7px; cursor: pointer;
+  font-family: var(--font-sans); font-size: 13px; font-weight: 400;
+  text-align: left; transition: background 0.15s, color 0.15s;
+  margin-bottom: 1px;
+}
+.nav-btn:hover { background: var(--surface2); color: var(--text); }
+.nav-btn.active { background: var(--gold-dim); color: var(--gold); }
+
+.nav-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+.nav-count {
+  margin-left: auto; font-size: 11px; color: var(--text-muted);
+  background: var(--surface2); padding: 1px 6px; border-radius: 10px;
+}
+.nav-btn.active .nav-count { background: var(--gold-dim); color: var(--gold); }
+
+.sidebar-divider { height: 1px; background: var(--border); margin: 6px 14px; }
+
+/* Tags section */
+.tags-section { padding: 8px 14px; }
+.tag-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 20px; font-size: 11.5px;
+  cursor: pointer; margin: 2px 2px;
+  border: 1px solid var(--border); color: var(--text-muted); background: transparent;
+  transition: all 0.15s; font-family: var(--font-sans);
+}
+.tag-pill:hover { border-color: var(--border-hover); color: var(--text-mid); }
+.tag-pill.active { background: var(--gold-dim); border-color: var(--gold-border); color: var(--gold); }
+
+.sidebar-footer {
+  padding: 12px 18px; border-top: 1px solid var(--border); flex-shrink: 0;
+}
+.footer-note { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+.footer-link { color: var(--blue); text-decoration: none; font-size: 11px; }
+.footer-link:hover { text-decoration: underline; }
+
+/* ══════════════════════════════
+   MAIN
+══════════════════════════════ */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+
+/* ── TOPBAR ── */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: var(--topbar-h); min-height: var(--topbar-h);
+  border-bottom: 1px solid var(--border); flex-shrink: 0;
+  background: var(--surface); gap: 12px;
+}
+
+.topbar-left { min-width: 0; }
+.topbar-left h1 {
+  font-family: var(--font-serif); font-size: 18px; font-weight: 600;
+  color: var(--text); line-height: 1.2; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.topbar-left p { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+
+.topbar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.results-count {
+  font-size: 12px; color: var(--text-muted); background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 20px; padding: 4px 11px;
+  white-space: nowrap;
+}
+
+.share-trigger-btn {
+  display: flex; align-items: center; gap: 6px; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 20px; color: var(--text-mid);
+  font-size: 12px; font-family: var(--font-sans); padding: 5px 13px;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.share-trigger-btn:hover { border-color: var(--gold-border); color: var(--gold); background: var(--gold-dim); }
+
+/* Hamburger for mobile */
+.menu-btn {
+  display: none; width: 36px; height: 36px; border-radius: 8px;
+  border: 1px solid var(--border); background: transparent;
+  color: var(--text-muted); cursor: pointer; font-size: 18px;
+  align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+/* ── CONTENT AREA ── */
+.content-area { flex: 1; overflow-y: auto; padding: 22px 24px 32px; }
+
+/* ── CARDS GRID ── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 14px;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  animation: fadeUp 0.3s ease both;
+  position: relative;
+}
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px var(--shadow);
+}
+
+/* card share button */
+.card-share-btn {
+  position: absolute; top: 10px; right: 10px;
+  width: 28px; height: 28px; border-radius: 7px;
+  border: 1px solid var(--border); background: var(--surface2);
+  color: var(--text-muted); font-size: 12px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: all 0.15s; z-index: 5;
+}
+.card:hover .card-share-btn { opacity: 1; }
+.card-share-btn:hover { border-color: var(--border-hover); color: var(--text); background: var(--surface3); }
+
+.card-accent-bar { height: 3px; width: 100%; }
+.card-body { padding: 16px 18px 12px; flex: 1; }
+
+.card-category {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; margin-bottom: 8px;
+}
+
+.card-title {
+  font-family: var(--font-serif); font-size: 16px; font-weight: 600;
+  color: var(--text); line-height: 1.3; margin-bottom: 7px;
+}
+
+.card-desc { font-size: 13px; color: var(--text-mid); line-height: 1.6; }
+
+.card-tags {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  padding: 10px 18px 14px; border-top: 1px solid var(--border);
+}
+.card-tag {
+  font-size: 11px; color: var(--text-muted); background: var(--surface2);
+  border-radius: 4px; padding: 2px 7px;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── EMPTY STATE ── */
+.empty-state { grid-column: 1 / -1; text-align: center; padding: 80px 40px; color: var(--text-muted); }
+.empty-state h3 { font-family: var(--font-serif); font-size: 22px; font-weight: 400; color: var(--text-mid); margin-bottom: 8px; }
+
+/* ══════════════════════════════
+   DETAIL OVERLAY
+══════════════════════════════ */
+.detail-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 100;
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.detail-overlay.open { opacity: 1; pointer-events: all; }
+
+.detail-panel {
+  background: var(--surface); border: 1px solid var(--border-hover);
+  border-radius: 20px; max-width: 680px; width: 100%; max-height: 88vh;
+  overflow-y: auto;
+  transform: translateY(14px) scale(0.98); transition: transform 0.22s ease;
+}
+.detail-overlay.open .detail-panel { transform: none; }
+
+.detail-close {
+  position: sticky; top: 0; display: flex; justify-content: space-between;
+  align-items: center; padding: 14px 20px 0; z-index: 10;
+  background: var(--surface);
+}
+
+.detail-close-actions { display: flex; gap: 8px; }
+
+.close-btn {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--surface2);
+  color: var(--text-muted); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; transition: all 0.15s;
+}
+.close-btn:hover { border-color: var(--border-hover); color: var(--text); }
+
+.detail-share-btn {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 20px; color: var(--text-muted); font-size: 12px;
+  font-family: var(--font-sans); padding: 5px 12px;
+  cursor: pointer; transition: all 0.15s;
+}
+.detail-share-btn:hover { border-color: var(--gold-border); color: var(--gold); }
+
+.detail-accent { height: 4px; border-radius: 20px 20px 0 0; }
+.detail-header { padding: 18px 28px 0; }
+.detail-category { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
+.detail-title { font-family: var(--font-serif); font-size: 24px; font-weight: 600; color: var(--text); line-height: 1.25; }
+.detail-desc { font-size: 14px; color: var(--text-mid); line-height: 1.65; margin-top: 10px; }
+.detail-body { padding: 18px 28px 28px; }
+.detail-section { margin-bottom: 22px; }
+.detail-section-label { font-size: 9.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+
+.use-cases { display: flex; flex-direction: column; gap: 7px; }
+.use-case {
+  display: flex; gap: 10px; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 10px; padding: 11px 13px; align-items: flex-start;
+}
+.use-case-icon { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
+.use-case-text strong { display: block; font-size: 13px; color: var(--text); margin-bottom: 2px; }
+.use-case-text span { font-size: 12.5px; color: var(--text-mid); line-height: 1.5; }
+
+.prompt-examples { display: flex; flex-direction: column; gap: 6px; }
+.prompt-example {
+  position: relative;
+  background: var(--bg); border: 1px solid var(--border);
+  border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0;
+  padding: 10px 70px 10px 13px; font-size: 12.5px; color: var(--text-mid);
+  font-style: italic; line-height: 1.5;
+}
+.prompt-example:hover .copy-prompt-btn { opacity: 1; }
+.copy-prompt-btn {
+  position: absolute; top: 6px; right: 8px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 6px; color: var(--text-muted);
+  font-size: 11px; font-family: var(--font-sans); padding: 3px 8px;
+  cursor: pointer; opacity: 0; transition: all 0.15s;
+}
+.copy-prompt-btn:hover { color: var(--gold); border-color: var(--gold-border); }
+.copy-prompt-btn.copied { color: var(--sage); border-color: rgba(91,158,133,0.3); opacity: 1; }
+
+.va-note {
+  background: var(--blue-dim); border: 1px solid rgba(59,130,196,0.2);
+  border-radius: 10px; padding: 13px 15px; font-size: 13px;
+  color: var(--text-mid); line-height: 1.6;
+}
+.va-note strong { color: var(--blue); }
+
+.detail-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+
+/* ══════════════════════════════
+   SECTION VIEWS
+══════════════════════════════ */
+.section-view { max-width: 860px; margin: 0 auto; animation: fadeUp 0.3s ease both; }
+
+/* ── Section hero ── */
+.section-hero {
+  border-radius: var(--radius-lg); padding: 30px 36px; margin-bottom: 24px;
+  position: relative; overflow: hidden;
+}
+.section-hero-eyebrow {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.16em;
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.section-hero h2 {
+  font-family: var(--font-serif); font-size: 26px; font-weight: 600;
+  color: var(--text); line-height: 1.25; margin-bottom: 10px;
+}
+.section-hero p { font-size: 13.5px; color: var(--text-mid); line-height: 1.7; max-width: 560px; }
+
+.hero-link {
+  display: inline-flex; align-items: center; gap: 5px; margin-top: 14px;
+  font-size: 12px; text-decoration: none; border-radius: 20px;
+  padding: 5px 14px; transition: all 0.15s;
+}
+
+/* ── AI Design Principles ── */
+.principles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
+
+.principle-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: border-color 0.2s, transform 0.2s; }
+.principle-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+
+.principle-number-bar { display: flex; align-items: center; gap: 11px; padding: 14px 18px 11px; border-bottom: 1px solid var(--border); }
+.principle-num { font-family: var(--font-serif); font-size: 26px; font-weight: 400; line-height: 1; flex-shrink: 0; }
+.principle-title { font-family: var(--font-serif); font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.25; }
+.principle-short { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-style: italic; }
+.principle-body { padding: 14px 18px 16px; }
+.principle-desc { font-size: 13px; color: var(--text-mid); line-height: 1.65; margin-bottom: 12px; }
+
+.principle-dos-donts { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.principle-do, .principle-dont { border-radius: 8px; padding: 9px 11px; }
+.principle-do { background: rgba(91,158,133,0.08); border: 1px solid rgba(91,158,133,0.2); }
+.principle-dont { background: rgba(184,96,90,0.08); border: 1px solid rgba(184,96,90,0.2); }
+.do-dont-label { font-size: 9.5px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 5px; }
+.principle-do .do-dont-label { color: var(--sage); }
+.principle-dont .do-dont-label { color: var(--rose); }
+.do-dont-item { font-size: 12px; color: var(--text-mid); line-height: 1.5; padding: 2px 0; display: flex; gap: 5px; }
+.do-dont-item::before { flex-shrink: 0; font-size: 11px; margin-top: 1px; }
+.principle-do .do-dont-item::before { content: '✓'; color: var(--sage); }
+.principle-dont .do-dont-item::before { content: '✗'; color: var(--rose); }
+
+.principles-commitments { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px 28px; margin-bottom: 20px; }
+.principles-commitments h3 { font-family: var(--font-serif); font-size: 19px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+.principles-commitments p { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
+.commitment-list { display: flex; flex-direction: column; gap: 8px; }
+.commitment-item { display: flex; gap: 11px; padding: 11px 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; align-items: flex-start; }
+.commitment-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.commitment-text strong { display: block; font-size: 13px; color: var(--text); margin-bottom: 2px; }
+.commitment-text span { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+.principles-meta { display: flex; gap: 18px; margin-top: 18px; flex-wrap: wrap; }
+.principles-meta-item { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+.principles-meta-item span { color: var(--text-mid); }
+
+/* ── VADS ── */
+.vads-tabs { display: flex; gap: 2px; background: var(--surface); border: 1px solid var(--border); border-radius: 11px; padding: 4px; margin-bottom: 18px; overflow-x: auto; }
+.vads-tab { flex: 1; min-width: fit-content; padding: 7px 14px; border-radius: 7px; border: none; background: transparent; color: var(--text-muted); font-size: 12.5px; font-family: var(--font-sans); cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+.vads-tab:hover { color: var(--text-mid); background: var(--surface2); }
+.vads-tab.active { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+.vads-panel { display: none; }
+.vads-panel.active { display: block; animation: fadeUp 0.2s ease both; }
+.vads-section-label { font-size: 9.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; margin-top: 22px; }
+.vads-section-label:first-child { margin-top: 0; }
+.vads-note { font-size: 12.5px; color: var(--text-muted); line-height: 1.6; margin-bottom: 14px; }
+.vads-note a { color: var(--blue); }
+.color-group { margin-bottom: 22px; }
+.color-group-name { font-size: 11px; font-weight: 500; color: var(--text-mid); margin-bottom: 8px; }
+.color-row { display: flex; gap: 4px; flex-wrap: wrap; }
+.color-chip { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; transition: transform 0.15s; }
+.color-chip:hover { transform: scale(1.06); }
+.color-swatch { width: 42px; height: 42px; border-radius: 7px; border: 1px solid rgba(128,128,128,0.15); }
+.color-chip-label { font-size: 9px; color: var(--text-muted); text-align: center; max-width: 42px; line-height: 1.3; }
+.color-chip-hex { font-size: 9px; color: var(--text-muted); font-family: monospace; }
+.semantic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 7px; margin-bottom: 18px; }
+.semantic-item { display: flex; align-items: center; gap: 9px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 9px 11px; cursor: pointer; transition: border-color 0.15s; }
+.semantic-item:hover { border-color: var(--border-hover); }
+.semantic-swatch { width: 26px; height: 26px; border-radius: 5px; flex-shrink: 0; border: 1px solid rgba(128,128,128,0.15); }
+.semantic-info strong { display: block; font-size: 12px; color: var(--text); }
+.semantic-info span { font-size: 11px; color: var(--text-muted); font-family: monospace; }
+.font-family-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; margin-bottom: 7px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.font-specimen { font-size: 30px; color: var(--text); line-height: 1; }
+.font-meta strong { display: block; font-size: 13px; color: var(--text); margin-bottom: 3px; }
+.font-meta span { font-size: 12px; color: var(--text-muted); }
+.spacing-table { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
+.spacing-table th { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); text-align: left; padding: 5px 11px; border-bottom: 1px solid var(--border); }
+.spacing-table td { padding: 7px 11px; font-size: 12.5px; color: var(--text-mid); border-bottom: 1px solid var(--border); opacity: 0.7; }
+.spacing-table td:first-child { font-weight: 500; color: var(--text); opacity: 1; }
+.spacing-table td:nth-child(3) { font-family: monospace; font-size: 11.5px; }
+.spacing-bar-cell { padding: 7px 11px; }
+.spacing-bar { height: 7px; border-radius: 2px; background: var(--blue); opacity: 0.65; }
+.spacing-table tr:hover td { background: var(--surface2); opacity: 1; }
+.breakpoint-list { display: flex; flex-direction: column; gap: 5px; margin-bottom: 18px; }
+.breakpoint-item { display: flex; align-items: center; gap: 11px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 9px 13px; }
+.bp-icon { font-size: 15px; flex-shrink: 0; width: 22px; text-align: center; }
+.bp-name { font-size: 13px; font-weight: 500; color: var(--text); width: 78px; flex-shrink: 0; }
+.bp-range { font-family: monospace; font-size: 12px; color: var(--text-muted); flex: 1; }
+.bp-cols { font-size: 11.5px; color: var(--text-mid); flex-shrink: 0; }
+.token-group { margin-bottom: 18px; }
+.token-table { width: 100%; border-collapse: collapse; }
+.token-table th { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); text-align: left; padding: 5px 11px; border-bottom: 1px solid var(--border); }
+.token-table td { padding: 6px 11px; font-size: 12px; color: var(--text-mid); border-bottom: 1px solid var(--border); opacity: 0.8; vertical-align: middle; cursor: pointer; }
+.token-table tr:hover td { background: var(--surface2); opacity: 1; }
+.token-table td:first-child { font-family: monospace; font-size: 11.5px; color: var(--sage); width: 250px; }
+.token-swatch-inline { display: inline-block; width: 13px; height: 13px; border-radius: 3px; border: 1px solid rgba(128,128,128,0.2); vertical-align: middle; margin-right: 5px; }
+.token-preview-text { display: inline-block; font-family: monospace; font-size: 11px; color: var(--text-muted); background: var(--surface2); border-radius: 4px; padding: 2px 6px; }
+.code-block { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 13px 15px; font-family: monospace; font-size: 12px; color: var(--sage); line-height: 1.8; }
+.code-comment { color: var(--text-muted); }
+
+/* ══════════════════════════════
+   INDUSTRY NEWS SECTION
+══════════════════════════════ */
+.news-view { max-width: 900px; margin: 0 auto; animation: fadeUp 0.3s ease both; }
+
+.news-top-bar { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+.news-top-bar h2 { font-family: var(--font-serif); font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.news-top-bar p { font-size: 13px; color: var(--text-muted); }
+
+.news-refresh-btn {
+  display: flex; align-items: center; gap: 6px; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 20px; color: var(--text-mid);
+  font-size: 12.5px; font-family: var(--font-sans); padding: 7px 15px;
+  cursor: pointer; transition: all 0.15s; flex-shrink: 0; margin-top: 4px;
+}
+.news-refresh-btn:hover { border-color: var(--gold-border); color: var(--gold); }
+.news-refresh-btn.loading { opacity: 0.5; pointer-events: none; }
+.refresh-spin { display: inline-block; }
+.news-refresh-btn.loading .refresh-spin { animation: spin 0.8s linear infinite; }
+
+.news-channels { display: flex; gap: 7px; margin-bottom: 18px; flex-wrap: wrap; }
+.channel-tab {
+  display: flex; align-items: center; gap: 6px; padding: 7px 13px;
+  border-radius: 20px; border: 1px solid var(--border);
+  background: transparent; color: var(--text-muted);
+  font-size: 12.5px; font-family: var(--font-sans); cursor: pointer;
+  transition: all 0.18s; white-space: nowrap;
+}
+.channel-tab:hover { border-color: var(--border-hover); color: var(--text-mid); }
+.channel-tab.active { background: var(--surface2); border-color: var(--border-hover); color: var(--text); }
+.channel-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+.news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 13px; margin-bottom: 20px; }
+
+.news-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 18px 20px;
+  display: flex; flex-direction: column; gap: 9px;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  animation: fadeUp 0.3s ease both; text-decoration: none; cursor: pointer;
+  position: relative;
+}
+.news-card:hover { border-color: var(--border-hover); transform: translateY(-2px); box-shadow: 0 6px 22px var(--shadow); }
+
+.news-card-share {
+  position: absolute; top: 10px; right: 10px;
+  width: 28px; height: 28px; border-radius: 7px;
+  border: 1px solid var(--border); background: var(--surface2);
+  color: var(--text-muted); font-size: 11px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: all 0.15s;
+}
+.news-card:hover .news-card-share { opacity: 1; }
+.news-card-share:hover { border-color: var(--border-hover); color: var(--text); }
+
+.news-card-channel { display: flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+.news-card-channel-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.news-card-title { font-family: var(--font-serif); font-size: 15.5px; font-weight: 600; color: var(--text); line-height: 1.35; }
+.news-card-summary { font-size: 13px; color: var(--text-mid); line-height: 1.65; }
+.news-card-takeaway { border-radius: 8px; padding: 9px 11px; margin-top: 1px; }
+.news-card-takeaway-label { font-size: 9.5px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px; }
+.news-card-takeaway-text { font-size: 12.5px; color: var(--text-mid); line-height: 1.55; }
+.news-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 3px; }
+.news-card-source { font-size: 11.5px; color: var(--text-muted); }
+.news-card-date { font-size: 11px; color: var(--text-muted); }
+
+.news-loading { grid-column: 1/-1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 40px; gap: 14px; }
+.news-loading-spinner { width: 30px; height: 30px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; }
+.news-loading-text { font-size: 13px; color: var(--text-muted); }
+.news-loading-sub { font-size: 12px; color: var(--text-muted); opacity: 0.6; }
+.news-timestamp { text-align: center; font-size: 11.5px; color: var(--text-muted); padding-bottom: 8px; }
+
+/* ══════════════════════════════
+   CARD SHARE MINI MODAL
+══════════════════════════════ */
+.card-share-overlay {
+  position: fixed; inset: 0; z-index: 150;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  opacity: 0; pointer-events: none; transition: opacity 0.18s;
+}
+.card-share-overlay.open { opacity: 1; pointer-events: all; }
+.card-share-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
+
+.card-share-panel {
+  background: var(--surface); border: 1px solid var(--border-hover);
+  border-radius: 16px; width: 360px; max-width: 92vw; padding: 22px;
+  position: relative; z-index: 1;
+  transform: translateY(10px) scale(0.98); transition: transform 0.2s ease;
+}
+.card-share-overlay.open .card-share-panel { transform: none; }
+
+.card-share-title { font-family: var(--font-serif); font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.card-share-sub { font-size: 12.5px; color: var(--text-muted); margin-bottom: 16px; }
+
+.card-share-actions { display: flex; flex-direction: column; gap: 7px; margin-bottom: 16px; }
+.card-share-action {
+  display: flex; align-items: center; gap: 11px; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 9px; padding: 10px 13px;
+  cursor: pointer; font-family: var(--font-sans); color: var(--text); width: 100%;
+  transition: all 0.15s; text-align: left;
+}
+.card-share-action:hover { border-color: var(--border-hover); background: var(--surface3); }
+.card-share-action-icon { width: 32px; height: 32px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.card-share-action-text strong { display: block; font-size: 13px; margin-bottom: 1px; }
+.card-share-action-text span { font-size: 12px; color: var(--text-muted); }
+
+.card-share-close { width: 100%; padding: 8px; background: transparent; border: 1px solid var(--border); border-radius: 8px; color: var(--text-muted); font-size: 13px; font-family: var(--font-sans); cursor: pointer; transition: all 0.15s; }
+.card-share-close:hover { border-color: var(--border-hover); color: var(--text); }
+
+/* ══════════════════════════════
+   GLOBAL SHARE MODAL
+══════════════════════════════ */
+.share-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200;
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.share-overlay.open { opacity: 1; pointer-events: all; }
+.share-panel { background: var(--surface); border: 1px solid var(--border-hover); border-radius: 18px; width: 420px; max-width: 92vw; padding: 26px; transform: translateY(10px) scale(0.98); transition: transform 0.22s ease; }
+.share-overlay.open .share-panel { transform: none; }
+.share-title { font-family: var(--font-serif); font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.share-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
+.share-options { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
+.share-option { display: flex; align-items: center; gap: 11px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 11px 13px; cursor: pointer; transition: all 0.15s; text-align: left; font-family: var(--font-sans); color: var(--text); width: 100%; }
+.share-option:hover { border-color: var(--border-hover); background: var(--surface3); }
+.share-option-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.share-option-text strong { display: block; font-size: 13px; margin-bottom: 1px; }
+.share-option-text span { font-size: 12px; color: var(--text-muted); }
+.share-url-row { display: flex; gap: 7px; align-items: center; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 9px 11px; margin-bottom: 14px; }
+.share-url-text { flex: 1; font-size: 12px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.share-url-copy { background: var(--gold-dim); border: 1px solid var(--gold-border); border-radius: 6px; color: var(--gold); font-size: 12px; font-family: var(--font-sans); padding: 5px 11px; cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+.share-url-copy:hover { background: rgba(196,160,64,0.2); }
+.share-close-row { display: flex; justify-content: flex-end; }
+.share-cancel { background: transparent; border: 1px solid var(--border); border-radius: 8px; color: var(--text-muted); font-size: 13px; font-family: var(--font-sans); padding: 7px 15px; cursor: pointer; transition: all 0.15s; }
+.share-cancel:hover { border-color: var(--border-hover); color: var(--text); }
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--surface2); border: 1px solid var(--border-hover); border-radius: 20px; padding: 9px 18px; font-size: 13px; color: var(--text); z-index: 400; opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s; white-space: nowrap; box-shadow: 0 4px 20px var(--shadow); }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 4px; }
+
+/* ── ANIMATIONS ── */
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ══════════════════════════════
+   MOBILE OVERLAY BACKDROP
+══════════════════════════════ */
+.sidebar-backdrop {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 40; opacity: 0; transition: opacity 0.28s;
+}
+.sidebar-backdrop.open { opacity: 1; }
+
+/* ══════════════════════════════
+   RESPONSIVE
+══════════════════════════════ */
+@media (max-width: 768px) {
+  body { overflow: auto; }
+  .app { flex-direction: column; height: auto; min-height: 100vh; }
+
+  /* Sidebar becomes a slide-in drawer */
+  .sidebar {
+    position: fixed; top: 0; left: 0; height: 100vh;
+    transform: translateX(-100%); z-index: 50;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.3);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-backdrop { display: block; }
+
+  .menu-btn { display: flex; }
+
+  .main { overflow: visible; height: auto; }
+  .content-area { overflow: visible; padding: 16px 16px 40px; }
+  .topbar { padding: 0 16px; height: 56px; min-height: 56px; }
+  .topbar-left h1 { font-size: 16px; }
+  .topbar-left p { display: none; }
+  .results-count { display: none; }
+
+  .cards-grid { grid-template-columns: 1fr; gap: 11px; }
+  .card-share-btn { opacity: 1; }
+
+  .news-grid { grid-template-columns: 1fr; }
+  .news-card-share { opacity: 1; }
+  .news-channels { gap: 5px; }
+  .channel-tab { font-size: 12px; padding: 6px 10px; }
+
+  .section-view { max-width: 100%; }
+  .section-hero { padding: 22px 22px; }
+  .section-hero h2 { font-size: 22px; }
+  .principles-grid { grid-template-columns: 1fr; }
+  .principle-dos-donts { grid-template-columns: 1fr; }
+  .principles-meta { gap: 10px; }
+  .vads-tabs { gap: 1px; }
+  .vads-tab { padding: 6px 10px; font-size: 12px; }
+  .spacing-table th:last-child, .spacing-table td:last-child { display: none; }
+  .token-table td:last-child { display: none; }
+
+  .detail-overlay { padding: 12px; align-items: flex-end; }
+  .detail-panel { max-height: 92vh; border-radius: 20px 20px 12px 12px; }
+  .detail-header { padding: 14px 20px 0; }
+  .detail-body { padding: 14px 20px 20px; }
+  .detail-title { font-size: 20px; }
+
+  .share-panel { padding: 20px; }
+  .card-share-panel { width: 100%; }
+
+  .news-top-bar { flex-direction: column; gap: 10px; }
+  .news-refresh-btn { align-self: flex-start; }
+}
+
+@media (max-width: 480px) {
+  .topbar-right .share-trigger-btn span { display: none; }
+  .section-hero { padding: 18px; }
+  .section-hero h2 { font-size: 20px; }
+  .principles-commitments { padding: 18px 18px; }
+  .commitment-item { flex-direction: column; gap: 6px; }
+  .font-family-card { flex-direction: column; align-items: flex-start; }
+  .detail-header { padding: 12px 16px 0; }
+  .detail-body { padding: 12px 16px 16px; }
+  .prompt-example { padding-right: 10px; }
+  .copy-prompt-btn { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="wordmark">
+      <div class="wordmark-flag"></div>
+      <div>
+        <div class="wordmark-text">AI for VA Design</div>
+        <div class="wordmark-sub">& Research — OCTO</div>
+      </div>
+    </div>
+    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">🌙</button>
+  </div>
+
+  <div class="search-wrap">
+    <div class="search-box">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="search-input" placeholder="Search concepts…" oninput="applyFilters()">
+    </div>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="nav-section">
+      <div class="nav-label">Foundation</div>
+      <button class="nav-btn" onclick="showPrinciples(this)">
+        <span class="nav-dot" style="background:#d07060"></span>
+        AI Design Principles
+      </button>
+      <button class="nav-btn" onclick="showVADS(this)">
+        <span class="nav-dot" style="background:#3b82c4"></span>
+        VADS Visual Language
+      </button>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="nav-section">
+      <div class="nav-label">Knowledge Base</div>
+      <button class="nav-btn active" onclick="setCategory(this, 'all')">
+        <span class="nav-dot" style="background:#5a6170"></span>
+        All concepts
+        <span class="nav-count" id="count-all">0</span>
+      </button>
+      <button class="nav-btn" onclick="setCategory(this, 'Research')">
+        <span class="nav-dot" style="background:#3b82c4"></span>
+        UX Research
+        <span class="nav-count" id="count-Research">0</span>
+      </button>
+      <button class="nav-btn" onclick="setCategory(this, 'Discovery')">
+        <span class="nav-dot" style="background:#c4a040"></span>
+        Discovery
+        <span class="nav-count" id="count-Discovery">0</span>
+      </button>
+      <button class="nav-btn" onclick="setCategory(this, 'Content')">
+        <span class="nav-dot" style="background:#5b9e85"></span>
+        Content Design
+        <span class="nav-count" id="count-Content">0</span>
+      </button>
+      <button class="nav-btn" onclick="setCategory(this, 'Synthesis')">
+        <span class="nav-dot" style="background:#7a6ec4"></span>
+        Synthesis
+        <span class="nav-count" id="count-Synthesis">0</span>
+      </button>
+      <button class="nav-btn" onclick="setCategory(this, 'Accessibility')">
+        <span class="nav-dot" style="background:#b8605a"></span>
+        Accessibility
+        <span class="nav-count" id="count-Accessibility">0</span>
+      </button>
+      <button class="nav-btn" onclick="setCategory(this, 'Prompts')">
+        <span class="nav-dot" style="background:#4ab5a8"></span>
+        Prompt Engineering
+        <span class="nav-count" id="count-Prompts">0</span>
+      </button>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="nav-section">
+      <div class="nav-label">Industry News</div>
+      <button class="nav-btn" onclick="showNews(this)">
+        <span class="nav-dot" style="background:#d07060"></span>
+        AI + Design Pulse
+      </button>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="tags-section">
+      <div class="nav-label" style="padding:0 6px 6px">Filter by tag</div>
+      <div id="tag-container"></div>
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="footer-note">For VA OCTO contractors. Always review AI outputs against <a href="https://design.va.gov" class="footer-link" target="_blank">VA Design System</a> guidelines and plain language standards.</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="menu-btn" onclick="openSidebar()">☰</button>
+      <div class="topbar-left">
+        <h1 id="topbar-title">All Concepts</h1>
+        <p id="topbar-sub">Practical AI workflows for VA UX designers and researchers</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="results-count" id="results-count">0 concepts</div>
+      <button class="share-trigger-btn" onclick="openShare()">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="13" cy="3" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="3" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="13" cy="13" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 7l6-3M5 9l6 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span>Share</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="content-area">
+    <div class="cards-grid" id="cards-grid"></div>
+    <div id="principles-view" style="display:none"></div>
+    <div id="vads-view" style="display:none"></div>
+    <div class="news-view" id="news-view" style="display:none"></div>
+  </div>
+</main>
+</div>
+
+<!-- DETAIL OVERLAY -->
+<div class="detail-overlay" id="detail-overlay" onclick="closeDetail(event)">
+  <div class="detail-panel" id="detail-panel">
+    <div class="detail-close">
+      <div class="detail-close-actions">
+        <button class="detail-share-btn" id="detail-share-btn">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="13" cy="3" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="3" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="13" cy="13" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 7l6-3M5 9l6 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Share this concept
+        </button>
+      </div>
+      <button class="close-btn" onclick="closeDetailBtn()">✕</button>
+    </div>
+    <div class="detail-accent" id="detail-accent"></div>
+    <div class="detail-header" id="detail-header"></div>
+    <div class="detail-body" id="detail-body"></div>
+  </div>
+</div>
+
+<!-- CARD SHARE MINI MODAL -->
+<div class="card-share-overlay" id="card-share-overlay">
+  <div class="card-share-backdrop" onclick="closeCardShare()"></div>
+  <div class="card-share-panel">
+    <div class="card-share-title" id="card-share-title">Share concept</div>
+    <div class="card-share-sub" id="card-share-sub">Choose how to share this</div>
+    <div class="card-share-actions" id="card-share-actions"></div>
+    <button class="card-share-close" onclick="closeCardShare()">Close</button>
+  </div>
+</div>
+
+<!-- GLOBAL SHARE MODAL -->
+<div class="share-overlay" id="share-overlay" onclick="closeShareOverlay(event)">
+  <div class="share-panel">
+    <div class="share-title">Share this knowledge base</div>
+    <div class="share-sub">Send to your VA team or export for offline use</div>
+    <div class="share-options">
+      <button class="share-option" onclick="shareEmail()">
+        <div class="share-option-icon" style="background:var(--blue-dim);color:var(--blue)">✉</div>
+        <div class="share-option-text"><strong>Share via Email</strong><span>Open mail client with a link and description</span></div>
+      </button>
+      <button class="share-option" onclick="copyPageLink()">
+        <div class="share-option-icon" style="background:var(--gold-dim);color:var(--gold)">⎘</div>
+        <div class="share-option-text"><strong>Copy page link</strong><span>Copy the current URL to clipboard</span></div>
+      </button>
+      <button class="share-option" onclick="exportHTML()">
+        <div class="share-option-icon" style="background:var(--sage-dim);color:var(--sage)">↓</div>
+        <div class="share-option-text"><strong>Download as HTML</strong><span>Self-contained file for SharePoint or Confluence</span></div>
+      </button>
+      <button class="share-option" onclick="exportJSON()">
+        <div class="share-option-icon" style="background:var(--violet-dim);color:var(--violet)">{ }</div>
+        <div class="share-option-text"><strong>Export concept data (JSON)</strong><span>Raw data for building your own tools or docs</span></div>
+      </button>
+    </div>
+    <div class="share-url-row">
+      <span class="share-url-text" id="share-url-display"></span>
+      <button class="share-url-copy" onclick="copyPageLink()">Copy URL</button>
+    </div>
+    <div class="share-close-row">
+      <button class="share-cancel" onclick="closeShare()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+window.__INLINE_CONTENT__ = {"meta":{"name":"AI for VA Design & Research","description":"Knowledge base for VA OCTO UX designers and researchers on using AI in design and research workflows","version":"1.0","lastUpdated":"2026-05-10","source":"va-ai-design-kb.html","totalConcepts":22,"totalPrinciples":8,"totalCommitments":5,"totalNewsArticles":17},"categories":{"Research":{"color":"#4a88c7","label":"UX Research"},"Discovery":{"color":"#c4a55a","label":"Discovery"},"Content":{"color":"#6a9e8a","label":"Content Design"},"Synthesis":{"color":"#8a7ec4","label":"Synthesis"},"Accessibility":{"color":"#b8706a","label":"Accessibility"},"Prompts":{"color":"#5ebfb0","label":"Prompt Engineering"}},"concepts":[{"id":1,"category":"Research","title":"AI-Assisted Interview Prep","desc":"Use AI to generate contextual, Veteran-centered discussion guides, screener questions, and moderator prompts tailored to your research goals.","tags":["research planning","conversation guides","screeners","moderation"],"overview":"Preparing for Veteran interviews requires balancing empathy, plain language, and regulatory awareness. AI can dramatically accelerate the creation of research instruments without replacing the judgment required to use them well.","useCases":[{"icon":"\ud83d\udccb","title":"Discussion guide drafting","desc":"Provide your research goals and user profile; AI generates a structured guide with warm-up, core, and wrap-up questions."},{"icon":"\ud83c\udfaf","title":"Screener criteria refinement","desc":"AI can help translate eligibility criteria into plain-language screener language that recruits the right participants without jargon."},{"icon":"\ud83d\udd04","title":"Question laddering","desc":"Given a top-level question, AI generates follow-up probes, neutral redirects, and silence-breakers for sensitive topics."}],"prompts":["\"Draft a 45-minute semi-structured discussion guide for Veterans exploring VA.gov disability claim status. Research goal: understand how Veterans interpret status labels and next steps.\"","\"Write 8 screener questions for recruiting Veterans who have used the VA mobile app within the last 6 months and have a service-connected disability rating.\"","\"Generate 5 empathetic follow-up probes for the question 'Can you walk me through the last time you contacted VA for help?'\""],"vaNote":"Always review AI-generated guides against VA research ethics standards and Paperwork Reduction Act (PRA) requirements before use. AI output should be iterated on with a VA research lead."},{"id":2,"category":"Research","title":"Thematic Synthesis from Transcripts","desc":"Feed session notes or cleaned transcripts to AI to surface emerging themes, contradictions, and notable quotes at scale.","tags":["synthesis","analysis","transcripts","affinity mapping"],"overview":"After a research sprint, the synthesis phase is often the most time-intensive. AI can serve as a first-pass analysis partner\u2014surfacing patterns, flagging outliers, and drafting theme labels\u2014so you can focus on interpretation and sense-making.","useCases":[{"icon":"\ud83d\uddc2\ufe0f","title":"Affinity clustering","desc":"Paste session notes and ask AI to cluster observations by theme and propose theme names in Veteran-plain language."},{"icon":"\ud83d\udcac","title":"Quote curation","desc":"AI can scan transcripts for verbatim quotes that best illustrate a specific theme or pain point."},{"icon":"\u26a1","title":"Contradiction flagging","desc":"AI can identify where participant statements diverge from each other or from your hypothesis."}],"prompts":["\"Here are 6 session notes from interviews with Veterans about the VA.gov login experience. Group observations into themes and give each theme a plain-language label. Flag any outlier observations.\"","\"From these transcript excerpts, surface 5 quotes that best illustrate confusion around the term 'authenticated session.' Prioritize quotes with emotional weight.\"","\"Where do these participants' experiences contradict each other? Identify 3 key tensions.\""],"vaNote":"Remove all PII from transcripts before inputting to any AI tool. Follow VA data handling protocols. AI synthesis is a starting point\u2014human interpretation is required before drawing research conclusions."},{"id":3,"category":"Research","title":"Competitive & Analogous Analysis","desc":"Use AI to rapidly benchmark VA design patterns against comparable government and non-government digital experiences.","tags":["benchmarking","competitive analysis","heuristics","patterns"],"overview":"Understanding the landscape of comparable experiences helps set standards and identify opportunities. AI can accelerate the analytical layer of competitive research by summarizing, comparing, and critiquing design patterns across examples you provide.","useCases":[{"icon":"\ud83d\udd0d","title":"Heuristic comparison","desc":"Describe two or more experiences and ask AI to compare them against Nielsen\\"},{"icon":"\ud83d\udcca","title":"Feature matrix drafting","desc":"AI can help draft a comparison matrix structure for evaluating similar government digital services."},{"icon":"\ud83d\udca1","title":"Analogous space mining","desc":"AI can suggest analogous use cases from adjacent domains (healthcare, insurance, benefits portals) to borrow from."}],"prompts":["\"Compare the form flow experience of USPS address change, SSA online benefits, and a generic insurance claim submission. What patterns appear across all three? What does each do uniquely well for low-digital-literacy users?\"","\"Based on these descriptions of VA.gov's claims status page and Medicare's beneficiary portal, apply Jakob Nielsen's 10 usability heuristics and surface the top 3 issues for each.\"","\"What analogous digital products outside government handle complex multi-step benefit applications well? Describe their structural approaches.\""],"vaNote":"Verify any AI-generated product descriptions against primary sources before using in presentations or reports. AI may hallucinate specific UI details it has not directly observed."},{"id":4,"category":"Discovery","title":"Problem Framing & HMW Generation","desc":"Transform raw research findings into sharp \"How Might We\" statements and problem frames that align stakeholders and inform design direction.","tags":["problem framing","HMW","discovery","alignment"],"overview":"Getting from research to design requires translating diffuse findings into focused problem statements. AI can generate, stress-test, and reframe HMW statements at multiple levels of abstraction\u2014helping teams avoid both too-broad and too-narrow framing.","useCases":[{"icon":"\ud83c\udfaf","title":"HMW generation at scale","desc":"Given a set of pain points, AI generates 10\u201320 HMW variations and helps you identify the most promising direction."},{"icon":"\u2696\ufe0f","title":"Reframing at different scopes","desc":"AI can restate the same problem at the system level, the service level, and the interaction level simultaneously."},{"icon":"\ud83d\udd17","title":"Assumption surface","desc":"AI can identify unstated assumptions embedded in your current problem frame and suggest alternative frames that challenge them."}],"prompts":["\"Veterans feel overwhelmed by the number of steps in the disability claim process and don't know what to expect next. Generate 12 HMW statements at varying levels of scope\u2014from interaction to system.\"","\"Here is our current problem statement: [paste]. Identify 3 embedded assumptions and reframe the problem with each assumption removed.\"","\"We need to align stakeholders on a problem frame for improving VA.gov search. Generate 3 competing HMW statements\u2014one focused on findability, one on literacy, one on trust\u2014and summarize the design implications of each.\""],"vaNote":"Problem frames should be validated with Veterans and VA subject matter experts. AI-generated frames reflect patterns in training data, not lived Veteran experience."},{"id":5,"category":"Discovery","title":"Journey Map Scaffolding","desc":"Rapidly scaffold journey maps, service blueprints, and scenario narratives using research inputs\u2014then refine with domain expertise.","tags":["journey mapping","service blueprint","scenarios","discovery"],"overview":"Journey maps are powerful alignment tools but time-intensive to build from scratch. AI can scaffold the structural layer\u2014stages, steps, touchpoints, emotional states\u2014leaving designers to contribute the nuance and Veteran-specific context that only human judgment can provide.","useCases":[{"icon":"\ud83d\uddfa\ufe0f","title":"Stage and step generation","desc":"Given a Veteran scenario, AI generates a draft journey with stages, touchpoints, actions, and thoughts/feelings."},{"icon":"\ud83d\udd27","title":"Pain point placement","desc":"Feed research findings and AI maps them onto journey stages, identifying where friction concentrates."},{"icon":"\ud83c\udfd7\ufe0f","title":"Service blueprint drafting","desc":"AI can generate a skeleton blueprint with frontstage/backstage structure from a journey description."}],"prompts":["\"Draft a journey map for a Veteran applying for VA healthcare enrollment for the first time\u2014no prior VA experience. Include stages, key actions, touchpoints (digital and physical), thoughts, and feelings. Flag the 3 highest-friction moments.\"","\"I have these 14 pain points from research [paste list]. Map each to the most likely stage in the VA disability claim journey. Identify which stage has the highest concentration of pain.\"","\"Based on this journey, scaffold a service blueprint with frontstage Veteran actions, backstage VA staff actions, and supporting systems.\""],"vaNote":"Journey maps must be validated against actual Veteran research. VA processes involve legally mandated steps\u2014AI-generated journeys may omit or misrepresent required touchpoints."},{"id":6,"category":"Content","title":"Plain Language Rewriting","desc":"Translate dense VA regulatory or benefits language into Veteran-grade plain language that meets VA content standards and reading level targets.","tags":["plain language","content design","writing","readability"],"overview":"VA content must meet a 6th\u20138th grade reading level for Veteran-facing communications. AI can serve as a tireless plain language partner\u2014rewriting, simplifying, and restructuring content while preserving legal accuracy (though accuracy must always be verified).","useCases":[{"icon":"\u270d\ufe0f","title":"Plain language conversion","desc":"Paste regulatory text and receive a simplified version targeting a specific reading level."},{"icon":"\ud83d\udcdd","title":"Error message writing","desc":"AI can draft empathetic, actionable error messages and form helper text that follows VA content style."},{"icon":"\ud83d\udd24","title":"Term substitution","desc":"AI can systematically replace VA jargon (e.g., \"service-connected,\" \"C&P exam\") with plain alternatives throughout a document."}],"prompts":["\"Rewrite this VA eligibility paragraph at a 6th grade reading level. Keep it accurate to the source. Prefer active voice. No jargon. [paste source text]\"","\"Write error message copy for a VA.gov form when: (1) a file upload fails because it exceeds the size limit, (2) a Social Security Number field has an invalid format, (3) a user tries to submit before completing required fields. Follow VA content style: plain, direct, helpful.\"","\"Replace all instances of VA-specific acronyms and bureaucratic terms in this text with plain equivalents. Provide a side-by-side comparison. [paste text]\""],"vaNote":"AI cannot guarantee legal accuracy of rewritten benefits content. All plain language rewrites must be reviewed by a VA content lead or subject matter expert before publishing. Reference the <a href=\"https://design.va.gov/content-style-guide/\" style=\"color:#4a88c7\">VA content style guide</a>."},{"id":7,"category":"Content","title":"Form & Label Copy Generation","desc":"Generate consistent, accessible, plain-language form labels, field descriptions, hint text, and confirmation messages at scale.","tags":["forms","microcopy","labels","content design","accessibility"],"overview":"Forms are the primary transaction surface on VA.gov. Inconsistent, unclear, or anxiety-inducing form copy creates real barriers for Veterans. AI can generate large volumes of form copy quickly, ensuring consistency in tone, reading level, and structure.","useCases":[{"icon":"\ud83c\udff7\ufe0f","title":"Label and hint text generation","desc":"Provide field names and data types; AI generates label, hint text, and placeholder for each."},{"icon":"\u2705","title":"Confirmation and success copy","desc":"AI can write confirmation page copy, email receipt content, and next-step instructions at a Veteran-appropriate tone."},{"icon":"\u26a0\ufe0f","title":"Validation and error copy","desc":"Generate a complete set of field-level validation messages for an entire form in one prompt."}],"prompts":["\"For a VA.gov healthcare enrollment form, write field label, hint text, and placeholder for: date of birth, service branch, discharge type, primary care preference, and emergency contact phone. Plain language, no jargon, 6th grade reading level.\"","\"Write a confirmation page for a Veteran who just submitted a travel reimbursement request. Include: what they did, what happens next, timeline expectations, and a plain-language support contact line.\"","\"Generate a full set of validation error messages for a 5-field address entry form: street address, city, state (dropdown), ZIP code, country. Each message should be under 12 words and tell the user exactly how to fix the error.\""],"vaNote":"Form copy changes on VA.gov require coordination with VA content design and engineering. Proposed copy must pass plain language review and may require 508 compliance validation."},{"id":8,"category":"Synthesis","title":"Research Report Drafting","desc":"Accelerate the production of research readouts, topline reports, and stakeholder summaries from raw notes and findings.","tags":["reporting","synthesis","stakeholders","documentation"],"overview":"Research reports for VA stakeholders need to translate complex findings into clear recommendations while respecting the evidence. AI can draft structural scaffolding, executive summaries, and finding narratives\u2014dramatically reducing the time between research and delivery.","useCases":[{"icon":"\ud83d\udcc4","title":"Topline summary drafting","desc":"Feed themes and key quotes; AI drafts an executive-level topline summary with findings and recommendations."},{"icon":"\ud83d\udcca","title":"Findings to recommendations","desc":"AI can generate structured \"Finding \u2192 Implication \u2192 Recommendation\" format from a list of observations."},{"icon":"\ud83c\udfa4","title":"Presentation narrative","desc":"AI can write the verbal script or slide narrative for a research readout presentation."}],"prompts":["\"I have 5 key research findings [paste]. For each, write: a 1-sentence plain-language finding, a 1-sentence implication for design, and a concrete recommendation. Format as a table.\"","\"Draft a 200-word executive summary for a VA usability study of the authenticated My VA dashboard. Study goals: understand discoverability of priority features. Key finding: Veterans missed the 'Your claims and appeals' section because it appeared below the fold.\"","\"Write slide narrative for a 3-slide research readout: slide 1 intro/goals, slide 2 top 3 themes, slide 3 recommendations. Audience: VA product owner and engineering lead. Tone: direct, evidence-based, not academic.\""],"vaNote":"Research reports shared with VA stakeholders should follow VA research documentation templates where applicable. Confirm any findings presented are backed by sufficient participant evidence."},{"id":9,"category":"Synthesis","title":"Design Decision Documentation","desc":"Generate structured decision logs, design rationale documents, and ADRs (Architecture Decision Records) from design discussions.","tags":["documentation","decision logs","rationale","handoff","collaboration"],"overview":"Design decisions on VA.gov often need to be documented for audits, onboarding new contractors, and cross-team alignment. AI can turn rough notes from a design review or Slack thread into structured decision logs that future teams can act on.","useCases":[{"icon":"\ud83d\udcdd","title":"Decision log from notes","desc":"Paste meeting notes or a design review summary; AI extracts and formats key decisions made."},{"icon":"\u2696\ufe0f","title":"Rationale articulation","desc":"Describe a design choice; AI helps you articulate the rationale in a structured format linking decision to user need, principle, or evidence."},{"icon":"\ud83d\udea6","title":"Open question tracking","desc":"AI can identify unresolved questions in design notes and format them as a tracked decision backlog."}],"prompts":["\"Here are notes from our design review [paste]. Extract all design decisions made. Format as: Decision | Rationale | Owner | Date. Flag anything that was discussed but not resolved.\"","\"We decided to use radio buttons instead of a dropdown for the service branch selection field. Help me write a design rationale: problem it solves, alternatives considered, why we chose this, tradeoffs accepted.\"","\"From these meeting notes, identify all open design questions and format them as a prioritized decision backlog with: question, why it matters, and who needs to decide.\""],"vaNote":"Decision documentation should be stored in approved VA project collaboration spaces (e.g., Confluence, GitHub). Confirm contractor documentation protocols with your VA product owner."},{"id":10,"category":"Accessibility","title":"Alt Text & ARIA Label Writing","desc":"Generate accurate, contextual alt text for images and ARIA labels for interactive components at scale, following VA 508 and WCAG 2.2 standards.","tags":["alt text","ARIA","508 compliance","screen readers","WCAG"],"overview":"Writing good alt text and ARIA labels requires understanding both the context and the assistive technology experience. AI can generate first drafts at scale, then you can review and refine\u2014turning hours of annotation work into minutes.","useCases":[{"icon":"\ud83d\uddbc\ufe0f","title":"Alt text generation","desc":"Describe an image or provide a screenshot; AI writes alt text that is purposeful, concise, and contextually appropriate."},{"icon":"\ud83d\udd16","title":"ARIA label generation","desc":"Provide a component description or code snippet; AI suggests appropriate aria-label, aria-describedby, and role values."},{"icon":"\ud83d\udccb","title":"Annotation batch processing","desc":"Give a list of UI elements; AI generates a complete accessibility annotation set for handoff to engineering."}],"prompts":["\"Write alt text for this image: a photograph of an older Veteran sitting with a counselor at a desk, reviewing documents. Context: it appears on the VA Mental Health landing page. The alt text should communicate the scenario and emotional context without being patronizing.\"","\"Generate ARIA labels and roles for these interactive elements in a VA.gov claim status tracker: a progress indicator showing 3 of 5 steps complete, a button that expands a section, and a status badge that reads 'In Review'.\"","\"We have 12 icon buttons in this toolbar [describe each]. Generate an aria-label for each. Icons have no visible text. Labels should be clear to a screen reader user who has no visual context.\""],"vaNote":"All accessibility annotations must be validated against WCAG 2.2 Level AA and VA 508 office requirements. AI-generated alt text may require revision by a 508 accessibility specialist."},{"id":11,"category":"Accessibility","title":"Accessibility Audit Prep","desc":"Use AI to prepare for Collaboration Cycle staging reviews, pre-audit annotation, and self-service accessibility checklists.","tags":["audit","508 compliance","staging review","checklists","Collaboration Cycle"],"overview":"VA's Collaboration Cycle staging reviews require teams to demonstrate accessibility compliance before launch. AI can help teams prepare by identifying likely issues, generating audit checklists, and annotating designs with accessibility requirements before the formal review.","useCases":[{"icon":"\u2705","title":"Pre-audit checklist generation","desc":"Describe a feature or page type; AI generates a targeted checklist of accessibility requirements to verify."},{"icon":"\ud83d\udd0d","title":"Issue prediction","desc":"Describe a proposed design pattern; AI flags likely WCAG violations based on the description."},{"icon":"\ud83d\udcd0","title":"Annotation template","desc":"AI generates a structured annotation template for Figma handoff including focus order, heading hierarchy, and touch target requirements."}],"prompts":["\"We are launching a new multi-step form on VA.gov for updating direct deposit information. Generate a pre-launch accessibility checklist covering: keyboard navigation, focus management, error handling, screen reader experience, and color contrast.\"","\"Describe potential WCAG 2.2 violations for this design pattern: a modal dialog that opens when a Veteran clicks 'Edit' on their profile, containing a form with 4 fields and Save/Cancel buttons.\"","\"Create a Figma accessibility annotation template for a VA.gov data table component. Include: column header roles, sort button states, row focus behavior, and reading order.\""],"vaNote":"AI cannot replace a formal 508 audit. Use these outputs to prepare and reduce defects before your Collaboration Cycle Staging Review with the VA Accessibility team."},{"id":12,"category":"Discovery","title":"Stakeholder Communication Drafting","desc":"Draft stakeholder updates, design request intakes, and cross-team alignment documents that translate design thinking for non-designer audiences.","tags":["stakeholders","communication","alignment","documentation"],"overview":"VA contractors regularly need to communicate design decisions, research findings, and project status to non-designer stakeholders\u2014product owners, engineers, policy leads, and VA leadership. AI can help translate design language into plain-language stakeholder communication.","useCases":[{"icon":"\ud83d\udce7","title":"Status update drafting","desc":"Provide a brief on current work; AI drafts a stakeholder update email or Slack message appropriate to the audience."},{"icon":"\ud83e\udd1d","title":"Design intake forms","desc":"AI can generate structured intake form language for capturing design requests from internal VA clients."},{"icon":"\ud83d\udcca","title":"Impact framing","desc":"AI can help you frame design work in terms of Veteran outcomes and business metrics for executive audiences."}],"prompts":["\"Draft a project status update for our VA product owner about the current state of the authenticated homepage redesign. We completed usability testing (5 sessions), identified 3 critical issues, and are now in redesign. Audience: non-designer, focused on timeline and Veteran impact. Tone: confident, clear.\"","\"Write a 1-page design brief for an engineering handoff of the VA.gov notification preferences feature. Include: what Veterans can do, key design decisions made, open questions, and accessibility requirements. Plain language throughout.\"","\"Reframe this design recommendation [paste] for a VA executive audience. Emphasize Veteran outcome, risk if not addressed, and level of effort. No design jargon. Under 150 words.\""],"vaNote":"Stakeholder communications on VA projects may be subject to review. Follow your contract's communication protocols before distributing AI-drafted external documents."},{"id":13,"category":"Research","title":"Usability Test Planning","desc":"Use AI to scaffold usability test plans, task scenarios, success metrics, and observer note-taking templates in hours instead of days.","tags":["usability testing","task design","test planning","moderation"],"overview":"A rigorous usability test plan covers goals, methodology, participant criteria, tasks, metrics, and logistics. AI can draft every section of this plan from a brief description of your feature and research questions \u2014 giving you a strong first draft to refine with your team.","useCases":[{"icon":"\ud83d\uddd3\ufe0f","title":"Full test plan scaffolding","desc":"Provide feature context and goals; AI generates a complete moderated usability test plan with all required sections."},{"icon":"\ud83c\udfad","title":"Realistic task scenario writing","desc":"AI writes scenario-based tasks that feel natural to Veterans without priming specific UI behaviors."},{"icon":"\ud83d\udcca","title":"Success metrics definition","desc":"AI suggests measurable success criteria (task completion rate, time-on-task thresholds, error counts) matched to your goals."}],"prompts":["\"Write a moderated usability test plan for a VA.gov feature that lets Veterans update their direct deposit information. Include: study goals, methodology, participant criteria (5 participants), 4 task scenarios, success metrics, and a debrief question list.\"","\"Write 4 realistic task scenarios for testing the VA prescription refill flow on the VA mobile app. Each scenario should give a Veteran a believable context without revealing the solution. Avoid UI-specific language.\"","\"We completed a usability test and want to define success criteria retrospectively for our next round. The feature is a claims status tracker. Suggest 5 measurable success metrics with target thresholds.\""],"vaNote":"VA usability test plans shared with the Collaboration Cycle must align with VA research standards. Participant recruiting must comply with PRA exemptions or approvals. Confirm with your VA research lead before fielding."},{"id":14,"category":"Research","title":"Survey & Intercept Design","desc":"Design short, statistically sound intercept surveys and Medallia-style feedback prompts that generate actionable signal without fatiguing Veterans.","tags":["surveys","Medallia","feedback","quantitative research"],"overview":"Intercept surveys on VA.gov surfaces are a key source of quantitative signal. AI can help design well-structured surveys with appropriate scale types, question ordering, and neutral wording \u2014 reducing bias and improving response quality.","useCases":[{"icon":"\ud83d\udcdd","title":"Survey question writing","desc":"AI writes neutral, closed-form survey questions with appropriate response scales (Likert, semantic differential, NPS)."},{"icon":"\ud83d\udd00","title":"Question order optimization","desc":"AI suggests question sequencing that minimizes priming effects and respondent fatigue."},{"icon":"\ud83d\udcc8","title":"Medallia prompt drafting","desc":"AI drafts page-level and task-completion feedback prompts tuned to VA\\"}],"prompts":["\"Design a 5-question post-task intercept survey for Veterans who just submitted a benefits application on VA.gov. Include a task completion question, a satisfaction rating (1\u20135 scale), one open-text question, and two closed questions about specific pain points. Neutral wording only.\"","\"Write a Medallia-style thumbs up/down prompt with a follow-on open-text question for the VA.gov disability rating page. It should appear after 60 seconds. Keep it under 15 words for the trigger question.\"","\"Review this survey draft [paste] for leading questions, double-barreled items, and scale inconsistencies. Flag each issue and suggest a corrected version.\""],"vaNote":"Surveys collecting feedback from Veterans may require PRA clearance depending on sample size and intent. Confirm with your contracting officer. Medallia configurations require coordination with the VA Digital Experience team."},{"id":15,"category":"Discovery","title":"Design Sprint Facilitation Support","desc":"Use AI to prepare sprint materials, generate divergent concepts for voting, and synthesize outputs from lightning demos and sketching rounds.","tags":["design sprints","facilitation","workshops","ideation"],"overview":"Design sprints compress months of design work into five days. AI can serve as a tireless prep assistant \u2014 generating How Might We variations, drafting lightning demo agendas, synthesizing sprint outputs, and drafting decision summaries from voting sessions.","useCases":[{"icon":"\u26a1","title":"Sprint question and HMW prep","desc":"AI generates the long-list of sprint week questions and HMW statements that the team will map and vote on."},{"icon":"\ud83d\uddbc\ufe0f","title":"Inspiration source curation","desc":"AI identifies specific product examples for lightning demos, organized by the design challenge component they address."},{"icon":"\ud83d\udccb","title":"Sprint output synthesis","desc":"Paste sketch descriptions or dot-vote results; AI synthesizes a decision narrative and flags open questions."}],"prompts":["\"We're running a design sprint on improving the VA.gov claims decision letter experience. Generate 20 sprint week 'How Might We' statements across three scales: interaction, service, and system. Group by scale.\"","\"Suggest 6 products for a lightning demo session in a sprint focused on helping Veterans understand complex decision letters. For each, explain which specific design element they should demo and why it's relevant.\"","\"Here are the results of our dot-vote session [paste]. Synthesize a decision summary: which solution direction won, what components were most valued, and what open questions remain.\""],"vaNote":"Design sprints on VA products should be run with VA product owner and engineering representation. Sprint outputs are prototypes and hypotheses \u2014 not launch-ready decisions."},{"id":16,"category":"Content","title":"Notification & Alert Copy","desc":"Write clear, timely, and actionable notification copy for VA.gov emails, text messages, in-app alerts, and push notifications.","tags":["notifications","alerts","email","push notifications","microcopy"],"overview":"VA communicates with Veterans across email, SMS, push, and in-app alerts. Each channel has distinct constraints on length, tone, and action language. AI can generate notification copy at scale, ensuring consistency across channels while respecting plain language and urgency calibration.","useCases":[{"icon":"\ud83d\udcf1","title":"Multi-channel copy variants","desc":"AI generates email, SMS, and push variants of the same notification, properly adapted to each channel\\"},{"icon":"\ud83d\udea8","title":"Alert severity calibration","desc":"AI writes informational, warning, and error alert variants for the same event with appropriate urgency signaling."},{"icon":"\u2705","title":"Action-oriented CTA writing","desc":"AI drafts notification call-to-action language that is specific, directive, and free of bureaucratic hedging."}],"prompts":["\"Write email, SMS (under 160 characters), and push notification (under 50 characters) copy for this event: a Veteran's disability claim has moved to the 'Preparation for Decision' stage. Plain language, no jargon, clear next step.\"","\"Write three alert variants for a VA.gov session expiration warning: (1) informational at 5 minutes remaining, (2) warning at 2 minutes remaining, (3) error when session has expired. Each should include the situation, consequence, and one clear action.\"","\"We need to notify Veterans that their direct deposit information was successfully updated. Write confirmation copy for: in-app success alert, email receipt, and a follow-up SMS 24 hours later confirming no changes were made after that.\""],"vaNote":"VA email and SMS notifications must comply with CAN-SPAM and TCPA requirements. Opt-out language is legally required on certain channels. Coordinate with VA contact center and notification platform teams before deploying."},{"id":17,"category":"Content","title":"Chatbot & Conversational UI Scripts","desc":"Write natural, empathetic conversational flows for VA virtual agents \u2014 including fallback handling, escalation paths, and tone calibration.","tags":["conversational UI","chatbot","virtual agent","microcopy","tone"],"overview":"VA's virtual agent interactions with Veterans carry significant emotional weight \u2014 often around benefits, health, or financial stress. AI can help draft conversational flows that are warm, plain-language, and designed to reduce rather than amplify anxiety.","useCases":[{"icon":"\ud83d\udcac","title":"Conversation flow scripting","desc":"AI drafts multi-turn conversation flows with intent recognition branches, clarifying questions, and resolution paths."},{"icon":"\ud83d\udd01","title":"Fallback and escalation copy","desc":"AI writes graceful fallback responses, I-don\\"},{"icon":"\ud83c\udf9a\ufe0f","title":"Tone calibration","desc":"AI rewrites bot responses to hit a specific tone target \u2014 more empathetic, more direct, less clinical."}],"prompts":["\"Write a 6-turn conversation flow for a VA chatbot helping a Veteran check their disability claim status. The Veteran may not know their claim number. Include: greeting, intent confirmation, data collection, status delivery, next step explanation, and close.\"","\"Write 5 fallback responses for a VA virtual agent when it doesn't understand the user's input. Each should be distinct in phrasing, warm in tone, and include a pivot to a human handoff option. No corporate language.\"","\"Rewrite this chatbot response at a more empathetic register: [paste current response]. The user has just been told their claim was denied. The bot must acknowledge the emotional weight, explain next steps, and offer escalation without being dismissive.\""],"vaNote":"VA virtual agent scripts must be reviewed by the VA contact center and virtual agent product team. Escalation paths must connect to real support channels with current availability data."},{"id":18,"category":"Synthesis","title":"Design System Contribution Docs","desc":"Generate VADS-ready component documentation, contribution proposals, and usage guidance for new or modified design system components.","tags":["design system","VADS","documentation","component specs","contribution"],"overview":"Contributing to the VA Design System (VADS) requires precise, structured documentation that covers usage guidance, accessibility requirements, component variants, and rationale. AI can generate first-draft contribution docs that follow VADS conventions \u2014 dramatically reducing the overhead of system contribution.","useCases":[{"icon":"\ud83d\udce6","title":"Component documentation drafting","desc":"AI generates usage guidance, do/don\\"},{"icon":"\ud83d\udd04","title":"Variant and state documentation","desc":"AI enumerates all required states and variants for a component (default, hover, focus, error, disabled, loading)."},{"icon":"\ud83d\udcdd","title":"Contribution proposal writing","desc":"AI drafts the rationale and impact case for a proposed VADS addition or modification."}],"prompts":["\"Write VADS-style usage documentation for a new 'Status Badge' component. It has 5 states: In Progress (blue), Completed (green), Action Required (yellow), Denied (red), Pending (gray). Include: when to use, when not to use, content guidelines, accessibility requirements.\"","\"List all required states and variants for a VA.gov file upload component. For each state, describe: what triggers it, what the user sees, and what the accessible label should be.\"","\"Draft a VADS contribution proposal for adding a 'Expandable Alert' pattern \u2014 an alert with a show/hide details toggle. Include: problem it solves, existing gaps in VADS, proposed behavior, and accessibility considerations.\""],"vaNote":"VADS contributions require formal proposal and review with the VADS team. AI-generated docs are a starting point \u2014 component behavior and accessibility must be validated in code before submission."},{"id":19,"category":"Synthesis","title":"Retrospective & Workshop Synthesis","desc":"Synthesize sprint retrospectives, co-design session outputs, and workshop sticky notes into structured action items and insight summaries.","tags":["retrospectives","workshops","facilitation","co-design","synthesis"],"overview":"After workshops and retros, raw outputs \u2014 sticky notes, vote counts, rough themes \u2014 need to be synthesized into clear records that teams can act on. AI can process raw workshop outputs into structured summaries, action items, and decision logs quickly.","useCases":[{"icon":"\ud83d\uddd2\ufe0f","title":"Sticky note synthesis","desc":"Paste raw sticky note content; AI groups into themes, names them, and surfaces the most-cited ideas."},{"icon":"\u2705","title":"Action item extraction","desc":"AI identifies action items, owners, and deadlines from messy meeting notes or workshop transcripts."},{"icon":"\ud83d\udcca","title":"Retro pattern analysis","desc":"AI identifies recurring themes across multiple retrospective sessions and flags systemic issues."}],"prompts":["\"Here are 34 sticky notes from our sprint retrospective [paste]. Group into What Went Well / What Didn't / Actions. Within each group, cluster by theme and surface the top 3 most-cited ideas. Format as a structured summary.\"","\"From these co-design session notes with Veterans [paste], extract all action items. Format as: Action | Owner type (designer/engineer/PM/VA stakeholder) | Priority (high/medium/low) | Deadline if mentioned.\"","\"We've run 4 retros over the past 2 months. Here are the 'What Didn't Work' sections from each [paste]. What systemic issues appear across all four? Prioritize by frequency and apparent impact.\""],"vaNote":"Workshop outputs that include Veteran feedback or co-design session data should be treated as research data. Remove PII before processing and follow VA data handling protocols."},{"id":20,"category":"Accessibility","title":"Focus Management & Keyboard Flow Design","desc":"Design and document keyboard navigation flows, focus management logic, and skip navigation patterns for complex VA.gov interactions.","tags":["keyboard navigation","focus management","WCAG","skip nav","screen readers"],"overview":"Keyboard accessibility is one of the most frequently failed criteria in VA 508 reviews. Designing focus flows proactively \u2014 before code \u2014 prevents expensive rework. AI can help designers think through focus management logic, document expected focus sequences, and write focus-related ARIA patterns.","useCases":[{"icon":"\u2328\ufe0f","title":"Focus flow documentation","desc":"AI documents the expected keyboard focus sequence for a complex interaction, component by component."},{"icon":"\ud83c\udfaf","title":"Focus trap design","desc":"AI describes the correct focus trap behavior for modals, drawers, and inline edit patterns."},{"icon":"\u23ed\ufe0f","title":"Skip navigation planning","desc":"AI suggests skip link structure and landmark regions appropriate for a given page layout."}],"prompts":["\"Document the keyboard focus sequence for a VA.gov multi-step form wizard with 4 steps: personal info, service history, supporting documents (file upload), and review & submit. Include: tab order within each step, how focus moves between steps, and error state focus behavior.\"","\"Describe the correct focus management behavior for a VA.gov modal dialog that opens when a user clicks 'Edit contact information'. Cover: focus on open, focus trap during interaction, focus return on close, and escape key behavior.\"","\"Our VA.gov page has: global nav, utility nav, a page header, a sidebar with 6 links, and the main content area with 3 sections. Design a skip navigation system. List each skip link, its target, and its label. Include landmark roles.\""],"vaNote":"Focus management must be tested with actual assistive technologies (NVDA, JAWS, VoiceOver). Document focus flows in Figma before implementation and include in your Staging Review accessibility annotation package."},{"id":21,"category":"Prompts","title":"Structuring Effective Design Prompts","desc":"Learn the anatomy of a high-quality AI prompt for design work \u2014 and how to reliably get specific, useful outputs instead of generic responses.","tags":["prompt writing","AI fundamentals","best practices","output quality"],"overview":"The quality of AI output is almost entirely determined by the quality of the prompt. For design and research work, vague prompts produce vague outputs. Learning to structure prompts with role, context, task, constraints, and format unlocks dramatically better results.","useCases":[{"icon":"\ud83c\udfd7\ufe0f","title":"The R-C-T-C-F framework","desc":"Role + Context + Task + Constraints + Format. Structuring prompts with all five elements produces reliably specific outputs."},{"icon":"\ud83d\udd01","title":"Iterative refinement","desc":"Treat AI like a collaborator \u2014 ask it to critique its own output, try again with constraints, or push in a different direction."},{"icon":"\ud83d\udcd0","title":"Output format specification","desc":"Specifying the exact output format (table, bullet list, numbered list, JSON, prose) eliminates ambiguity and saves editing time."}],"prompts":["\"[Weak prompt] Give me some questions for a user interview. \u2192 [Strong prompt] You are a UX researcher at a VA design agency. Write a 45-minute semi-structured discussion guide for Veterans with service-connected disabilities who are applying for caregiver support through VA. Goal: understand decision points and emotional barriers. Format: warm-up (3 questions), core (8 questions with follow-up probes), wrap-up (2 questions).\"","\"Here is an AI response I got [paste]. Push back on it: what assumptions did it make? What's missing for a VA context specifically? What would you ask to get a better answer?\"","\"Rewrite this prompt to get more specific output: [paste your draft prompt]. Make it more specific by adding role, user context, constraints, and output format.\""],"vaNote":"Prompt engineering is a skill that improves with practice. Keep a personal library of prompts that worked well for VA-specific tasks. Share effective prompts with your team in Confluence or your project's design documentation."},{"id":22,"category":"Prompts","title":"Context Loading for VA Projects","desc":"Learn how to load VA-specific context \u2014 design system constraints, product stage, Veteran audience characteristics \u2014 into AI prompts to get outputs that don't need heavy editing.","tags":["context loading","VA-specific","system prompts","prompt writing","AI fundamentals"],"overview":"AI doesn\\'t know your project, your constraints, or your users \u2014 unless you tell it. For VA work, this means explicitly including: the design system (VADS), plain language requirements, target reading level, the Veteran audience characteristics relevant to your feature, and any VA policy constraints. Generic AI output requires heavy editing; context-loaded output often needs only light refinement.","useCases":[{"icon":"\ud83c\udf92","title":"Project context block","desc":"Create a reusable project context block to paste at the top of any prompt \u2014 covering product, audience, constraints, and standards."},{"icon":"\ud83d\udc64","title":"Veteran persona loading","desc":"Describe relevant Veteran characteristics (service era, digital literacy, device, stress context) to anchor AI outputs in real-world use."},{"icon":"\ud83d\udccf","title":"Standards constraint injection","desc":"Explicitly state VA standards (reading level, style guide rules, WCAG level, VADS component names) to eliminate non-compliant suggestions."}],"prompts":["\"[Context block template] You are a UX designer on a VA OCTO contract. The product is [product name]. Primary users are Veterans with [relevant characteristics]. The design system is VADS. All Veteran-facing copy must be written at a 6th\u20138th grade reading level, active voice, plain language. VA content style guide applies. WCAG 2.2 Level AA is required. Now: [your actual task].\"","\"Before we start, here's the context you need: we're redesigning the VA.gov health care enrollment application. Users: Veterans new to VA, ages 45\u201375, low-to-moderate digital literacy, often on mobile, frequently high stress due to health concerns. Platform: mobile-first web. Design system: VADS. Reading level target: 6th grade. Now write [task].\"","\"Review this AI-generated design recommendation [paste]. How would it need to change to be appropriate for a low-digital-literacy Veteran audience on a mobile device? List specific adjustments.\""],"vaNote":"Never include real Veteran PII or sensitive case data in AI prompts. Use representative, anonymized characteristics when describing your user audience. When in doubt, describe user traits in aggregate rather than as specific cases."}],"principles":[{"num":"01","title":"Veterans First, Technology Second","short":"Human need drives every AI decision","color":"#e8856a","desc":"","dos":["Start with a Veteran pain point, then ask if AI can help","Measure AI features by Veteran outcomes, not feature novelty","Design for the Veteran who is under stress and time pressure"],"donts":["Ship AI features because they're novel or technically impressive","Optimize for AI accuracy metrics when Veteran outcome metrics don't improve","Let technical constraints define the Veteran experience"]},{"num":"02","title":"Transparency Over Cleverness","short":"Veterans always know when AI is involved","color":"#4a88c7","desc":"","dos":["Label AI-generated content clearly and consistently","Explain in plain language what the AI is doing and why","Provide a path to human review for any AI-driven decision"],"donts":["Hide AI involvement behind neutral-sounding copy","Present AI outputs as VA decisions without disclosing AI involvement","Design AI confidence as certainty when the model may be wrong"]},{"num":"03","title":"Design for Low Trust, High Stakes","short":"Assume skepticism; design to earn confidence","color":"#8a7ec4","desc":"","dos":["Acknowledge uncertainty explicitly when AI isn't confident","Offer human escalation paths at every AI-assisted decision point","Design for skeptical users who don't yet trust AI-generated content"],"donts":["Present AI outputs as definitive facts when confidence is low","Remove human review steps to speed up the interaction","Assume Veterans will trust AI because it's embedded in a VA product"]},{"num":"04","title":"Accessible by Default, Not Afterthought","short":"VA's 508 requirements apply equally to AI features","color":"#6a9e8a","desc":"","dos":["Test AI-generated content with screen readers before shipping","Ensure AI-driven dynamic updates use proper ARIA live regions","Provide non-AI alternatives for every AI-powered feature"],"donts":["Launch AI-powered features without screen reader and keyboard testing","Use AI-generated dynamic content without accessible ARIA live regions","Treat 508 compliance as a post-launch fix rather than a design input"]},{"num":"05","title":"Plain Language Is Non-Negotiable","short":"AI output must meet the 6th\u20138th grade standard","color":"#c4a55a","desc":"","dos":["Constrain AI outputs with explicit plain language instructions in prompts","Validate AI-generated content with a reading level tool before publishing","Write AI system prompts that reflect VA content style guide rules"],"donts":["Publish AI-generated copy without a reading level check","Let AI use jargon, passive voice, or bureaucratic hedging in Veteran-facing text","Assume AI outputs are plain language by default \u2014 they rarely are"]},{"num":"06","title":"Privacy as a Design Constraint","short":"Veterans' data is never training data","color":"#b8706a","desc":"","dos":["Design AI features within VA-approved data use boundaries","Strip PII before using Veteran data in any AI pipeline","Involve privacy officers in AI feature design, not just review"],"donts":["Input real Veteran PII into any non-VA-approved AI tool","Collect more Veteran data than the AI feature strictly requires","Treat privacy review as a launch checklist item rather than a design constraint"]},{"num":"07","title":"Human Judgment Holds the Final Call","short":"AI recommends; humans decide","color":"#5ebfb0","desc":"","dos":["Make human review genuinely meaningful, not a rubber stamp","Design audit trails for AI-assisted decisions","Communicate clearly which parts of a decision were AI-assisted"],"donts":["Design AI-assisted decisions as fully automated without a meaningful human override","Present AI recommendations as official VA determinations","Eliminate human review steps to reduce processing time"]},{"num":"08","title":"Inclusive Data, Inclusive Outcomes","short":"AI must not amplify existing inequities","color":"#a07cc5","desc":"","dos":["Evaluate AI outputs across demographic segments before launch","Include underrepresented Veteran populations in usability research for AI features","Set up ongoing monitoring for disparate outcomes in AI-assisted decisions"],"donts":["Ship AI features without evaluating outputs across demographic segments","Treat disparate outcomes for underrepresented Veterans as acceptable edge cases","Exclude low-digital-literacy or low-bandwidth Veterans from AI feature testing"]}],"commitments":[{"icon":"\ud83e\udd1d","title":"We research with Veterans before we build with AI","desc":"No AI feature ships without grounding in real Veteran research. AI ideas start as hypotheses, not assumptions."},{"icon":"\ud83d\udd2c","title":"We validate AI outputs before they reach Veterans","desc":"Plain language review, accessibility testing, and accuracy checks happen before publication \u2014 not after."},{"icon":"\ud83d\udce3","title":"We surface AI failures, not just AI successes","desc":"When AI gets it wrong in a VA context, we document it, learn from it, and fix the design \u2014 not just the model."},{"icon":"\ud83d\udee1\ufe0f","title":"We protect the most vulnerable users first","desc":"Our edge cases are Veterans in crisis, with low digital literacy, or using assistive technology. We design for them."},{"icon":"\u2696\ufe0f","title":"We hold ourselves to VA\\","desc":"VA regulations, PRA, HIPAA, Section 508, and OMB AI guidance are constraints, not bureaucracy to work around."}],"newsChannels":[{"id":"all","label":"All News","color":"#9ba3b0"},{"id":"figma","label":"Figma & Design Tools","color":"#6a9e8a"},{"id":"mcp","label":"MCP for Designers","color":"#8a7ec4"},{"id":"ai","label":"Claude & AI","color":"#c4a55a"},{"id":"gov","label":"AI in Gov Tech","color":"#4a88c7"}],"newsArticles":[{"id":"fig1","channel":"figma","title":"Figma Make: Turn designs and prompts into working prototypes","summary":"Figma's AI prototyping tool lets designers convert design files or plain-language prompts into functional, high-fidelity prototypes. Make kits now bring real component context from your Figma library into generated output.","source":"figma.com/make","sourceUrl":"https://www.figma.com/make/","date":"Apr 2026","relevance":"Direct design workflow tool \u2014 prototype faster without handoff lag"},{"id":"fig2","channel":"figma","title":"Config 2025: \"Design helps you decide what you should make\"","summary":"Figma CEO Dylan Field argued at Config 2025 that design becomes more important, not less, as AI makes software creation easier. Four new products launched: Figma Sites, Make, Buzz, and Draw.","source":"Forrester","sourceUrl":"https://www.forrester.com/blogs/figma-config-2025-in-an-ai-world-design-matters-more-than-ever/","date":"May 2025","relevance":"Strategic framing for the role of design as AI lowers barriers to software creation"},{"id":"fig3","channel":"figma","title":"Figma AI: Generate images, replace text, and remove backgrounds in-canvas","summary":"Figma's native AI suite now includes Gemini and GPT-powered image generation, in-design text replacement, background removal, copy tone adjustment, and translation \u2014 all without leaving the design file.","source":"figma.com/ai","sourceUrl":"https://www.figma.com/ai/","date":"Apr 2026","relevance":"Reduces time spent on placeholder content and asset prep in VA design workflows"},{"id":"fig4","channel":"figma","title":"AI Design Systems Conference 2026: Vibe coding, MCP, and agentic systems","summary":"A sold-out 1,000-person conference featured 21 experts from Figma, Adobe, GitHub, and Atlassian covering AI-powered design system workflows including Figma MCP, Claude Code, and production-ready agentic patterns.","source":"intodesignsystems.com","sourceUrl":"https://www.intodesignsystems.com/","date":"Mar 2026","relevance":"Conference-level signal that agentic design systems are moving from experimental to standard practice"},{"id":"mcp1","channel":"mcp","title":"Figma Dev Mode MCP Server: Real design data, direct to your IDE","summary":"Launched June 2025, Figma's MCP server lets AI-powered IDEs pull live component data, tokens, and layouts directly from Figma files \u2014 enabling code generation that actually respects your design system.","source":"Design Systems Collective","sourceUrl":"https://www.designsystemscollective.com/how-ai-mcp-server-will-automate-multi-brand-design-at-scale-62f8355b4eb9","date":"Jun 2025","relevance":"The biggest design-to-code handoff improvement in years \u2014 tokens stay in sync automatically"},{"id":"mcp2","channel":"mcp","title":"Penpot experiments with MCP servers for bi-directional design-code workflows","summary":"Penpot demonstrated MCP-powered workflows that move between design, code, and documentation in both directions \u2014 design to code, code to design, docs to design system components \u2014 using prior decisions as context.","source":"Smashing Magazine","sourceUrl":"https://www.smashingmagazine.com/2026/01/penpot-experimenting-mcp-servers-ai-powered-design-workflows/","date":"Jan 2026","relevance":"Open-source signal that MCP-powered design workflows will be platform-agnostic, not just Figma"},{"id":"mcp3","channel":"mcp","title":"MCP is the USB-C for AI: Design systems as machine-readable intelligence layers","summary":"The framing shift of 2026: design systems are no longer just component libraries \u2014 they're the intelligence layer AI uses to stay on-brand. DTCG token standards are now the minimum viable export format.","source":"Medium / David Robinson","sourceUrl":"https://davidrdesign.medium.com/ai-in-product-design-where-we-are-now-in-2026-a71bceada2d8","date":"Feb 2026","relevance":"Fundamental reframe of what a design system is \u2014 relevant for VA's VADS evolution strategy"},{"id":"mcp4","channel":"mcp","title":"How AI + MCP will automate multi-brand design at scale","summary":"With Figma's MCP server, a prompt like \"update all primary buttons across brands to 16px corner radius\" can trigger changes across every brand variant and run visual regression checks automatically.","source":"Parallel HQ","sourceUrl":"https://www.parallelhq.com/blog/automating-design-systems-with-ai","date":"Mar 2026","relevance":"Concrete demonstration of how MCP enables design system governance at VA scale"},{"id":"ai1","channel":"ai","title":"Figma MCP server brings Figma context directly into Claude","summary":"The Figma MCP connector lets you generate FigJam diagrams, inspect design context, and reference component data from Figma files inside Claude conversations \u2014 making Claude a design-aware collaborator.","source":"figma.com/ai","sourceUrl":"https://www.figma.com/ai/","date":"Jan 2026","relevance":"Directly actionable for VA designers \u2014 the Figma MCP is already available in Claude.ai"},{"id":"ai2","channel":"ai","title":"From prompt engineers to context engineers: MCP in 2026","summary":"In 2024 we were prompt engineers. In 2025, RAG architects. In 2026, context engineers are building the infrastructure that connects AI intelligence to real action \u2014 and MCP is the substrate.","source":"Essa Mamdani","sourceUrl":"https://www.essamamdani.com/blog/complete-guide-model-context-protocol-mcp-2026","date":"Apr 2026","relevance":"Helps VA designers understand what skill to invest in next \u2014 context engineering over prompt crafting"},{"id":"ai3","channel":"ai","title":"2026 predictions: Agentic AI replaces passive chat as the core design pattern","summary":"UX researchers now see 2026 as the year \"delegative UI\" overtakes \"conversational UI\" \u2014 where users assign AI a goal rather than ask it a question. This has major implications for how VA designs AI-powered features.","source":"UX Tigers","sourceUrl":"https://www.uxtigers.com/post/2026-predictions","date":"Jan 2026","relevance":"Fundamental shift in AI interaction paradigm \u2014 affects how VA teams design AI features for Veterans"},{"id":"ai4","channel":"ai","title":"Figma's 2025 AI report: 85% of designers say AI fluency is essential to their future","summary":"Despite efficiency gains, fewer than half of designers feel AI makes them better at their jobs. The tension: AI speeds up execution but design judgment \u2014 what to make, not how to make it \u2014 remains irreplaceably human.","source":"Figma","sourceUrl":"https://www.figma.com/resource-library/ai-in-design/","date":"2025","relevance":"Evidence-based framing for why VA design teams should invest in AI fluency without losing craft"},{"id":"gov1","channel":"gov","title":"GSA launches FedRAMP 20x to fast-track AI tool authorization for federal agencies","summary":"GSA's FedRAMP 20x initiative introduces automated authorization pathways to make it simpler and cheaper for AI cloud providers to achieve federal compliance \u2014 with first AI Prioritization authorizations completed in early 2026.","source":"GSA","sourceUrl":"https://www.gsa.gov/blog/2025/12/31/ai-in-action-how-gsa-is-transforming-federal-services","date":"Dec 2025","relevance":"Directly impacts which AI tools VA contractors can use \u2014 FedRAMP authorization is a prerequisite"},{"id":"gov2","channel":"gov","title":"OMB M-25-22: Federal contractors barred from using government data to train AI models","summary":"OMB's M-25-22 memorandum requires contracts to prohibit vendors from using non-public government data to train commercial AI algorithms without explicit consent \u2014 and mandates clear IP and data portability terms.","source":"Ogletree","sourceUrl":"https://ogletree.com/insights-resources/blog-posts/federal-agencies-roll-out-ai-strategy-plans-takeaways-for-government-contractors/","date":"Dec 2025","relevance":"Critical compliance requirement for VA contractors using AI tools \u2014 affects tool selection and data handling"},{"id":"gov3","channel":"gov","title":"2026: Federal agencies move from \"AI curiosity\" to \"AI consequence\"","summary":"Agencies that spent 2025 in experimentation mode are now implementing targeted, mission-aligned AI solutions. The shift: fewer AI pilots for their own sake, more deployments with repeatable, secure architectures.","source":"Hitachi Vantara Federal","sourceUrl":"https://www.hitachifederal.com/2026-federal-tech-predictions-the-year-ai-gets-real-and-data-does-the-heavy-lifting/","date":"Feb 2026","relevance":"Sets expectations for the environment VA design teams are operating in \u2014 AI must show mission outcomes"},{"id":"gov4","channel":"gov","title":"AI democratizes software development across government \u2014 \"everyone can be a developer\"","summary":"Mission specialists, policy experts, and administrators are now building applications and automating workflows without traditional programming skills, exponentially expanding government development capacity.","source":"Federal News Network","sourceUrl":"https://federalnewsnetwork.com/commentary/2025/12/the-year-ai-moves-from-pilots-to-practice-three-predictions-for-government-in-2026/","date":"Dec 2025","relevance":"Has implications for how VA teams think about who builds internal tools \u2014 and what skills to develop"},{"id":"gov5","channel":"gov","title":"The AI trust gap: Government's biggest 2026 challenge isn't adoption, it's transparency","summary":"As AI tools proliferate in government, the hardest problem is not getting them in the door \u2014 it's ensuring transparency, fairness, and public trust in how they're used. Human judgment and accountability remain essential differentiators.","source":"Intelliworx","sourceUrl":"https://intelliworxit.com/blog/government-technology-predictions-2026/","date":"Jan 2026","relevance":"Directly relevant to VA's AI design principles \u2014 trust and transparency aren't just UX concerns, they're institutional ones"}]};
+</script>
+<script>
+// ── STATE ─────────────────────────────────────────────────────────────────
+let currentMode = 'all';
+let activeTags = new Set();
+let currentDetailId = null;
+
+// ── CONTENT SOURCE ────────────────────────────────────────────────────────
+const CONTENT_SOURCE = './va-ai-design-content.json';
+let CATEGORIES = {};
+let CONCEPTS = [];
+let PRINCIPLES = [];
+let COMMITMENTS = [];
+let NEWS_CHANNELS = [];
+let SEED_ARTICLES = [];
+
+async function loadContentFromJSON() {
+  let data = null;
+  if (window.__INLINE_CONTENT__) {
+    data = window.__INLINE_CONTENT__;
+  } else {
+    try {
+      const response = await fetch(CONTENT_SOURCE);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      data = await response.json();
+    } catch (error) {
+      console.error('Failed to load content from JSON:', error);
+      return false;
+    }
+  }
+  CATEGORIES = data.categories || {};
+  CONCEPTS = data.concepts || [];
+  PRINCIPLES = data.principles || [];
+  COMMITMENTS = data.commitments || [];
+  NEWS_CHANNELS = data.newsChannels || [];
+  SEED_ARTICLES = data.newsArticles || [];
+  newsState.enrichedArticles = null;
+  vadsRendered = false;
+  return true;
+}
+
+const CATEGORIES_FALLBACK = {
+  Research:      { color: '#4a88c7', dim: 'rgba(74,136,199,0.12)',  label: 'UX Research' },
+  Discovery:     { color: '#c4a55a', dim: 'rgba(196,165,90,0.12)',  label: 'Discovery' },
+  Content:       { color: '#6a9e8a', dim: 'rgba(106,158,138,0.12)', label: 'Content Design' },
+  Synthesis:     { color: '#8a7ec4', dim: 'rgba(138,126,196,0.12)', label: 'Synthesis' },
+  Accessibility: { color: '#b8706a', dim: 'rgba(184,112,106,0.10)', label: 'Accessibility' },
+  Prompts:       { color: '#5ebfb0', dim: 'rgba(94,191,176,0.12)',  label: 'Prompt Engineering' },
+};
+
+// ── DATA ARRAYS LOADED FROM va-ai-design-content.json ────────────────────
+// CONCEPTS, PRINCIPLES, COMMITMENTS, NEWS_CHANNELS, and SEED_ARTICLES
+// are now loaded dynamically from the JSON file via loadContentFromJSON()
+// The arrays are declared as empty above and populated when the app initializes.
+// The hardcoded data arrays have been removed - all content comes from the JSON.
+let newsState = {
+  activeChannel: 'all',
+  enrichedArticles: null,
+  loading: false,
+  lastFetched: null,
+};
+
+
+
+// ── THEME ──────────────────────────────────────────────────────────────────
+let isDark = true;
+function toggleTheme() {
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  document.getElementById('theme-toggle').textContent = isDark ? '🌙' : '☀️';
+}
+
+// ── MOBILE SIDEBAR ─────────────────────────────────────────────────────────
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  const bd = document.getElementById('sidebar-backdrop');
+  bd.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  const bd = document.getElementById('sidebar-backdrop');
+  bd.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── VIEW HELPERS ───────────────────────────────────────────────────────────
+function hideAllViews() {
+  document.getElementById('cards-grid').style.display = 'none';
+  document.getElementById('principles-view').style.display = 'none';
+  document.getElementById('vads-view').style.display = 'none';
+  document.getElementById('news-view').style.display = 'none';
+  document.getElementById('results-count').style.display = 'none';
+  closeSidebar();
+}
+function showCardsView() {
+  document.getElementById('cards-grid').style.display = '';
+  document.getElementById('results-count').style.display = '';
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+async function initApp() {
+  const loaded = await loadContentFromJSON();
+  if (!loaded) {
+    console.warn('Using fallback hardcoded data');
+    CATEGORIES = CATEGORIES_FALLBACK;
+  }
+  init();
+}
+
+function init() {
+  renderTagCloud();
+  updateCounts();
+  applyFilters();
+}
+
+// ── TAG CLOUD ──────────────────────────────────────────────────────────────
+function renderTagCloud() {
+  const allTags = [...new Set(CONCEPTS.flatMap(c => c.tags))].sort();
+  const container = document.getElementById('tag-container');
+  container.innerHTML = allTags.map(tag =>
+    `<button class="tag-pill" onclick="toggleTag('${tag}')" data-tag="${tag}">${tag}</button>`
+  ).join('');
+}
+
+function updateCounts() {
+  const cats = ['all','Research','Discovery','Content','Synthesis','Accessibility','Prompts'];
+  cats.forEach(cat => {
+    const el = document.getElementById(`count-${cat}`);
+    if (el) el.textContent = cat === 'all' ? CONCEPTS.length : CONCEPTS.filter(c => c.category === cat).length;
+  });
+}
+
+// ── CATEGORY / FILTER ──────────────────────────────────────────────────────
+function setCategory(btn, cat) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentMode = cat;
+  hideAllViews();
+  showCardsView();
+  const catNames = { all:'All Concepts', Research:'UX Research', Discovery:'Discovery', Content:'Content Design', Synthesis:'Synthesis', Accessibility:'Accessibility', Prompts:'Prompt Engineering' };
+  document.getElementById('topbar-title').textContent = catNames[cat] || cat;
+  document.getElementById('topbar-sub').textContent = 'Practical AI workflows for VA UX designers and researchers';
+  applyFilters();
+}
+
+function toggleTag(tag) {
+  activeTags.has(tag) ? activeTags.delete(tag) : activeTags.add(tag);
+  document.querySelectorAll('.tag-pill').forEach(p => p.classList.toggle('active', activeTags.has(p.dataset.tag)));
+  applyFilters();
+}
+
+function applyFilters() {
+  const query = document.getElementById('search-input').value.toLowerCase().trim();
+  const catFilter = currentMode;
+  const filtered = CONCEPTS.filter(c => {
+    const catMatch = catFilter === 'all' || c.category === catFilter;
+    const tagMatch = activeTags.size === 0 || [...activeTags].every(t => c.tags.includes(t));
+    const searchMatch = !query || c.title.toLowerCase().includes(query) || c.desc.toLowerCase().includes(query) || c.tags.some(t => t.toLowerCase().includes(query));
+    return catMatch && tagMatch && searchMatch;
+  });
+  renderCards(filtered);
+  document.getElementById('results-count').textContent = `${filtered.length} concept${filtered.length !== 1 ? 's' : ''}`;
+}
+
+function renderCards(concepts) {
+  const grid = document.getElementById('cards-grid');
+  if (concepts.length === 0) {
+    grid.innerHTML = `<div class="empty-state"><h3>No concepts found</h3><p>Try adjusting your filters or search query.</p></div>`;
+    return;
+  }
+  grid.innerHTML = concepts.map((c, i) => {
+    const cat = CATEGORIES[c.category];
+    return `
+      <div class="card" onclick="openDetail(${c.id})" style="animation-delay:${i * 0.04}s">
+        <button class="card-share-btn" onclick="openCardShare(event, ${c.id})" title="Share this concept">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="13" cy="3" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="3" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="13" cy="13" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 7l6-3M5 9l6 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="card-accent-bar" style="background:linear-gradient(90deg,${cat.color},${cat.color}77)"></div>
+        <div class="card-body">
+          <div class="card-category" style="color:${cat.color}">
+            <span style="width:6px;height:6px;border-radius:50%;background:${cat.color};display:inline-block"></span>
+            ${cat.label}
+          </div>
+          <div class="card-title">${c.title}</div>
+          <div class="card-desc">${c.desc}</div>
+        </div>
+        <div class="card-tags">
+          ${c.tags.slice(0,4).map(t => `<span class="card-tag">${t}</span>`).join('')}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── DETAIL ─────────────────────────────────────────────────────────────────
+function openDetail(id) {
+  const c = CONCEPTS.find(x => x.id === id);
+  if (!c) return;
+  currentDetailId = id;
+  const cat = CATEGORIES[c.category];
+  document.getElementById('detail-accent').style.background = `linear-gradient(90deg,${cat.color},${cat.color}55)`;
+  document.getElementById('detail-share-btn').onclick = () => openCardShare(null, id);
+  document.getElementById('detail-header').innerHTML = `
+    <div class="detail-category" style="color:${cat.color}">
+      <span style="width:6px;height:6px;border-radius:50%;background:${cat.color};display:inline-block"></span>
+      ${cat.label}
+    </div>
+    <div class="detail-title">${c.title}</div>
+    <div class="detail-desc">${c.overview}</div>`;
+  document.getElementById('detail-body').innerHTML = `
+    <div class="detail-section">
+      <div class="detail-section-label">Use cases</div>
+      <div class="use-cases">
+        ${c.useCases.map(u => `
+          <div class="use-case">
+            <div class="use-case-icon">${u.icon}</div>
+            <div class="use-case-text"><strong>${u.title}</strong><span>${u.desc}</span></div>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-label">Example prompts to try</div>
+      <div class="prompt-examples">
+        ${c.prompts.map(p => `
+          <div class="prompt-example" style="padding-right:70px">
+            ${p}
+            <button class="copy-prompt-btn" onclick="copyPrompt(event,this,${JSON.stringify(p)})">Copy</button>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-label">VA context & guidance</div>
+      <div class="va-note"><strong>Note:</strong> ${c.vaNote}</div>
+    </div>
+    <div class="detail-tags">${c.tags.map(t => `<span class="card-tag">${t}</span>`).join('')}</div>`;
+  document.getElementById('detail-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetail(e) {
+  if (e.target === document.getElementById('detail-overlay')) closeDetailBtn();
+}
+function closeDetailBtn() {
+  document.getElementById('detail-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  currentDetailId = null;
+}
+
+// ── CARD SHARE ─────────────────────────────────────────────────────────────
+let cardShareContext = null;
+function openCardShare(e, id) {
+  if (e) e.stopPropagation();
+  const c = CONCEPTS.find(x => x.id === id);
+  if (!c) return;
+  cardShareContext = c;
+  const cat = CATEGORIES[c.category];
+  document.getElementById('card-share-title').textContent = c.title;
+  document.getElementById('card-share-sub').textContent = `${cat.label} concept`;
+  const text = `${c.title}\n\n${c.desc}\n\nFrom the AI for VA Design & Research knowledge base.`;
+  document.getElementById('card-share-actions').innerHTML = `
+    <button class="card-share-action" onclick="cardShareCopy()">
+      <div class="card-share-action-icon" style="background:var(--gold-dim);color:var(--gold)">⎘</div>
+      <div class="card-share-action-text"><strong>Copy concept summary</strong><span>Title + description as plain text</span></div>
+    </button>
+    <button class="card-share-action" onclick="cardShareEmail()">
+      <div class="card-share-action-icon" style="background:var(--blue-dim);color:var(--blue)">✉</div>
+      <div class="card-share-action-text"><strong>Share via email</strong><span>Open mail client with this concept</span></div>
+    </button>
+    <button class="card-share-action" onclick="cardShareSlack()">
+      <div class="card-share-action-icon" style="background:var(--violet-dim);color:var(--violet)">#</div>
+      <div class="card-share-action-text"><strong>Copy for Slack/Teams</strong><span>Formatted for chat platforms</span></div>
+    </button>`;
+  document.getElementById('card-share-overlay').classList.add('open');
+}
+
+function closeCardShare() {
+  document.getElementById('card-share-overlay').classList.remove('open');
+  cardShareContext = null;
+}
+
+function cardShareCopy() {
+  if (!cardShareContext) return;
+  const c = cardShareContext;
+  const text = `*${c.title}*\n\n${c.desc}\n\nTags: ${c.tags.join(', ')}\n\nFrom: AI for VA Design & Research knowledge base`;
+  navigator.clipboard.writeText(text).then(() => { showToast('✓  Concept copied to clipboard'); closeCardShare(); });
+}
+
+function cardShareEmail() {
+  if (!cardShareContext) return;
+  const c = cardShareContext;
+  const subject = encodeURIComponent(`VA AI Design Concept: ${c.title}`);
+  const body = encodeURIComponent(`I wanted to share this concept from the AI for VA Design & Research knowledge base:\n\n${c.title}\n\n${c.desc}\n\nCategory: ${CATEGORIES[c.category].label}\nTags: ${c.tags.join(', ')}\n\nFull detail: ${window.location.href}`);
+  window.open(`mailto:?subject=${subject}&body=${body}`);
+  closeCardShare();
+}
+
+function cardShareSlack() {
+  if (!cardShareContext) return;
+  const c = cardShareContext;
+  const cat = CATEGORIES[c.category];
+  const text = `:bulb: *${c.title}* _[${cat.label}]_\n${c.desc}\nTags: ${c.tags.map(t => '`'+t+'`').join(' ')}\n_AI for VA Design & Research knowledge base_`;
+  navigator.clipboard.writeText(text).then(() => { showToast('✓  Slack-formatted text copied'); closeCardShare(); });
+}
+
+// ── COPY PROMPT ────────────────────────────────────────────────────────────
+function copyPrompt(e, btn, text) {
+  e.stopPropagation();
+  const clean = text.replace(/^"|"$/g, '');
+  navigator.clipboard.writeText(clean).then(() => {
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ── PRINCIPLES VIEW ────────────────────────────────────────────────────────
+function showPrinciples(btn) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  hideAllViews();
+  document.getElementById('principles-view').style.display = 'block';
+  document.getElementById('topbar-title').textContent = 'AI Design Principles';
+  document.getElementById('topbar-sub').textContent = 'Foundational commitments for AI in VA products designed for Veterans and their families';
+  renderPrinciples();
+}
+
+function renderPrinciples() {
+  const view = document.getElementById('principles-view');
+  view.className = 'section-view';
+  view.innerHTML = `
+    <div class="section-hero" style="background:linear-gradient(135deg,rgba(208,112,96,0.08),rgba(196,160,64,0.05));border:1px solid rgba(208,112,96,0.18)">
+      <div class="section-hero-eyebrow" style="color:#d07060">AI Design Principles</div>
+      <h2>Designing AI for those who served</h2>
+      <p>Veterans and their families interact with VA at some of the most significant moments of their lives. AI in these contexts carries extraordinary responsibility. These principles define how we meet it.</p>
+      <div class="principles-meta">
+        <div class="principles-meta-item">⬡ <span>${PRINCIPLES.length} principles</span></div>
+        <div class="principles-meta-item">◎ <span>VA OCTO, Design & Research</span></div>
+        <div class="principles-meta-item">↻ <span>Living document</span></div>
+      </div>
+    </div>
+
+    <div class="principles-grid">
+      ${PRINCIPLES.map(p => `
+        <div class="principle-card">
+          <div class="principle-number-bar">
+            <div class="principle-num" style="color:${p.color}">${p.num}</div>
+            <div>
+              <div class="principle-title">${p.title}</div>
+              <div class="principle-short">${p.short}</div>
+            </div>
+          </div>
+          <div class="principle-body">
+            <div class="principle-desc">${p.desc}</div>
+            <div class="principle-dos-donts">
+              <div class="principle-do">
+                <div class="do-dont-label">Do</div>
+                ${p.dos.map(d => `<div class="do-dont-item">${d}</div>`).join('')}
+              </div>
+              <div class="principle-dont">
+                <div class="do-dont-label">Don't</div>
+                ${(p.donts || []).map(d => `<div class="do-dont-item">${d}</div>`).join('')}
+              </div>
+            </div>
+          </div>
+        </div>`).join('')}
+    </div>
+
+    <div class="principles-commitments">
+      <h3>Our commitments as practitioners</h3>
+      <p>Principles without practice are decoration. These are the specific commitments the team makes to Veterans when working with AI.</p>
+      <div class="commitment-list">
+        ${COMMITMENTS.map(c => `
+          <div class="commitment-item">
+            <div class="commitment-icon">${c.icon}</div>
+            <div class="commitment-text"><strong>${c.title}</strong><span>${c.desc}</span></div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+// ── VADS VIEW ──────────────────────────────────────────────────────────────
+let vadsRendered = false;
+function showVADS(btn) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  hideAllViews();
+  document.getElementById('vads-view').style.display = 'block';
+  document.getElementById('topbar-title').textContent = 'VADS Visual Language';
+  document.getElementById('topbar-sub').textContent = 'Color, typography, spacing, breakpoints & design tokens from the VA Design System';
+  if (!vadsRendered) { renderVADS(); vadsRendered = true; }
+}
+
+function renderVADS() {
+  const view = document.getElementById('vads-view');
+  view.className = 'section-view';
+  view.innerHTML = `
+    <div class="section-hero" style="background:linear-gradient(135deg,rgba(59,130,196,0.08),rgba(74,181,168,0.05));border:1px solid rgba(59,130,196,0.18);margin-bottom:20px">
+      <div class="section-hero-eyebrow" style="color:var(--blue)">VA Design System — Foundation</div>
+      <h2>Visual language for VA.gov</h2>
+      <p>The VADS visual language creates a consistent, accessible experience across VA digital products. These tokens, scales, and guidelines define the look and feel of every Veteran-facing interface.</p>
+      <a href="https://design.va.gov/foundation/" target="_blank" class="hero-link" style="color:var(--blue);border:1px solid rgba(59,130,196,0.3)">↗ Full VADS documentation</a>
+    </div>
+    <div class="vads-tabs">
+      <button class="vads-tab active" onclick="switchVadsTab(this,'colors')">Color Palette</button>
+      <button class="vads-tab" onclick="switchVadsTab(this,'typography')">Typography</button>
+      <button class="vads-tab" onclick="switchVadsTab(this,'spacing')">Spacing</button>
+      <button class="vads-tab" onclick="switchVadsTab(this,'breakpoints')">Breakpoints</button>
+      <button class="vads-tab" onclick="switchVadsTab(this,'tokens')">Design Tokens</button>
+    </div>
+    ${renderColorsPanel()}${renderTypographyPanel()}${renderSpacingPanel()}${renderBreakpointsPanel()}${renderTokensPanel()}`;
+}
+
+function switchVadsTab(btn, id) {
+  document.querySelectorAll('.vads-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.vads-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('vads-panel-' + id).classList.add('active');
+}
+
+function renderColorsPanel() {
+  const palettes = [
+    { name:'Primary — VA Blue', colors:[{name:'blue-80',hex:'#112f4e'},{name:'blue-70',hex:'#1b4f82'},{name:'blue-60',hex:'#205493'},{name:'blue-50',hex:'#2e78d2'},{name:'blue-40',hex:'#4da9e8'},{name:'blue-20',hex:'#dbe8f5'}] },
+    { name:'Success — Green', colors:[{name:'green-70',hex:'#2e6c4f'},{name:'green-60',hex:'#2d8a5f'},{name:'green-40',hex:'#5ab9a8'},{name:'green-20',hex:'#e5f4ee'}] },
+    { name:'Warning — Gold', colors:[{name:'gold-70',hex:'#8a6702'},{name:'gold-50',hex:'#f2a900'},{name:'gold-20',hex:'#fdf2c0'}] },
+    { name:'Error — Red', colors:[{name:'red-60',hex:'#981b1e'},{name:'red-50',hex:'#cd2026'},{name:'red-20',hex:'#f4e3db'}] },
+    { name:'Neutrals', colors:[{name:'gray-dark',hex:'#1b1b1b'},{name:'gray-medium',hex:'#565c65'},{name:'gray',hex:'#71767a'},{name:'gray-light',hex:'#a9aeb1'},{name:'gray-cool',hex:'#dfe1e2'},{name:'white',hex:'#ffffff'}] },
+  ];
+  const semanticColors = [
+    {name:'Action',hex:'#005ea2',desc:'Primary CTA'},{name:'Action hover',hex:'#1a4480',desc:'Hover state'},{name:'Base text',hex:'#1b1b1b',desc:'Body text'},
+    {name:'Error',hex:'#cd2026',desc:'Error state'},{name:'Warning',hex:'#f2a900',desc:'Warning'},{name:'Success',hex:'#2d8a5f',desc:'Confirmation'},
+    {name:'Info',hex:'#2e78d2',desc:'Info alerts'},{name:'Visited link',hex:'#4b1878',desc:'Visited links'},
+  ];
+  return `<div class="vads-panel active" id="vads-panel-colors">
+    <div class="vads-note">VA.gov uses a USWDS-based color system with semantic tokens. Never use color as the <em>only</em> means of conveying information.</div>
+    <div class="vads-section-label">Semantic Color Roles</div>
+    <div class="semantic-grid">
+      ${semanticColors.map(c => `
+        <div class="semantic-item" onclick="copyHex('${c.hex}','${c.name}')">
+          <div class="semantic-swatch" style="background:${c.hex}"></div>
+          <div class="semantic-info"><strong>${c.name}</strong><span>${c.hex}</span></div>
+        </div>`).join('')}
+    </div>
+    <div class="vads-section-label">Full Palette</div>
+    ${palettes.map(pal => `
+      <div class="color-group">
+        <div class="color-group-name">${pal.name}</div>
+        <div class="color-row">
+          ${pal.colors.map(c => `
+            <div class="color-chip" onclick="copyHex('${c.hex}','${c.name}')">
+              <div class="color-swatch" style="background:${c.hex}"></div>
+              <div class="color-chip-label">${c.name}</div>
+              <div class="color-chip-hex">${c.hex}</div>
+            </div>`).join('')}
+        </div>
+      </div>`).join('')}
+    <div class="vads-note">Click any swatch to copy hex. Source: <a href="https://design.va.gov/foundation/color-palette" target="_blank">design.va.gov/foundation/color-palette</a></div>
+  </div>`;
+}
+
+function renderTypographyPanel() {
+  const scale = [
+    {label:'H1 Display',size:'52px',lh:'1.2',weight:'700'},{label:'H2',size:'36px',lh:'1.3',weight:'700'},
+    {label:'H3',size:'24px',lh:'1.4',weight:'700'},{label:'H4',size:'20px',lh:'1.4',weight:'700'},
+    {label:'Lead',size:'20px',lh:'1.6',weight:'300'},{label:'Body',size:'17px',lh:'1.65',weight:'400'},
+    {label:'Small',size:'14px',lh:'1.6',weight:'400'},
+  ];
+  return `<div class="vads-panel" id="vads-panel-typography">
+    <div class="vads-section-label">Primary Typeface</div>
+    <div class="font-family-card">
+      <div class="font-specimen" style="font-family:'Source Sans Pro',sans-serif;font-weight:400">Aa Bb Cc Dd</div>
+      <div class="font-meta"><strong>Source Sans Pro</strong><span>Primary — body, UI, labels<br>Weights: 300, 400, 700</span></div>
+    </div>
+    <div class="font-family-card">
+      <div class="font-specimen" style="font-family:'Bitter',serif;font-weight:700">Aa Bb Cc Dd</div>
+      <div class="font-meta"><strong>Bitter</strong><span>Secondary — display headings<br>Weights: 400, 700</span></div>
+    </div>
+    <div class="vads-section-label">Type Scale</div>
+    <table class="spacing-table">
+      <thead><tr><th>Role</th><th>Size</th><th>Line height</th><th>Weight</th></tr></thead>
+      <tbody>${scale.map(t => `<tr><td>${t.label}</td><td style="font-family:monospace;font-size:11.5px">${t.size}</td><td style="font-family:monospace;font-size:11.5px">${t.lh}</td><td>${t.weight}</td></tr>`).join('')}</tbody>
+    </table>
+    <div class="vads-section-label">Specimens</div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:20px 24px;display:flex;flex-direction:column;gap:14px">
+      <div style="font-size:32px;font-weight:700;color:var(--text);line-height:1.2">Find VA benefits and services</div>
+      <div style="font-size:22px;font-weight:700;color:var(--text)">Disability compensation</div>
+      <div style="font-size:16px;color:var(--text-mid);line-height:1.7">You may be eligible for VA disability compensation if you have a current illness or injury that was caused by or made worse during your active duty service.</div>
+      <div style="font-size:13px;color:var(--text-muted)">Last updated March 2025 · Form 10-10EZ</div>
+    </div>
+    <div class="vads-note" style="margin-top:12px">Source: <a href="https://design.va.gov/foundation/typography" target="_blank">design.va.gov/foundation/typography</a></div>
+  </div>`;
+}
+
+function renderSpacingPanel() {
+  const units = [
+    {t:'0.5',px:'4px',rem:'0.25rem',use:'Tight inline'},{t:'1',px:'8px',rem:'0.5rem',use:'Icon/label gap'},
+    {t:'1.5',px:'12px',rem:'0.75rem',use:'Small padding'},{t:'2',px:'16px',rem:'1rem',use:'Default padding'},
+    {t:'2.5',px:'20px',rem:'1.25rem',use:'Form fields'},{t:'3',px:'24px',rem:'1.5rem',use:'Card padding'},
+    {t:'4',px:'32px',rem:'2rem',use:'Section gaps'},{t:'5',px:'40px',rem:'2.5rem',use:'Page rhythm'},
+    {t:'6',px:'48px',rem:'3rem',use:'Large gaps'},{t:'8',px:'64px',rem:'4rem',use:'Full sections'},
+  ];
+  return `<div class="vads-panel" id="vads-panel-spacing">
+    <div class="vads-note">VA uses an 8px base grid. Always use tokens — not arbitrary pixel values — to stay on-grid.</div>
+    <table class="spacing-table">
+      <thead><tr><th>Token</th><th>px</th><th>rem</th><th>Visual</th><th>Use</th></tr></thead>
+      <tbody>${units.map(u => `
+        <tr>
+          <td><span class="token-preview-text">spacing-${u.t}</span></td>
+          <td>${u.px}</td><td>${u.rem}</td>
+          <td class="spacing-bar-cell"><div class="spacing-bar" style="width:${Math.min(parseInt(u.px)*1.3,220)}px"></div></td>
+          <td>${u.use}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+    <div class="vads-note">Source: <a href="https://design.va.gov/foundation/spacing-units" target="_blank">design.va.gov/foundation/spacing-units</a></div>
+  </div>`;
+}
+
+function renderBreakpointsPanel() {
+  const bps = [
+    {icon:'📱',name:'Mobile',range:'< 481px',cols:'1 col, 16px gutters',note:'Default mobile-first'},
+    {icon:'📱',name:'Mobile-lg',range:'≥ 481px',cols:'1–2 col',note:'Large phones landscape'},
+    {icon:'💻',name:'Tablet',range:'≥ 640px',cols:'2–4 col, 16px gutters',note:'Side-by-side fields'},
+    {icon:'💻',name:'Tablet-lg',range:'≥ 880px',cols:'4–8 col, 32px gutters',note:'Sidebar visible'},
+    {icon:'🖥️',name:'Desktop',range:'≥ 1024px',cols:'8–12 col, 32px gutters',note:'Full 12-col grid'},
+    {icon:'🖥️',name:'Desktop-lg',range:'≥ 1200px',cols:'12 col, max 1000px',note:'Content width caps'},
+  ];
+  return `<div class="vads-panel" id="vads-panel-breakpoints">
+    <div class="vads-note">VA.gov is mobile-first. Design and test at mobile widths first, then progressively enhance. Content max-width is ~1000px on desktop.</div>
+    <div class="breakpoint-list">
+      ${bps.map(b => `
+        <div class="breakpoint-item">
+          <div class="bp-icon">${b.icon}</div>
+          <div class="bp-name">${b.name}</div>
+          <div class="bp-range">${b.range}</div>
+          <div class="bp-cols">${b.cols}</div>
+        </div>`).join('')}
+    </div>
+    <div class="vads-section-label">Sass Usage</div>
+    <div class="code-block">
+      @include media(tablet) { ... } <span class="code-comment">// ≥ 640px</span><br>
+      @include media(tablet-lg) { ... } <span class="code-comment">// ≥ 880px</span><br>
+      @include media(desktop) { ... } <span class="code-comment">// ≥ 1024px</span>
+    </div>
+    <div class="vads-note" style="margin-top:12px">Source: <a href="https://design.va.gov/foundation/breakpoints" target="_blank">design.va.gov/foundation/breakpoints</a></div>
+  </div>`;
+}
+
+function renderTokensPanel() {
+  const groups = [
+    { name:'Color Tokens', tokens:[
+      {n:'color-primary',v:'#005ea2',desc:'Primary action / link',s:'#005ea2'},
+      {n:'color-primary-dark',v:'#1a4480',desc:'Hover on primary',s:'#1a4480'},
+      {n:'color-base',v:'#1b1b1b',desc:'Default body text',s:'#1b1b1b'},
+      {n:'color-error',v:'#cd2026',desc:'Error state',s:'#cd2026'},
+      {n:'color-warning',v:'#f2a900',desc:'Warning state',s:'#f2a900'},
+      {n:'color-success',v:'#2d8a5f',desc:'Success confirmation',s:'#2d8a5f'},
+      {n:'color-focus',v:'#2491ff',desc:'Keyboard focus ring',s:'#2491ff'},
+    ]},
+    { name:'Typography Tokens', tokens:[
+      {n:'font-sans',v:"'Source Sans Pro', sans-serif",desc:'Primary UI typeface'},
+      {n:'font-serif',v:"'Bitter', Georgia, serif",desc:'Display / heading'},
+      {n:'font-size-base',v:'17px / 1.0625rem',desc:'Default body'},
+      {n:'font-weight-normal',v:'400',desc:'Default weight'},
+      {n:'font-weight-bold',v:'700',desc:'Headings, emphasis'},
+      {n:'line-height-base',v:'1.65',desc:'Body reading'},
+    ]},
+    { name:'Spacing & Border Tokens', tokens:[
+      {n:'spacing-1',v:'8px',desc:'1 unit'},{n:'spacing-2',v:'16px',desc:'Default padding'},
+      {n:'spacing-3',v:'24px',desc:'Card padding'},{n:'spacing-4',v:'32px',desc:'Section gap'},
+      {n:'border-width',v:'2px',desc:'Standard border'},{n:'border-radius',v:'4px',desc:'Element rounding'},
+      {n:'focus-width',v:'2px',desc:'Focus ring width'},{n:'focus-offset',v:'4px',desc:'Focus ring offset'},
+    ]},
+  ];
+  return `<div class="vads-panel" id="vads-panel-tokens">
+    <div class="vads-note">Design tokens are the single source of truth for visual decisions. Use tokens — not hardcoded values — in code, Figma, and documentation so updates propagate automatically.</div>
+    ${groups.map(g => `
+      <div class="token-group">
+        <div class="vads-section-label">${g.name}</div>
+        <table class="token-table">
+          <thead><tr><th>Token</th><th>Value</th><th>Usage</th></tr></thead>
+          <tbody>
+            ${g.tokens.map(t => `
+              <tr onclick="copyToken('${t.n}')">
+                <td>$${t.n}</td>
+                <td>${t.s ? `<span class="token-swatch-inline" style="background:${t.s}"></span>` : ''}<span class="token-preview-text">${t.v}</span></td>
+                <td>${t.desc}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`).join('')}
+    <div class="vads-note">Click any row to copy the token name. Full reference: <a href="https://design.va.gov/foundation/design-tokens" target="_blank">design.va.gov/foundation/design-tokens</a></div>
+  </div>`;
+}
+
+function copyHex(hex, name) { navigator.clipboard.writeText(hex).then(() => showToast(`✓  ${name}: ${hex}`)); }
+function copyToken(name) { navigator.clipboard.writeText('$' + name).then(() => showToast(`✓  $${name}`)); }
+
+// ── NEWS VIEW ──────────────────────────────────────────────────────────────
+
+function showNews(btn) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  hideAllViews();
+  document.getElementById('news-view').style.display = 'block';
+  document.getElementById('topbar-title').textContent = 'Industry News';
+  document.getElementById('topbar-sub').textContent = 'AI + design intelligence across Figma, MCP, Claude, and government technology';
+  renderNewsShell();
+  if (!newsState.enrichedArticles && !newsState.loading) fetchNewsInsights();
+  else if (newsState.enrichedArticles) renderNewsCards();
+}
+
+function renderNewsShell() {
+  const view = document.getElementById('news-view');
+  view.innerHTML = `
+    <div class="news-top-bar">
+      <div>
+        <h2>AI + Design Industry Pulse</h2>
+        <p>Curated signal across Figma, MCP, Claude, and AI in government — contextualized for VA design teams.</p>
+      </div>
+      <button class="news-refresh-btn" id="news-refresh-btn" onclick="refreshNews()">
+        <span class="refresh-spin">↺</span> Refresh
+      </button>
+    </div>
+    <div class="news-channels">
+      ${NEWS_CHANNELS.map(ch => `
+        <button class="channel-tab ${ch.id==='all'?'active':''}" onclick="setNewsChannel('${ch.id}',this)">
+          <span class="channel-dot" style="background:${ch.color}"></span>${ch.label}
+        </button>`).join('')}
+    </div>
+    <div class="news-grid" id="news-grid">
+      <div class="news-loading">
+        <div class="news-loading-spinner"></div>
+        <div class="news-loading-text">Fetching industry intelligence…</div>
+        <div class="news-loading-sub">Generating VA design context with AI</div>
+      </div>
+    </div>
+    <div class="news-timestamp" id="news-timestamp"></div>`;
+}
+
+function setNewsChannel(id, btn) {
+  newsState.activeChannel = id;
+  document.querySelectorAll('.channel-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderNewsCards();
+}
+
+async function fetchNewsInsights() {
+  newsState.loading = true;
+  const btn = document.getElementById('news-refresh-btn');
+  if (btn) btn.classList.add('loading');
+  const articlesForPrompt = SEED_ARTICLES.map(a =>
+    `[${a.channel.toUpperCase()}|${a.id}] ${a.title}\n${a.summary}\nSource: ${a.source} (${a.date})`
+  ).join('\n\n---\n\n');
+  const prompt = `You are a senior design strategist briefing VA OCTO UX contractors. For each article below, write a sharp 1-2 sentence "VA Design Team Takeaway" — specific, actionable, grounded in the Veteran experience or VA design practice. No generic language.\n\nReturn ONLY valid JSON array: [{id: string, takeaway: string}]. No markdown.\n\nArticles:\n${articlesForPrompt}`;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000, messages:[{role:'user',content:prompt}] })
+    });
+    const data = await res.json();
+    const raw = data.content?.map(c => c.text||'').join('') || '[]';
+    const takeaways = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    newsState.enrichedArticles = SEED_ARTICLES.map(a => ({ ...a, takeaway: takeaways.find(t => t.id===a.id)?.takeaway || a.relevance }));
+  } catch { newsState.enrichedArticles = SEED_ARTICLES.map(a => ({...a, takeaway: a.relevance})); }
+  newsState.loading = false;
+  newsState.lastFetched = new Date();
+  if (btn) btn.classList.remove('loading');
+  renderNewsCards();
+}
+
+function refreshNews() { newsState.enrichedArticles = null; renderNewsShell(); fetchNewsInsights(); }
+
+function renderNewsCards() {
+  const grid = document.getElementById('news-grid');
+  const ts = document.getElementById('news-timestamp');
+  if (!grid) return;
+  const articles = newsState.enrichedArticles || SEED_ARTICLES.map(a => ({...a, takeaway: a.relevance}));
+  const filtered = newsState.activeChannel==='all' ? articles : articles.filter(a => a.channel===newsState.activeChannel);
+  const ch = id => NEWS_CHANNELS.find(c => c.id===id) || NEWS_CHANNELS[0];
+  grid.innerHTML = filtered.map((a, i) => {
+    const channel = ch(a.channel);
+    return `
+      <a class="news-card" href="${a.sourceUrl}" target="_blank" rel="noopener" style="animation-delay:${i*0.04}s" onclick="event.stopPropagation()">
+        <button class="news-card-share" onclick="shareNewsCard(event,'${a.id}')" title="Share article">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><circle cx="13" cy="3" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="3" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="13" cy="13" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 7l6-3M5 9l6 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="news-card-channel" style="color:${channel.color}">
+          <span class="news-card-channel-dot" style="background:${channel.color}"></span>${channel.label}
+        </div>
+        <div class="news-card-title">${a.title}</div>
+        <div class="news-card-summary">${a.summary}</div>
+        ${a.takeaway ? `
+          <div class="news-card-takeaway" style="background:${channel.color}12;border:1px solid ${channel.color}25">
+            <div class="news-card-takeaway-label" style="color:${channel.color}">VA Design Takeaway</div>
+            <div class="news-card-takeaway-text">${a.takeaway}</div>
+          </div>` : ''}
+        <div class="news-card-footer">
+          <div class="news-card-source">↗ ${a.source}</div>
+          <div class="news-card-date">${a.date}</div>
+        </div>
+      </a>`;
+  }).join('');
+  if (newsState.lastFetched && ts) ts.textContent = `Last updated ${newsState.lastFetched.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})} · ${filtered.length} articles`;
+}
+
+function shareNewsCard(e, id) {
+  e.preventDefault(); e.stopPropagation();
+  const a = SEED_ARTICLES.find(x => x.id===id);
+  if (!a) return;
+  const ch = NEWS_CHANNELS.find(c => c.id===a.channel) || NEWS_CHANNELS[0];
+  document.getElementById('card-share-title').textContent = a.title;
+  document.getElementById('card-share-sub').textContent = `${ch.label} · ${a.source}`;
+  document.getElementById('card-share-actions').innerHTML = `
+    <button class="card-share-action" onclick="navigator.clipboard.writeText(${JSON.stringify(a.title+'\n\n'+a.summary+'\n\nSource: '+a.source+'\n'+a.sourceUrl)}).then(()=>{showToast('✓  Article copied');closeCardShare()})">
+      <div class="card-share-action-icon" style="background:var(--gold-dim);color:var(--gold)">⎘</div>
+      <div class="card-share-action-text"><strong>Copy article summary</strong><span>Title, summary and source link</span></div>
+    </button>
+    <button class="card-share-action" onclick="window.open('mailto:?subject='+encodeURIComponent('AI+Design: ${a.title.replace(/'/g,"\\'")}')+'&body='+encodeURIComponent(${JSON.stringify(a.title+'\n\n'+a.summary+'\n\nSource: '+a.sourceUrl+'\n\nShared from AI for VA Design & Research knowledge base.')}));closeCardShare()">
+      <div class="card-share-action-icon" style="background:var(--blue-dim);color:var(--blue)">✉</div>
+      <div class="card-share-action-text"><strong>Share via email</strong><span>Open mail client with this article</span></div>
+    </button>
+    <button class="card-share-action" onclick="navigator.clipboard.writeText(${JSON.stringify(':newspaper: *'+a.title+'*\n'+a.summary+'\n<'+a.sourceUrl+'|Read more →>')}).then(()=>{showToast('✓  Slack text copied');closeCardShare()})">
+      <div class="card-share-action-icon" style="background:var(--violet-dim);color:var(--violet)">#</div>
+      <div class="card-share-action-text"><strong>Copy for Slack/Teams</strong><span>Formatted for chat platforms</span></div>
+    </button>`;
+  document.getElementById('card-share-overlay').classList.add('open');
+}
+
+// ── GLOBAL SHARE ───────────────────────────────────────────────────────────
+function openShare() {
+  document.getElementById('share-url-display').textContent = window.location.href;
+  document.getElementById('share-overlay').classList.add('open');
+}
+function closeShare() { document.getElementById('share-overlay').classList.remove('open'); }
+function closeShareOverlay(e) { if (e.target===document.getElementById('share-overlay')) closeShare(); }
+function copyPageLink() {
+  navigator.clipboard.writeText(window.location.href).then(() => { showToast('✓  Link copied'); closeShare(); });
+}
+function shareEmail() {
+  const s = encodeURIComponent('AI for VA Design & Research — Knowledge Base');
+  const b = encodeURIComponent(`Hi,\n\nI wanted to share this knowledge base on using AI in VA design and research workflows.\n\nIt covers UX research, content design, accessibility, synthesis, prompt engineering, visual principles, and industry news — all grounded in VA context.\n\n${window.location.href}`);
+  window.open(`mailto:?subject=${s}&body=${b}`); closeShare();
+}
+function exportHTML() {
+  const blob = new Blob([document.documentElement.outerHTML], {type:'text/html'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'va-ai-design-knowledge-base.html'; a.click(); URL.revokeObjectURL(a.href);
+  showToast('✓  HTML file downloaded'); closeShare();
+}
+function exportJSON() {
+  const data = CONCEPTS.map(c => ({id:c.id,category:c.category,title:c.title,description:c.desc,tags:c.tags,overview:c.overview,useCases:c.useCases,prompts:c.prompts,vaNote:c.vaNote}));
+  const blob = new Blob([JSON.stringify({concepts:data,categories:CATEGORIES},null,2)],{type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'va-ai-design-concepts.json'; a.click(); URL.revokeObjectURL(a.href);
+  showToast(`✓  JSON exported — ${data.length} concepts`); closeShare();
+}
+
+// ── TOAST ──────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── KEYBOARD ──────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeDetailBtn(); closeCardShare(); closeShare(); closeSidebar(); }
+});
+
+initApp();
+</script>
+</body>
+</html>
