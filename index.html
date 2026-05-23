@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MD Projects</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #0f1117;
+  color: #e0e0e6;
+  min-height: 100vh;
+  padding: 3rem 1.5rem;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 2.5rem;
+}
+
+.folder {
+  margin-bottom: 2rem;
+}
+
+.folder-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #1e2028;
+  margin-bottom: 0.5rem;
+}
+
+.file-list {
+  list-style: none;
+}
+
+.file-list li {
+  border-bottom: 1px solid #1a1c24;
+}
+
+.file-list a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.5rem;
+  color: #e0e0e6;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+}
+
+.file-list a:hover {
+  background: #1a1d28;
+}
+
+.file-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background: #1e2230;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #7c8aff;
+}
+
+.file-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.file-title {
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.empty {
+  color: #444;
+  font-size: 0.85rem;
+  font-style: italic;
+  padding: 0.75rem 0.5rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>MD Projects</h1>
+  <p class="subtitle">Project directory</p>
+
+  <div class="folder">
+    <div class="folder-name">AI at VA</div>
+    <ul class="file-list">
+      <li>
+        <a href="AI%20at%20VA/va-ai-design-kb.html">
+          <span class="file-icon">HTML</span>
+          <span>
+            <span class="file-name">va-ai-design-kb.html</span>
+            <div class="file-title">AI for VA Design &amp; Research</div>
+          </span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="folder">
+    <div class="folder-name">VA</div>
+    <p class="empty">No HTML files yet</p>
+  </div>
+</div>
+</body>
+</html>

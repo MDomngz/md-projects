@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "static",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-l", "3000", "/Users/marisadominguez/Documents/md_GitHub/md-projects"],
+      "port": 3000
+    }
+  ]
+}
