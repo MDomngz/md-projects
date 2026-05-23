@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Couch to 5K for AI — VA UX Edition</title>
+  <meta name="description" content="A free 30-day program to help VA UX designers and researchers build a real AI practice. 10 minutes a day. From prompting to prototyping.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --va-blue: #003f72;
+      --va-blue-light: #0071bb;
+      --va-blue-lighter: #e1f3f8;
+      --va-red: #c4262e;
+      --va-gold: #ffbe2e;
+      --va-gold-light: #fee685;
+      --va-green: #2e8540;
+      --va-gray-dark: #323a45;
+      --va-gray-medium: #5b616b;
+      --va-gray-light: #aeb0b5;
+      --va-gray-lighter: #f1f1f1;
+      --va-white: #ffffff;
+      --accent: #0071bb;
+      --accent-hover: #205493;
+      --font-heading: 'Bitter', Georgia, serif;
+      --font-body: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+      --max-width: 1200px;
+      --section-padding: 6rem 2rem;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--va-gray-dark);
+      line-height: 1.65;
+      background: var(--va-white);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ====== NAV ====== */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      transition: box-shadow 0.3s;
+    }
+
+    nav.scrolled {
+      box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+    }
+
+    .nav-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--va-blue);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-logo .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--va-blue);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.85rem;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--va-gray-medium);
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--va-blue);
+    }
+
+    .nav-cta {
+      background: var(--va-blue);
+      color: white !important;
+      padding: 0.6rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 600 !important;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta:hover {
+      background: var(--accent-hover) !important;
+    }
+
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+
+    .mobile-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--va-gray-dark);
+      margin: 5px 0;
+      transition: 0.3s;
+    }
+
+    /* ====== HERO ====== */
+    .hero {
+      padding: 10rem 2rem 6rem;
+      background: linear-gradient(165deg, #f0f6fb 0%, var(--va-white) 50%, #fef9ee 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(0,113,187,0.06) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .hero-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--va-blue-lighter);
+      color: var(--va-blue);
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-badge .dot {
+      width: 8px;
+      height: 8px;
+      background: var(--va-green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-size: 3.5rem;
+      line-height: 1.15;
+      color: var(--va-blue);
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero h1 span {
+      color: var(--va-blue-light);
+    }
+
+    .hero-sub {
+      font-size: 1.25rem;
+      color: var(--va-gray-medium);
+      margin-bottom: 2rem;
+      max-width: 520px;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--va-blue);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-body);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,63,114,0.25);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      color: var(--va-blue);
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: 2px solid var(--va-blue);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-body);
+    }
+
+    .btn-secondary:hover {
+      background: var(--va-blue);
+      color: white;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 2rem;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .hero-meta-item {
+      text-align: left;
+    }
+
+    .hero-meta-item .number {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--va-blue);
+    }
+
+    .hero-meta-item .label {
+      font-size: 0.85rem;
+      color: var(--va-gray-medium);
+      margin-top: 0.15rem;
+    }
+
+    /* Hero visual */
+    .hero-visual {
+      position: relative;
+    }
+
+    .hero-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 20px 60px rgba(0,63,114,0.1), 0 1px 3px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    .hero-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--va-gray-lighter);
+    }
+
+    .hero-card-day {
+      background: var(--va-blue);
+      color: white;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .hero-card-title {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--va-gray-dark);
+    }
+
+    .hero-card-week {
+      font-size: 0.8rem;
+      color: var(--va-gray-light);
+    }
+
+    .hero-card-task {
+      background: var(--va-gray-lighter);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero-card-task p {
+      font-size: 0.95rem;
+      color: var(--va-gray-medium);
+      line-height: 1.6;
+    }
+
+    .hero-card-task strong {
+      color: var(--va-gray-dark);
+    }
+
+    .hero-card-time {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--va-gray-light);
+    }
+
+    .hero-card-progress {
+      margin-top: 1.25rem;
+      background: var(--va-gray-lighter);
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .hero-card-progress-fill {
+      height: 100%;
+      width: 23%;
+      background: linear-gradient(90deg, var(--va-blue), var(--va-blue-light));
+      border-radius: 3px;
+      transition: width 1.5s ease;
+    }
+
+    .floating-badge {
+      position: absolute;
+      background: white;
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .floating-badge.top-right {
+      top: -20px;
+      right: -20px;
+      animation-delay: 0.5s;
+    }
+
+    .floating-badge.bottom-left {
+      bottom: -15px;
+      left: -15px;
+      animation-delay: 1.5s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* ====== PROBLEM ====== */
+    .problem {
+      padding: var(--section-padding);
+      background: var(--va-white);
+    }
+
+    .problem-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--va-blue-light);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      color: var(--va-blue);
+      margin-bottom: 1.5rem;
+      line-height: 1.25;
+    }
+
+    .section-desc {
+      font-size: 1.15rem;
+      color: var(--va-gray-medium);
+      line-height: 1.75;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .pain-points {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+      text-align: left;
+    }
+
+    .pain-point {
+      background: var(--va-gray-lighter);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .pain-point .icon {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      background: white;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .pain-point h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--va-gray-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .pain-point p {
+      font-size: 0.9rem;
+      color: var(--va-gray-medium);
+      line-height: 1.55;
+    }
+
+    /* ====== HOW IT WORKS ====== */
+    .how-it-works {
+      padding: var(--section-padding);
+      background: linear-gradient(180deg, var(--va-gray-lighter) 0%, white 100%);
+    }
+
+    .how-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .how-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .step {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .step-number {
+      width: 56px;
+      height: 56px;
+      background: var(--va-blue);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin: 0 auto 1.5rem;
+    }
+
+    .step h3 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      color: var(--va-gray-dark);
+      margin-bottom: 0.75rem;
+    }
+
+    .step p {
+      font-size: 0.95rem;
+      color: var(--va-gray-medium);
+      line-height: 1.65;
+    }
+
+    /* ====== WEEKLY BREAKDOWN ====== */
+    .weeks {
+      padding: var(--section-padding);
+      background: var(--va-white);
+    }
+
+    .weeks-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .weeks-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+
+    .week-card {
+      background: white;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .week-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      border-radius: 4px 0 0 4px;
+    }
+
+    .week-card:nth-child(1)::before { background: var(--va-blue-light); }
+    .week-card:nth-child(2)::before { background: var(--va-green); }
+    .week-card:nth-child(3)::before { background: var(--va-gold); }
+    .week-card:nth-child(4)::before { background: var(--va-red); }
+
+    .week-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+    }
+
+    .week-card-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .week-number {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.3rem 0.75rem;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .week-card:nth-child(1) .week-number { background: #e1f3f8; color: var(--va-blue-light); }
+    .week-card:nth-child(2) .week-number { background: #e7f4e4; color: var(--va-green); }
+    .week-card:nth-child(3) .week-number { background: #fef3cd; color: #946300; }
+    .week-card:nth-child(4) .week-number { background: #f8d7da; color: var(--va-red); }
+
+    .week-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      color: var(--va-gray-dark);
+      margin-bottom: 0.75rem;
+    }
+
+    .week-card > p {
+      font-size: 0.95rem;
+      color: var(--va-gray-medium);
+      line-height: 1.65;
+      margin-bottom: 1.25rem;
+    }
+
+    .week-activities {
+      list-style: none;
+    }
+
+    .week-activities li {
+      font-size: 0.9rem;
+      color: var(--va-gray-medium);
+      padding: 0.4rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .week-activities li::before {
+      content: '\2713';
+      color: var(--va-green);
+      font-weight: 700;
+      margin-top: 1px;
+      flex-shrink: 0;
+    }
+
+    /* ====== WHO IT'S FOR ====== */
+    .audience {
+      padding: var(--section-padding);
+      background: var(--va-blue);
+      color: white;
+    }
+
+    .audience-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .audience-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .audience .section-label {
+      color: var(--va-gold-light);
+    }
+
+    .audience .section-title {
+      color: white;
+    }
+
+    .audience .section-desc {
+      color: rgba(255,255,255,0.75);
+    }
+
+    .persona-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .persona {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
+      padding: 2rem;
+      transition: all 0.3s;
+    }
+
+    .persona:hover {
+      background: rgba(255,255,255,0.12);
+      transform: translateY(-2px);
+    }
+
+    .persona-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .persona h3 {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+
+    .persona p {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.6;
+    }
+
+    /* ====== TESTIMONIALS ====== */
+    .testimonials {
+      padding: var(--section-padding);
+      background: var(--va-gray-lighter);
+    }
+
+    .testimonials-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .testimonials-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .testimonial {
+      background: white;
+      border-radius: 14px;
+      padding: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .testimonial-stars {
+      color: var(--va-gold);
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      letter-spacing: 2px;
+    }
+
+    .testimonial blockquote {
+      font-size: 0.95rem;
+      color: var(--va-gray-medium);
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+      font-style: italic;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .testimonial-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--va-blue-lighter);
+      color: var(--va-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .testimonial-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--va-gray-dark);
+    }
+
+    .testimonial-role {
+      font-size: 0.8rem;
+      color: var(--va-gray-light);
+    }
+
+    /* ====== SAMPLE DAY ====== */
+    .sample {
+      padding: var(--section-padding);
+      background: white;
+    }
+
+    .sample-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .sample-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .sample-card {
+      background: var(--va-gray-lighter);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .sample-card-top {
+      background: var(--va-blue);
+      color: white;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sample-card-top h4 {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+    }
+
+    .sample-card-top .time-badge {
+      background: rgba(255,255,255,0.15);
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .sample-card-body {
+      padding: 2rem;
+    }
+
+    .sample-step {
+      display: flex;
+      gap: 1.25rem;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .sample-step:last-child {
+      border-bottom: none;
+    }
+
+    .sample-step-num {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      background: var(--va-blue);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+
+    .sample-step h5 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--va-gray-dark);
+      margin-bottom: 0.35rem;
+    }
+
+    .sample-step p {
+      font-size: 0.9rem;
+      color: var(--va-gray-medium);
+      line-height: 1.6;
+    }
+
+    /* ====== FAQ ====== */
+    .faq {
+      padding: var(--section-padding);
+      background: var(--va-gray-lighter);
+    }
+
+    .faq-inner {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .faq-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .faq-item {
+      background: white;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 1.25rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--va-gray-dark);
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-body);
+      transition: background 0.2s;
+    }
+
+    .faq-question:hover {
+      background: var(--va-gray-lighter);
+    }
+
+    .faq-question .chevron {
+      transition: transform 0.3s;
+      font-size: 1.25rem;
+      color: var(--va-gray-light);
+    }
+
+    .faq-item.open .faq-question .chevron {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .faq-answer-inner {
+      padding: 0 1.5rem 1.25rem;
+      font-size: 0.95rem;
+      color: var(--va-gray-medium);
+      line-height: 1.7;
+    }
+
+    /* ====== CTA ====== */
+    .cta {
+      padding: var(--section-padding);
+      background: linear-gradient(135deg, var(--va-blue) 0%, #004d8a 100%);
+      color: white;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -25%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .cta::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      right: -15%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255,190,46,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .cta-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta .section-title {
+      color: white;
+      font-size: 2.75rem;
+    }
+
+    .cta .section-desc {
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 2.5rem;
+    }
+
+    .cta .btn-primary {
+      background: white;
+      color: var(--va-blue);
+      font-size: 1.1rem;
+      padding: 1.1rem 2.5rem;
+    }
+
+    .cta .btn-primary:hover {
+      background: var(--va-gold-light);
+      color: var(--va-blue);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    .cta-note {
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* ====== FOOTER ====== */
+    footer {
+      padding: 3rem 2rem;
+      background: var(--va-gray-dark);
+      color: rgba(255,255,255,0.5);
+    }
+
+    .footer-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-logo {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: white;
+      font-size: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    .footer-note {
+      font-size: 0.8rem;
+      width: 100%;
+      text-align: center;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* ====== ANIMATIONS ====== */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ====== RESPONSIVE ====== */
+    @media (max-width: 968px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero-visual {
+        max-width: 500px;
+      }
+
+      .steps {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .week-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .persona-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .testimonial-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-title {
+        font-size: 2rem;
+      }
+
+      .cta .section-title {
+        font-size: 2.25rem;
+      }
+
+      .pain-points {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      :root {
+        --section-padding: 4rem 1.25rem;
+      }
+
+      .hero {
+        padding: 7rem 1.25rem 4rem;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .hero-sub {
+        font-size: 1.1rem;
+      }
+
+      .hero-meta {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn-primary, .btn-secondary {
+        justify-content: center;
+        text-align: center;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-toggle {
+        display: block;
+      }
+
+      .floating-badge {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <div class="logo-icon">5K</div>
+        Couch to 5K for AI
+      </a>
+      <ul class="nav-links">
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#weeks">The program</a></li>
+        <li><a href="#audience">Who it's for</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#signup" class="nav-cta">Start free</a></li>
+      </ul>
+      <button class="mobile-toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav-links').classList.toggle('show')">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          VA UX Edition &mdash; Updated for 2026
+        </div>
+        <h1>Build your AI practice.<br><span>Design better for Veterans.</span></h1>
+        <p class="hero-sub">A free 30-day program for VA UX designers and researchers. Ten minutes a day. Go from curious about AI to using it to ship better Veteran experiences.</p>
+        <div class="hero-actions">
+          <a href="#signup" class="btn-primary">Start the program &rarr;</a>
+          <a href="#how" class="btn-secondary">See how it works</a>
+        </div>
+        <div class="hero-meta">
+          <div class="hero-meta-item">
+            <div class="number">30</div>
+            <div class="label">Days of guided practice</div>
+          </div>
+          <div class="hero-meta-item">
+            <div class="number">&lt;10 min</div>
+            <div class="label">Per day</div>
+          </div>
+          <div class="hero-meta-item">
+            <div class="number">100%</div>
+            <div class="label">Free</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="floating-badge top-right">
+            <span>&#9989;</span> Day 7 complete
+          </div>
+          <div class="floating-badge bottom-left">
+            <span>&#9200;</span> ~8 min today
+          </div>
+          <div class="hero-card-header">
+            <div class="hero-card-day">D8</div>
+            <div>
+              <div class="hero-card-title">Synthesize a research session</div>
+              <div class="hero-card-week">Week 2 &middot; Research &amp; Discovery</div>
+            </div>
+          </div>
+          <div class="hero-card-task">
+            <p><strong>Today's task:</strong> Take notes from a recent Veteran interview and ask Claude to identify the top 3 pain points, group related quotes, and suggest follow-up questions you might have missed.</p>
+          </div>
+          <div class="hero-card-time">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            Estimated: 8 minutes
+          </div>
+          <div class="hero-card-progress">
+            <div class="hero-card-progress-fill"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="problem fade-up">
+    <div class="problem-inner">
+      <div class="section-label">The challenge</div>
+      <h2 class="section-title">You know AI matters. But where do you start?</h2>
+      <p class="section-desc">You're busy shipping forms, running research sessions, and navigating platform reviews. Learning AI feels like one more thing on an already full plate.</p>
+
+      <div class="pain-points">
+        <div class="pain-point">
+          <div class="icon">&#128300;</div>
+          <div>
+            <h4>Overwhelmed by options</h4>
+            <p>ChatGPT, Claude, Copilot, Figma AI... there are too many tools and no clear starting point for VA work.</p>
+          </div>
+        </div>
+        <div class="pain-point">
+          <div class="icon">&#9203;</div>
+          <div>
+            <h4>No time to experiment</h4>
+            <p>Between sprint ceremonies, stakeholder meetings, and platform reviews, carving out learning time feels impossible.</p>
+          </div>
+        </div>
+        <div class="pain-point">
+          <div class="icon">&#128272;</div>
+          <div>
+            <h4>Unsure what's allowed</h4>
+            <p>Privacy, PII, ATO boundaries... you're not sure what you can safely use AI for in the VA context.</p>
+          </div>
+        </div>
+        <div class="pain-point">
+          <div class="icon">&#128161;</div>
+          <div>
+            <h4>Generic advice doesn't fit</h4>
+            <p>Most AI courses teach marketing copy and code generation. None of them know what a Collaboration Cycle is.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works fade-up" id="how">
+    <div class="how-inner">
+      <div class="how-header">
+        <div class="section-label">How it works</div>
+        <h2 class="section-title">Small steps, real skills</h2>
+        <p class="section-desc">Like the running program that inspired it, this builds your AI muscle gradually. Each day is one small, practical task grounded in VA UX work.</p>
+      </div>
+
+      <div class="steps">
+        <div class="step fade-up">
+          <div class="step-number">1</div>
+          <h3>Open today's task</h3>
+          <p>Each morning you get a focused, bite-sized activity designed for VA designers and researchers. No video lectures. No quizzes.</p>
+        </div>
+        <div class="step fade-up">
+          <div class="step-number">2</div>
+          <h3>Do the thing</h3>
+          <p>Follow the prompt. Use it on real work: a research synthesis, a content audit, a design critique, an accessibility review. It takes under 10 minutes.</p>
+        </div>
+        <div class="step fade-up">
+          <div class="step-number">3</div>
+          <h3>Build the habit</h3>
+          <p>By day 30, you won't need the program. You'll have a working AI practice tailored to your role and a library of prompts you actually use.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEEKLY BREAKDOWN -->
+  <section class="weeks fade-up" id="weeks">
+    <div class="weeks-inner">
+      <div class="weeks-header">
+        <div class="section-label">The 30-day program</div>
+        <h2 class="section-title">Four weeks. Four skill levels.</h2>
+        <p class="section-desc">Skills build on each other. By the end, you'll be using AI across every phase of the design process.</p>
+      </div>
+
+      <div class="week-grid">
+        <div class="week-card fade-up">
+          <div class="week-card-header">
+            <span class="week-number">Week 1</span>
+          </div>
+          <h3>Foundations &amp; First Prompts</h3>
+          <p>Get comfortable talking to AI. Learn how prompt structure, context, and specificity change everything.</p>
+          <ul class="week-activities">
+            <li>Write your first prompt using a VA scenario</li>
+            <li>Rewrite a vague prompt into a great one</li>
+            <li>Ask AI to explain a VA form pattern</li>
+            <li>Use AI to draft stakeholder talking points</li>
+            <li>Practice giving AI examples of good output</li>
+          </ul>
+        </div>
+
+        <div class="week-card fade-up">
+          <div class="week-card-header">
+            <span class="week-number">Week 2</span>
+          </div>
+          <h3>Research &amp; Discovery</h3>
+          <p>Put AI to work on the messy middle of research: synthesis, affinity mapping, and finding what you missed.</p>
+          <ul class="week-activities">
+            <li>Synthesize notes from a Veteran interview</li>
+            <li>Generate an affinity map from session quotes</li>
+            <li>Draft a research plan with AI as thought partner</li>
+            <li>Identify gaps in your screener questions</li>
+            <li>Turn findings into a shareable summary</li>
+          </ul>
+        </div>
+
+        <div class="week-card fade-up">
+          <div class="week-card-header">
+            <span class="week-number">Week 3</span>
+          </div>
+          <h3>Design &amp; Iteration</h3>
+          <p>Use AI to accelerate design work: critique flows, audit content, generate alternatives, and stress-test decisions.</p>
+          <ul class="week-activities">
+            <li>Get a design critique from AI using VADS principles</li>
+            <li>Audit a page for plain language compliance</li>
+            <li>Generate three alternative microcopy options</li>
+            <li>Map edge cases for a form flow</li>
+            <li>Create an accessibility review checklist</li>
+          </ul>
+        </div>
+
+        <div class="week-card fade-up">
+          <div class="week-card-header">
+            <span class="week-number">Week 4</span>
+          </div>
+          <h3>Advanced Workflows</h3>
+          <p>Chain techniques together. Build reusable workflows and integrate AI into your daily design process.</p>
+          <ul class="week-activities">
+            <li>Build a reusable prompt template for your team</li>
+            <li>Use AI to prep for a Collaboration Cycle review</li>
+            <li>Draft a product brief with AI as co-author</li>
+            <li>Create a research repository entry from raw notes</li>
+            <li>Design your personal AI workflow toolkit</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO IT'S FOR -->
+  <section class="audience fade-up" id="audience">
+    <div class="audience-inner">
+      <div class="audience-header">
+        <div class="section-label">Who it's for</div>
+        <h2 class="section-title">Built for people who design at the VA</h2>
+        <p class="section-desc">Whether you've never used AI or you've dabbled and dropped off, this program meets you where you are.</p>
+      </div>
+
+      <div class="persona-grid">
+        <div class="persona fade-up">
+          <div class="persona-icon">&#127912;</div>
+          <h3>UX Designers</h3>
+          <p>You're designing forms, flows, and pages on VA.gov. AI can help you iterate faster, write better content, and catch edge cases before staging review.</p>
+        </div>
+        <div class="persona fade-up">
+          <div class="persona-icon">&#128269;</div>
+          <h3>UX Researchers</h3>
+          <p>You're running sessions with Veterans and drowning in notes. AI can help you synthesize faster, spot patterns, and strengthen your research plans.</p>
+        </div>
+        <div class="persona fade-up">
+          <div class="persona-icon">&#128221;</div>
+          <h3>Content Designers</h3>
+          <p>You're writing Veteran-facing content under tight constraints. AI can help you draft, edit for plain language, and check against VA content style guidelines.</p>
+        </div>
+        <div class="persona fade-up">
+          <div class="persona-icon">&#9855;</div>
+          <h3>Accessibility Specialists</h3>
+          <p>You're reviewing components and pages for WCAG compliance. AI can help you generate test cases, write alt text, and audit content structure.</p>
+        </div>
+        <div class="persona fade-up">
+          <div class="persona-icon">&#128640;</div>
+          <h3>Product Managers</h3>
+          <p>You're shipping features for Veterans. AI can help you write briefs, synthesize stakeholder feedback, and prep for Collaboration Cycle touchpoints.</p>
+        </div>
+        <div class="persona fade-up">
+          <div class="persona-icon">&#128736;</div>
+          <h3>Design System Contributors</h3>
+          <p>You're building and maintaining shared patterns. AI can help you write component documentation, review PRs, and generate usage guidelines.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials fade-up">
+    <div class="testimonials-inner">
+      <div class="testimonials-header">
+        <div class="section-label">What people are saying</div>
+        <h2 class="section-title">Small investment, big shift</h2>
+      </div>
+
+      <div class="testimonial-grid">
+        <div class="testimonial fade-up">
+          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <blockquote>"I went from feeling paralyzed by AI options to having a go-to workflow for research synthesis. The VA-specific framing made all the difference."</blockquote>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">JR</div>
+            <div>
+              <div class="testimonial-name">Jamie R.</div>
+              <div class="testimonial-role">UX Researcher, OCTO</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial fade-up">
+          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <blockquote>"Day 14's content audit exercise saved me hours on a staging review. I use that prompt template weekly now."</blockquote>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">ML</div>
+            <div>
+              <div class="testimonial-name">Morgan L.</div>
+              <div class="testimonial-role">UX Designer, Health &amp; Benefits</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial fade-up">
+          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <blockquote>"I was skeptical that 10 minutes a day would matter. By week 3, I was using AI in every sprint without even thinking about it."</blockquote>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">SK</div>
+            <div>
+              <div class="testimonial-name">Sam K.</div>
+              <div class="testimonial-role">Content Designer, Sitewide</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SAMPLE DAY -->
+  <section class="sample fade-up">
+    <div class="sample-inner">
+      <div class="sample-header">
+        <div class="section-label">A peek inside</div>
+        <h2 class="section-title">Here's what a typical day looks like</h2>
+        <p class="section-desc">Each day has a clear task, VA-specific context, and a prompt you can use immediately.</p>
+      </div>
+
+      <div class="sample-card">
+        <div class="sample-card-top">
+          <h4>Day 11 &mdash; Synthesize a research session</h4>
+          <span class="time-badge">~8 min</span>
+        </div>
+        <div class="sample-card-body">
+          <div class="sample-step">
+            <div class="sample-step-num">1</div>
+            <div>
+              <h5>Read the context</h5>
+              <p>A quick paragraph explaining why research synthesis is one of the highest-value uses of AI for VA researchers, and how to handle PII safely.</p>
+            </div>
+          </div>
+          <div class="sample-step">
+            <div class="sample-step-num">2</div>
+            <div>
+              <h5>Copy the prompt</h5>
+              <p>A ready-to-use prompt that asks AI to identify key themes, group related quotes, flag contradictions, and suggest follow-up questions from your session notes.</p>
+            </div>
+          </div>
+          <div class="sample-step">
+            <div class="sample-step-num">3</div>
+            <div>
+              <h5>Try it on your work</h5>
+              <p>Paste in de-identified notes from a recent Veteran interview. Review what AI surfaces. Compare it to your own synthesis. Notice what it caught that you missed.</p>
+            </div>
+          </div>
+          <div class="sample-step">
+            <div class="sample-step-num">4</div>
+            <div>
+              <h5>Reflect and save</h5>
+              <p>One question to consider: "What would change if you had this synthesis 30 minutes after every session?" Save the prompt if it worked for you.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq fade-up" id="faq">
+    <div class="faq-inner">
+      <div class="faq-header">
+        <div class="section-label">FAQ</div>
+        <h2 class="section-title">Questions you might have</h2>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Is this approved for use on VA projects?
+          <span class="chevron">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">This program teaches general AI skills using VA-relevant scenarios. It does not require you to input PII or sensitive VA data. Each exercise includes guidance on what's safe to share with AI tools. Always follow your team's and OCTO's policies on AI tool usage.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Do I need to be technical?
+          <span class="chevron">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Not at all. This program is designed for designers, researchers, and content strategists. No coding required. If you can write a Slack message, you can do this.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Which AI tool should I use?
+          <span class="chevron">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">The exercises work with any major AI assistant: Claude, ChatGPT, or Gemini. We include tips optimized for Claude, but the skills transfer across tools. Use whatever you have access to.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          What if I miss a day?
+          <span class="chevron">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">No worries. The program is self-paced. Each day's exercise stands alone, so you can skip ahead, go back, or take a break. The goal is building a habit, not perfection.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Is this really free?
+          <span class="chevron">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Yes. Completely free, no credit card, no upsell. This was built to help the VA UX community level up together. Share it with your team.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Can I share this with my team?
+          <span class="chevron">&#9660;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Please do. It works great as a team activity. Some teams do it together during a daily standup warmup or as a design team learning sprint. The more people who build these skills, the better our Veteran experiences get.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta" id="signup">
+    <div class="cta-inner">
+      <h2 class="section-title">Ready to start your AI practice?</h2>
+      <p class="section-desc">Join VA designers and researchers who are building AI into their daily workflow. Free. 30 days. Ten minutes a day.</p>
+
+      <form class="signup-form" onsubmit="handleSignup(event)">
+        <div style="display:flex;gap:0.75rem;max-width:480px;margin:0 auto;flex-wrap:wrap;justify-content:center;">
+          <input type="email" placeholder="Your VA email address" required
+            style="flex:1;min-width:240px;padding:1rem 1.25rem;border-radius:8px;border:none;font-size:1rem;font-family:var(--font-body);outline:none;">
+          <button type="submit" class="btn-primary" style="white-space:nowrap;">Start Day 1 &rarr;</button>
+        </div>
+      </form>
+
+      <p class="cta-note">No spam. Unsubscribe anytime. Your email is only used to deliver the daily exercises.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">Couch to 5K for AI &mdash; VA UX Edition</div>
+      <ul class="footer-links">
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#weeks">Program</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <p class="footer-note">Inspired by <a href="https://couchto5k.ai/" style="color:rgba(255,255,255,0.7);text-decoration:underline;">Couch to 5K for AI</a> by Hilary Gridley. Built for the VA UX community.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Nav scroll effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // FAQ toggle
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      const answer = item.querySelector('.faq-answer');
+      const isOpen = item.classList.contains('open');
+
+      document.querySelectorAll('.faq-item.open').forEach(el => {
+        el.classList.remove('open');
+        el.querySelector('.faq-answer').style.maxHeight = '0';
+      });
+
+      if (!isOpen) {
+        item.classList.add('open');
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+      }
+    }
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Signup handler
+    function handleSignup(e) {
+      e.preventDefault();
+      const email = e.target.querySelector('input[type="email"]').value;
+      const btn = e.target.querySelector('button');
+      btn.textContent = 'You\'re in!';
+      btn.style.background = '#2e8540';
+      btn.style.color = 'white';
+      setTimeout(() => {
+        btn.textContent = 'Start Day 1 →';
+        btn.style.background = '';
+        btn.style.color = '';
+      }, 3000);
+    }
+
+    // Animate progress bar on load
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.querySelector('.hero-card-progress-fill').style.width = '27%';
+      }, 500);
+    });
+  </script>
+
+</body>
+</html>

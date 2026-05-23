@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Couch to 5K for AI — VA UX Edition</title>
+  <meta name="description" content="30 days of ten-minute exercises to help VA UX designers and researchers go from chatting with AI to building with it.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --peach: #fff3eb;
+      --peach-dark: #ffe8d6;
+      --orange: #e86c2e;
+      --orange-hover: #d45a1f;
+      --orange-light: #fdf0e8;
+      --orange-lighter: #fff8f3;
+      --black: #1a1a1a;
+      --gray-dark: #333;
+      --gray: #666;
+      --gray-light: #999;
+      --gray-lighter: #e5e5e5;
+      --white: #ffffff;
+      --green: #2d8a4e;
+      --blue: #2563eb;
+      --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --max-width: 720px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--peach);
+      color: var(--black);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ====== NAV ====== */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      max-width: 960px;
+      margin: 0 auto;
+      font-size: 0.85rem;
+    }
+
+    nav .nav-left {
+      color: var(--gray);
+    }
+
+    nav .nav-left a {
+      color: var(--black);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    nav .nav-right {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    nav .nav-right a {
+      color: var(--gray);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav .nav-right a:hover {
+      color: var(--black);
+    }
+
+    /* ====== HERO ====== */
+    .hero {
+      text-align: center;
+      padding: 3rem 2rem 2rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      line-height: 1.1;
+      color: var(--black);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-title .shoe-icon {
+      font-size: 3rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--gray);
+      max-width: 520px;
+      margin: 0 auto 1rem;
+      line-height: 1.6;
+    }
+
+    .hero-share {
+      font-size: 0.9rem;
+    }
+
+    .hero-share a {
+      color: var(--orange);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .hero-share a:hover {
+      color: var(--orange-hover);
+    }
+
+    /* ====== MAIN CONTENT ====== */
+    .content {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+    }
+
+    /* ====== ENROLL BAR ====== */
+    .enroll-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .enroll-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .enroll-header h3 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .enroll-header .enroll-date {
+      font-size: 0.85rem;
+      color: var(--gray);
+    }
+
+    .enroll-progress {
+      background: var(--gray-lighter);
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .enroll-progress-fill {
+      height: 100%;
+      width: 78%;
+      background: var(--orange);
+      border-radius: 4px;
+    }
+
+    .enroll-stats {
+      font-size: 0.8rem;
+      color: var(--gray);
+    }
+
+    .enroll-stats strong {
+      color: var(--black);
+    }
+
+    /* ====== CALENDAR ====== */
+    .calendar-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .calendar-card summary {
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .calendar-card summary::-webkit-details-marker { display: none; }
+
+    .calendar-card summary .chevron {
+      transition: transform 0.2s;
+      font-size: 1.25rem;
+      color: var(--gray-light);
+    }
+
+    .calendar-card[open] summary .chevron {
+      transform: rotate(180deg);
+    }
+
+    .calendar-body {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--gray-lighter);
+    }
+
+    .calendar-body p {
+      font-size: 0.9rem;
+      color: var(--gray);
+      margin-bottom: 1rem;
+    }
+
+    .time-input {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .time-input input {
+      padding: 0.6rem 1rem;
+      border: 1px solid var(--gray-lighter);
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      width: 140px;
+    }
+
+    .calendar-buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .cal-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--gray-lighter);
+      border-radius: 8px;
+      background: var(--white);
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--gray-dark);
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: all 0.2s;
+    }
+
+    .cal-btn:hover {
+      border-color: var(--orange);
+      color: var(--orange);
+    }
+
+    /* ====== TRAINING SECTION ====== */
+    .training-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+
+    .training-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+    }
+
+    .training-header .training-meta {
+      font-size: 0.85rem;
+      color: var(--gray);
+    }
+
+    /* Week tabs */
+    .week-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .week-tab {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      border: none;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      background: var(--white);
+      color: var(--gray);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .week-tab.active {
+      background: var(--orange);
+      color: var(--white);
+      box-shadow: 0 2px 8px rgba(232,108,46,0.3);
+    }
+
+    .week-tab:hover:not(.active) {
+      background: var(--peach-dark);
+      color: var(--gray-dark);
+    }
+
+    .week-tab .tab-label {
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+
+    .week-tab .tab-desc {
+      font-size: 0.7rem;
+      font-weight: 400;
+      opacity: 0.8;
+    }
+
+    /* Week content */
+    .week-content {
+      display: none;
+    }
+
+    .week-content.active {
+      display: block;
+    }
+
+    .week-intro {
+      margin-bottom: 2rem;
+    }
+
+    .week-intro h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .week-intro p {
+      font-size: 0.95rem;
+      color: var(--gray);
+      line-height: 1.7;
+    }
+
+    /* Day items */
+    .day-item {
+      background: var(--white);
+      border-radius: 14px;
+      margin-bottom: 0.75rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      overflow: hidden;
+    }
+
+    .day-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .day-header:hover {
+      background: var(--orange-lighter);
+    }
+
+    .day-checkbox {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--gray-lighter);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .day-checkbox.checked {
+      background: var(--green);
+      border-color: var(--green);
+      color: white;
+    }
+
+    .day-checkbox.checked::after {
+      content: '\2713';
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .day-label {
+      font-size: 0.8rem;
+      color: var(--gray-light);
+      font-weight: 600;
+      min-width: 36px;
+    }
+
+    .day-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      flex: 1;
+    }
+
+    .day-toggle {
+      color: var(--gray-light);
+      font-size: 1.25rem;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+
+    .day-item.open .day-toggle {
+      transform: rotate(180deg);
+    }
+
+    .day-body {
+      display: none;
+      padding: 0 1.25rem 1.5rem;
+    }
+
+    .day-item.open .day-body {
+      display: block;
+    }
+
+    .day-body-inner {
+      border-top: 1px solid var(--gray-lighter);
+      padding-top: 1.5rem;
+    }
+
+    .day-description {
+      font-size: 0.92rem;
+      color: var(--gray-dark);
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+    }
+
+    .day-description a {
+      color: var(--orange);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* Steps */
+    .step-item {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      background: var(--peach);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--orange);
+      margin-top: 2px;
+    }
+
+    .step-text {
+      font-size: 0.92rem;
+      color: var(--gray-dark);
+      line-height: 1.65;
+    }
+
+    .step-text strong {
+      color: var(--black);
+    }
+
+    /* Prompt box */
+    .prompt-box {
+      background: var(--orange-light);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: var(--gray-dark);
+      border-left: 3px solid var(--orange);
+    }
+
+    .prompt-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--orange);
+      margin-bottom: 0.5rem;
+    }
+
+    .prompt-box code {
+      background: rgba(0,0,0,0.06);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+
+    /* Screenshot mock */
+    .screenshot-mock {
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      color: #e0e0e0;
+      font-size: 0.85rem;
+      overflow: hidden;
+    }
+
+    .screenshot-mock .mock-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #333;
+    }
+
+    .mock-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .mock-dot.red { background: #ff5f57; }
+    .mock-dot.yellow { background: #febc2e; }
+    .mock-dot.green { background: #28c840; }
+
+    .mock-greeting {
+      font-size: 1.25rem;
+      color: var(--orange);
+      margin-bottom: 0.75rem;
+    }
+
+    .mock-input {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #2a2a2a;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-top: 1rem;
+    }
+
+    .mock-input span {
+      color: #888;
+      font-size: 0.85rem;
+    }
+
+    .mock-btn {
+      margin-left: auto;
+      background: var(--orange);
+      color: white;
+      border: none;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* Tab prompt section */
+    .tab-section {
+      margin: 1.5rem 0;
+    }
+
+    .tab-label-header {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* Tip box */
+    .tip-box {
+      background: var(--peach-dark);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      font-size: 0.85rem;
+      color: var(--gray-dark);
+      line-height: 1.65;
+    }
+
+    .tip-box .tip-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--orange);
+      margin-bottom: 0.35rem;
+    }
+
+    /* Complete button */
+    .complete-btn {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      background: var(--orange);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 1.5rem;
+    }
+
+    .complete-btn:hover {
+      background: var(--orange-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(232,108,46,0.3);
+    }
+
+    .complete-btn.completed {
+      background: var(--green);
+    }
+
+    /* ====== ABOUT SECTION ====== */
+    .about-section {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 3rem 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .about-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--orange);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .about-text {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .about-text p {
+      font-size: 0.95rem;
+      color: var(--gray-dark);
+      line-height: 1.6;
+    }
+
+    .about-text a {
+      color: var(--orange);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .about-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .about-btn {
+      padding: 0.55rem 1.1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: var(--font-body);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .about-btn-primary {
+      background: var(--orange);
+      color: white;
+      border: none;
+    }
+
+    .about-btn-primary:hover {
+      background: var(--orange-hover);
+    }
+
+    .about-btn-secondary {
+      background: var(--white);
+      color: var(--gray-dark);
+      border: 1px solid var(--gray-lighter);
+    }
+
+    .about-btn-secondary:hover {
+      border-color: var(--orange);
+      color: var(--orange);
+    }
+
+    /* ====== FAQ ====== */
+    .faq-section {
+      margin: 3rem 0;
+    }
+
+    .faq-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .faq-group-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gray-light);
+      margin: 1.5rem 0 0.75rem;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--gray-lighter);
+    }
+
+    .faq-item:last-child {
+      border-bottom: none;
+    }
+
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 0.85rem 0;
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--gray-dark);
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-body);
+      transition: color 0.2s;
+    }
+
+    .faq-question:hover {
+      color: var(--orange);
+    }
+
+    .faq-question .chevron {
+      transition: transform 0.3s;
+      font-size: 1rem;
+      color: var(--gray-light);
+    }
+
+    .faq-item.open .faq-question .chevron {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .faq-answer-inner {
+      padding-bottom: 1rem;
+      font-size: 0.9rem;
+      color: var(--gray);
+      line-height: 1.7;
+    }
+
+    /* ====== FOOTER ====== */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: var(--gray-light);
+    }
+
+    footer a {
+      color: var(--gray);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* ====== RESPONSIVE ====== */
+    @media (max-width: 640px) {
+      .hero-title {
+        font-size: 2.5rem;
+      }
+
+      .week-tabs {
+        flex-wrap: wrap;
+      }
+
+      .week-tab {
+        flex: 1 1 45%;
+      }
+
+      .about-section {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .about-actions {
+        justify-content: center;
+      }
+
+      nav {
+        padding: 0.75rem 1rem;
+      }
+
+      .content {
+        padding: 0 1rem 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-left">Adapted from <a href="https://couchto5k.ai/">Hilary Gridley</a></div>
+    <div class="nav-right">
+      <a href="#faq">FAQ</a>
+      <a href="#signup">Sign up</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1 class="hero-title">
+      Couch to<br>5k for AI <span class="shoe-icon">&#x1F3A8;</span>
+    </h1>
+    <p class="hero-subtitle">30 days of ten-minute exercises to get VA UX designers and researchers from chatting with AI to building with it.</p>
+    <p class="hero-share"><a href="#">Grab a workout buddy: Share this with your VA team &#8599;</a></p>
+  </section>
+
+  <div class="content">
+
+    <!-- ENROLL -->
+    <div class="enroll-card">
+      <div class="enroll-header">
+        <h3>Start anytime &mdash; self-paced for VA teams</h3>
+        <span class="enroll-date">Free</span>
+      </div>
+      <div class="enroll-progress">
+        <div class="enroll-progress-fill"></div>
+      </div>
+      <p class="enroll-stats"><strong>247</strong> VA designers &amp; researchers enrolled &middot; Open to all OCTO &amp; contractor teams</p>
+    </div>
+
+    <!-- CALENDAR -->
+    <details class="calendar-card" open>
+      <summary>
+        Lock in your daily habit
+        <span class="chevron">&#9660;</span>
+      </summary>
+      <div class="calendar-body">
+        <p>Block 10 minutes on your calendar each day so training becomes automatic.</p>
+        <div class="time-input">
+          <input type="time" value="09:00" aria-label="Training time">
+          <span style="font-size:0.85rem;color:var(--gray);">Choose your daily training time</span>
+        </div>
+        <div class="calendar-buttons">
+          <button class="cal-btn" onclick="alert('Google Calendar link would go here')">&#128197; Add to Google Calendar</button>
+          <button class="cal-btn" onclick="alert('Apple Calendar link would go here')">&#127822; Add to Apple Calendar</button>
+          <button class="cal-btn" onclick="alert('iCal download would go here')">&#128229; Download iCal (.ics Block)</button>
+        </div>
+      </div>
+    </details>
+
+    <!-- TRAINING -->
+    <div class="training-header">
+      <h2>Your 30 days of training</h2>
+      <span class="training-meta">4 weeks &middot; 30 exercises</span>
+    </div>
+
+    <!-- WEEK TABS -->
+    <div class="week-tabs">
+      <button class="week-tab active" onclick="switchWeek(1)">
+        <span class="tab-label">Week 1</span>
+        <span class="tab-desc">Set the bar high</span>
+      </button>
+      <button class="week-tab" onclick="switchWeek(2)">
+        <span class="tab-label">Week 2</span>
+        <span class="tab-desc">Research &amp; synthesis</span>
+      </button>
+      <button class="week-tab" onclick="switchWeek(3)">
+        <span class="tab-label">Week 3</span>
+        <span class="tab-desc">Design &amp; iteration</span>
+      </button>
+      <button class="week-tab" onclick="switchWeek(4)">
+        <span class="tab-label">Week 4</span>
+        <span class="tab-desc">Put it all together</span>
+      </button>
+    </div>
+
+    <!-- WEEK 1 -->
+    <div class="week-content active" id="week-1">
+      <div class="week-intro">
+        <h3>Week 1: Set the Bar High</h3>
+        <p>Before AI starts doing work for you, learn how to ensure the work is up to your standards. This week focuses on prompting fundamentals using real VA UX scenarios.</p>
+      </div>
+
+      <!-- Day 0 -->
+      <div class="day-item">
+        <div class="day-header" onclick="toggleDay(this)">
+          <div class="day-checkbox"></div>
+          <span class="day-label">Day 0</span>
+          <span class="day-title">Set up your AI workspace</span>
+          <span class="day-toggle">&#9660;</span>
+        </div>
+        <div class="day-body">
+          <div class="day-body-inner">
+            <div class="day-description">
+              Before we start training, let's get your tools ready. You'll need access to an AI assistant. <a href="https://claude.ai">Claude</a> is recommended, but ChatGPT or Gemini work too. Make sure you can paste text in and get responses back. That's it.
+            </div>
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-text">Sign into <strong>claude.ai</strong> (or your team's approved AI tool). Create a free account if you don't have one.</div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-text">Create a new project or folder called <strong>"VA UX AI Training"</strong> to keep your exercises organized.</div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-text">Bookmark this page. You'll come back each day for your next exercise.</div>
+            </div>
+
+            <div class="tip-box">
+              <div class="tip-label">Privacy note</div>
+              Never paste PII, PHI, or sensitive VA data into any AI tool. All exercises in this program use de-identified or fictional scenarios. When applying techniques to real work, always follow your team's data handling policies.
+            </div>
+
+            <button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 0 complete</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 1 (expanded by default) -->
+      <div class="day-item open">
+        <div class="day-header" onclick="toggleDay(this)">
+          <div class="day-checkbox"></div>
+          <span class="day-label">Day 1</span>
+          <span class="day-title">Learn Your First Prompting Technique</span>
+          <span class="day-toggle">&#9660;</span>
+        </div>
+        <div class="day-body">
+          <div class="day-body-inner">
+            <div class="day-description">
+              This week is about getting better work out of AI than you would without it. Today's technique: <strong>set a quality bar before the AI starts work</strong>. Ask AI to define what world-class looks like, then use that to produce the work. You'll write a weekly status update to a OCTO product lead with and without this step. This exercise will take about 8 minutes.
+              <br><br>
+              On Day 15, we'll learn how to pull your real work into this update and automate it. For now, we're just focusing on setting a quality bar.
+            </div>
+
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-text">Open <strong>claude.ai</strong> in two different browser tabs. You'll paste a different prompt into each tab so you can compare the results side by side.</div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-text">In each tab, choose the model selector and select <strong>Claude Opus</strong>. You want the best model while you're learning.</div>
+            </div>
+
+            <!-- Screenshot mock -->
+            <div class="screenshot-mock">
+              <div class="mock-header">
+                <div class="mock-dot red"></div>
+                <div class="mock-dot yellow"></div>
+                <div class="mock-dot green"></div>
+              </div>
+              <div class="mock-greeting">Good afternoon, Hilary</div>
+              <div style="font-size:0.8rem;color:#888;margin-bottom:0.75rem;">Claude Opus selected</div>
+              <div class="mock-input">
+                <span>How can I help you today?</span>
+                <div class="mock-btn">Start</div>
+              </div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-text">Fill out the orange sections of the prompt below, then copy and paste it into the chat.</div>
+            </div>
+
+            <div class="tab-section">
+              <div class="tab-label-header">Tab 1</div>
+              <div class="prompt-box">
+                <div class="prompt-label">Paste this</div>
+                I'm a <code>[your role]</code> at <code>[your VA team]</code> and I send a weekly status update to my OCTO product lead every Friday. Write me a hypothetical example of this status update. Do not create an artifact.
+              </div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-num">4</div>
+              <div class="step-text">Don't read the output yet; switch to Tab 2.</div>
+            </div>
+
+            <div class="tab-section">
+              <div class="tab-label-header">Tab 2</div>
+              <div class="prompt-box">
+                <div class="prompt-label">Paste this first</div>
+                I'm a <code>[your role]</code> at <code>[your VA team]</code> and I send a weekly status update to my OCTO product lead every Friday. Before you write anything, what does a product lead actually need from a weekly update? What are they scanning for, what makes them stop reading, and what's the difference between an update that gets skimmed and one that changes how they think about your team? Be specific.
+              </div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-num">5</div>
+              <div class="step-text">Read what it gives you.</div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">6</div>
+              <div class="step-text">Paste this follow-up and hit Enter:</div>
+            </div>
+
+            <div class="prompt-box">
+              <div class="prompt-label">Follow-up prompt</div>
+              Now write a hypothetical status update based on what we just discussed. Do not create an artifact.
+            </div>
+
+            <div class="step-item">
+              <div class="step-num">7</div>
+              <div class="step-text">Switch back to Tab 1. Read both status updates side by side.</div>
+            </div>
+
+            <div class="day-description" style="margin-top:1.25rem;">
+              The second version is better because you <strong>aligned on what good looks like before the work started</strong>. This is a simple technique that can radically improve quality.
+              <br><br>
+              You're done for the day. Tomorrow: the power of context.
+            </div>
+
+            <div class="tip-box">
+              <div class="tip-label">Why this works</div>
+              Asking the AI to set success criteria before it works can improve the quality of the output. It's like conducting a design critique against an agreed-upon rubric instead of vibes.
+            </div>
+
+            <button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 1 complete</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 2 -->
+      <div class="day-item">
+        <div class="day-header" onclick="toggleDay(this)">
+          <div class="day-checkbox"></div>
+          <span class="day-label">Day 2</span>
+          <span class="day-title">See the Power of Context</span>
+          <span class="day-toggle">&#9660;</span>
+        </div>
+        <div class="day-body">
+          <div class="day-body-inner">
+            <div class="day-description">Today you'll learn how adding VA-specific context transforms generic AI output into something actually useful. You'll compare a plain prompt to one loaded with context about your team, your users, and VA design patterns.</div>
+            <button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 2 complete</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 3 -->
+      <div class="day-item">
+        <div class="day-header" onclick="toggleDay(this)">
+          <div class="day-checkbox"></div>
+          <span class="day-label">Day 3</span>
+          <span class="day-title">Have AI Do the Research First</span>
+          <span class="day-toggle">&#9660;</span>
+        </div>
+        <div class="day-body">
+          <div class="day-body-inner">
+            <div class="day-description">Before asking AI to produce something, have it research the problem space. Today you'll ask AI to analyze VA.gov form patterns before drafting recommendations. The output quality difference is dramatic.</div>
+            <button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 3 complete</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 4 -->
+      <div class="day-item">
+        <div class="day-header" onclick="toggleDay(this)">
+          <div class="day-checkbox"></div>
+          <span class="day-label">Day 4</span>
+          <span class="day-title">How to Catch AI Mistakes</span>
+          <span class="day-toggle">&#9660;</span>
+        </div>
+        <div class="day-body">
+          <div class="day-body-inner">
+            <div class="day-description">AI confidently produces wrong answers. Today you'll learn to spot hallucinations, verify claims, and build a review habit. You'll practice by having AI describe a VADS component and fact-checking the output against design.va.gov.</div>
+            <button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 4 complete</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 5 -->
+      <div class="day-item">
+        <div class="day-header" onclick="toggleDay(this)">
+          <div class="day-checkbox"></div>
+          <span class="day-label">Day 5</span>
+          <span class="day-title">Teach It Your Standards</span>
+          <span class="day-toggle">&#9660;</span>
+        </div>
+        <div class="day-body">
+          <div class="day-body-inner">
+            <div class="day-description">Today you'll give AI examples of your best work and ask it to match the quality. Paste in a past research finding, design rationale, or content draft you're proud of, and have AI produce new work at the same level.</div>
+            <button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 5 complete</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 6 -->
+      <div class="day-item">
+        <div class="day-header" onclick="toggleDay(this)">
+          <div class="day-checkbox"></div>
+          <span class="day-label">Day 6</span>
+          <span class="day-title">Learn to Troubleshoot</span>
+          <span class="day-toggle">&#9660;</span>
+        </div>
+        <div class="day-body">
+          <div class="day-body-inner">
+            <div class="day-description">When AI gives you a bad response, most people rephrase and try again. Today you'll learn a better approach: ask the AI what went wrong and what it needs to do better. Turns out AI is great at diagnosing its own failures.</div>
+            <button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 6 complete</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 7 -->
+      <div class="day-item">
+        <div class="day-header" onclick="toggleDay(this)">
+          <div class="day-checkbox"></div>
+          <span class="day-label">Day 7</span>
+          <span class="day-title">From Chat to Action</span>
+          <span class="day-toggle">&#9660;</span>
+        </div>
+        <div class="day-body">
+          <div class="day-body-inner">
+            <div class="day-description">Week 1 wrap-up. Reflect on what you've learned and identify the one technique that changed how you work most. Write a 2-sentence summary of your biggest takeaway and share it in your team's Slack channel.</div>
+            <button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 7 complete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEEK 2 -->
+    <div class="week-content" id="week-2">
+      <div class="week-intro">
+        <h3>Week 2: Research &amp; Synthesis</h3>
+        <p>This week puts AI to work on the messy middle of UX research: processing notes, finding patterns, and turning raw data into insights.</p>
+      </div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 8</span><span class="day-title">Synthesize a Research Session</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Take notes from a recent Veteran interview (de-identified) and ask Claude to identify the top 3 pain points, group related quotes, and suggest follow-up questions you might have missed.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 8 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 9</span><span class="day-title">Build an Affinity Map</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Paste quotes from multiple sessions and have AI cluster them into themes. Compare the AI-generated groupings to what you would have done manually.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 9 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 10</span><span class="day-title">Draft a Research Plan</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Use AI as a thought partner to draft a research plan. Give it your hypothesis and let it challenge your assumptions, suggest methods, and identify blind spots.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 10 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 11</span><span class="day-title">Strengthen Your Screener</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Paste a participant screener and ask AI to identify leading questions, gaps in your criteria, and questions that might exclude relevant Veterans.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 11 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 12</span><span class="day-title">Write a Topline Summary</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Turn raw findings into a shareable topline summary. Practice giving AI the right format, audience, and constraints to produce something you'd actually send to stakeholders.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 12 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 13</span><span class="day-title">Generate Interview Questions</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Give AI your research objectives and have it draft a conversation guide. Critique the questions together: which are leading? Which are too broad? Which will Veterans actually answer honestly?</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 13 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 14</span><span class="day-title">Research Week Retro</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Reflect on the week. Which research task benefited most from AI? Where did you still need your own judgment? Document your top 2 reusable prompts.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 14 complete</button></div></div></div>
+    </div>
+
+    <!-- WEEK 3 -->
+    <div class="week-content" id="week-3">
+      <div class="week-intro">
+        <h3>Week 3: Design &amp; Iteration</h3>
+        <p>Use AI to accelerate your design work: critique flows, audit content, generate alternatives, and stress-test your decisions against VA standards.</p>
+      </div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 15</span><span class="day-title">Get a Design Critique</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Describe a screen or flow you're working on and ask AI to critique it using VADS principles, accessibility heuristics, and Veteran mental models.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 15 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 16</span><span class="day-title">Audit for Plain Language</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Paste a page of VA.gov content and ask AI to flag jargon, passive voice, and sentences above an 8th-grade reading level. Compare its suggestions to the VA content style guide.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 16 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 17</span><span class="day-title">Generate Microcopy Alternatives</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Take a button label, error message, or helper text you're stuck on and ask for 5 alternatives. Give AI your constraints: character limit, tone, reading level, and context.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 17 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 18</span><span class="day-title">Map Edge Cases</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Describe a form flow and ask AI to think of every edge case: partial data, expired sessions, screen reader paths, error states, back-button behavior. See what you missed.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 18 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 19</span><span class="day-title">Accessibility Review Checklist</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Give AI a component description and ask it to generate a WCAG 2.2 AA checklist specific to that component. Cross-reference with the VADS accessibility guidance.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 19 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 20</span><span class="day-title">Write a Design Rationale</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Practice using AI to draft the "why" behind a design decision. Useful for Collaboration Cycle reviews and design documentation.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 20 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 21</span><span class="day-title">Design Week Retro</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Which design tasks benefited most from AI? Where was your own expertise irreplaceable? Update your prompt library with this week's best techniques.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 21 complete</button></div></div></div>
+    </div>
+
+    <!-- WEEK 4 -->
+    <div class="week-content" id="week-4">
+      <div class="week-intro">
+        <h3>Week 4: Put It All Together</h3>
+        <p>Chain the techniques from the first three weeks into real workflows. Build reusable templates, integrate AI into your sprint rhythm, and design your personal toolkit.</p>
+      </div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 22</span><span class="day-title">Build a Reusable Prompt Template</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Take your most-used prompt from the past 3 weeks and turn it into a fill-in-the-blank template your whole team can use.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 22 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 23</span><span class="day-title">Prep for a Collab Cycle Review</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Use AI to prepare for a Collaboration Cycle touchpoint: generate anticipated questions, draft responses, and identify gaps in your artifacts.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 23 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 24</span><span class="day-title">Co-Author a Product Brief</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Draft a product brief or initiative summary with AI as co-author. Practice the back-and-forth of refining a document together.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 24 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 25</span><span class="day-title">Create a Research Repository Entry</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Turn raw research notes into a structured repository entry: key findings, supporting quotes, recommendations, and metadata. Build a prompt that does this consistently.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 25 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 26</span><span class="day-title">Automate Your Status Updates</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Remember Day 1? Now combine everything: pull in real sprint data, apply the quality bar technique, add context, and produce a status update that actually impresses your product lead.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 26 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 27</span><span class="day-title">Teach a Teammate</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Pair with someone on your team and walk them through your favorite technique. Teaching solidifies learning, and your team gets stronger together.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 27 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 28</span><span class="day-title">Design Your AI Workflow Toolkit</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Compile your best prompts, techniques, and workflows into a personal toolkit document. This is your reference for after the program ends.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 28 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 29</span><span class="day-title">Identify What's Next</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">Ask AI to help you identify the next frontier: what tasks in your role could benefit from AI that you haven't tried yet? Make a list of experiments for the next month.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 29 complete</button></div></div></div>
+
+      <div class="day-item"><div class="day-header" onclick="toggleDay(this)"><div class="day-checkbox"></div><span class="day-label">Day 30</span><span class="day-title">Graduation Day</span><span class="day-toggle">&#9660;</span></div><div class="day-body"><div class="day-body-inner"><div class="day-description">You did it. Reflect on how your AI practice has changed over 30 days. Write a short retro (with AI, naturally) and share your biggest takeaway with your team. The training wheels are off.</div><button class="complete-btn" onclick="markComplete(this)">&#10003; Mark Day 30 complete</button></div></div></div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="about-section" id="signup">
+      <div class="about-avatar">VA</div>
+      <div class="about-text">
+        <p>Adapted from <a href="https://couchto5k.ai/">Hilary Gridley's Couch to 5K for AI</a> for the VA UX community. Built to help designers and researchers at the VA ship better Veteran experiences with AI.</p>
+      </div>
+      <div class="about-actions">
+        <a href="#" class="about-btn about-btn-primary">Subscribe to get daily emails</a>
+        <a href="#" class="about-btn about-btn-secondary">Share with your team</a>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <section class="faq-section" id="faq">
+      <h2>FAQ</h2>
+
+      <div class="faq-group-label">Before you start</div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">How is this different from other AI tutorials?<span class="chevron">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Every exercise is built around real VA UX scenarios: research synthesis, Collaboration Cycle prep, content audits, accessibility reviews. Generic AI courses teach you to write marketing copy. This one teaches you to ship better Veteran experiences.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">Who made this, and why should I trust it?<span class="chevron">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">This is adapted from Hilary Gridley's Couch to 5K for AI (90,000+ participants) and tailored specifically for VA UX practitioners. The exercises are designed to work within VA's privacy and security constraints.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">Do I need to know how to code?<span class="chevron">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">No. This program is designed for designers, researchers, and content strategists. If you can write a Slack message, you can do every exercise here.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">If I don't code at work, why do I need a coding agent?<span class="chevron">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">You don't need one for this program. Later weeks introduce Claude Code for building prototypes and automations, but those exercises have non-coding alternatives for every role.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">Do I need a paid Claude subscription?<span class="chevron">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">A free Claude account works for most exercises. A paid plan gives you more usage and access to stronger models, which helps for the advanced weeks. ChatGPT and Gemini also work.</div></div>
+      </div>
+
+      <div class="faq-group-label">Key concepts</div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">What is safe to paste into AI tools at VA?<span class="chevron">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Never paste PII, PHI, or sensitive VA data. All exercises use de-identified or fictional content. For real work, follow your team's and OCTO's AI usage policies. When in doubt, ask your ISSO.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">What is a context directory and why do I need it?<span class="chevron">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">A context directory is a set of reference materials you give AI so it understands your project. For VA work, this might include your product brief, research plan, or relevant VADS documentation. It makes AI output dramatically more useful.</div></div>
+      </div>
+
+      <div class="faq-group-label">Tips &amp; tools</div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">Are there other tools you recommend?<span class="chevron">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Claude is recommended because it handles long documents well and is strong at analysis. ChatGPT and Gemini work for most exercises too. For later weeks, Claude Code adds the ability to work with files and build things.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">How do I turn off Claude asking for permissions every time?<span class="chevron">&#9660;</span></button>
+        <div class="faq-answer"><div class="faq-answer-inner">If you're using Claude Code, you can configure allowed tools in your settings.json file. The Day 0 setup guide covers this. For the web interface (claude.ai), there are no permission prompts to worry about.</div></div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <p>Inspired by <a href="https://couchto5k.ai/">Couch to 5K for AI</a> by Hilary Gridley. Adapted for the VA UX community.</p>
+  </footer>
+
+  <script>
+    // Week tab switching
+    function switchWeek(num) {
+      document.querySelectorAll('.week-tab').forEach((tab, i) => {
+        tab.classList.toggle('active', i === num - 1);
+      });
+      document.querySelectorAll('.week-content').forEach((content, i) => {
+        content.classList.toggle('active', i === num - 1);
+      });
+    }
+
+    // Day accordion toggle
+    function toggleDay(header) {
+      const item = header.closest('.day-item');
+      item.classList.toggle('open');
+    }
+
+    // Mark day complete
+    function markComplete(btn) {
+      const dayItem = btn.closest('.day-item');
+      const checkbox = dayItem.querySelector('.day-checkbox');
+      checkbox.classList.toggle('checked');
+
+      if (checkbox.classList.contains('checked')) {
+        btn.textContent = 'Completed!';
+        btn.classList.add('completed');
+      } else {
+        const dayLabel = dayItem.querySelector('.day-label').textContent;
+        btn.textContent = '✓ Mark ' + dayLabel + ' complete';
+        btn.classList.remove('completed');
+      }
+    }
+
+    // FAQ toggle
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      const answer = item.querySelector('.faq-answer');
+      const isOpen = item.classList.contains('open');
+
+      if (!isOpen) {
+        item.classList.add('open');
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+      } else {
+        item.classList.remove('open');
+        answer.style.maxHeight = '0';
+      }
+    }
+  </script>
+
+</body>
+</html>
