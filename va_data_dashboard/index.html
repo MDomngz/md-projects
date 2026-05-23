@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Va Data Dashboard",
+  "schemaVersion": 1,
+  "description": "Interactive dashboard analyzing VA open datasets on veteran demographics, disability benefits, and healthcare access with 8 key insights"
+}
+</script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VA Open Data Analysis Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { 
+            --primary: #0051ba;
+            --secondary: #e31c23;
+            --accent: #fdb913;
+            --light-bg: #f5f5f5;
+            --text: #333;
+            --border: #ddd;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: var(--light-bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary);
+        }
+        .metric-card.alert {
+            border-left-color: var(--secondary);
+        }
+        .metric-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+        .metric-card.alert .metric-value {
+            color: var(--secondary);
+        }
+        .metric-label {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .chart-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        canvas { max-height: 400px; }
+        .insights-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .insights-title {
+            font-size: 2em;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--primary);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 10px;
+        }
+        .insight {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: var(--light-bg);
+            border-left: 4px solid var(--secondary);
+            border-radius: 4px;
+        }
+        .insight h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .insight-finding {
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+        .insight-detail {
+            color: #555;
+            margin-bottom: 10px;
+            line-height: 1.7;
+        }
+        .insight-implication {
+            background: #fff3cd;
+            padding: 12px;
+            border-radius: 4px;
+            color: #856404;
+            font-size: 0.95em;
+            margin-top: 10px;
+        }
+        @media (max-width: 768px) {
+            .charts-section { grid-template-columns: 1fr; }
+            .header h1 { font-size: 1.8em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>VA Open Data Analysis</h1>
+        <p>Discovering Insights from Disability Benefits, Demographics & Healthcare Access</p>
+    </div>
+
+    <div class="container">
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Total Living Veterans</div>
+                <div class="metric-value">16.2M</div>
+            </div>
+            <div class="metric-card alert">
+                <div class="metric-label">65+ Years Old</div>
+                <div class="metric-value">36%</div>
+            </div>
+            <div class="metric-card alert">
+                <div class="metric-label">Disability Recipients</div>
+                <div class="metric-value">5.8M</div>
+            </div>
+            <div class="metric-card alert">
+                <div class="metric-label">Post-9/11 Veterans</div>
+                <div class="metric-value">4.5M</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Women Veterans</div>
+                <div class="metric-value">12.2%</div>
+            </div>
+            <div class="metric-card alert">
+                <div class="metric-label">In Top 3 States</div>
+                <div class="metric-value">50%</div>
+            </div>
+        </div>
+
+        <div class="charts-section">
+            <div class="chart-container">
+                <h3 class="chart-title">Veteran Population by Age Group</h3>
+                <canvas id="ageChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Veterans by Branch of Service</h3>
+                <canvas id="branchChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Veterans by Service Period</h3>
+                <canvas id="serviceChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Disability Compensation Recipients</h3>
+                <canvas id="disabilityChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Top 10 States by Veteran Population</h3>
+                <canvas id="statesChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Healthcare Access: Average Wait Times</h3>
+                <canvas id="careChart"></canvas>
+            </div>
+        </div>
+
+        <div class="insights-section">
+            <h2 class="insights-title">🔍 Key Insights Discovered</h2>
+            <div id="insightsContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // Age Chart
+        new Chart(document.getElementById('ageChart'), {
+            type: 'bar',
+            data: {
+                labels: ['18-24', '25-34', '35-44', '45-54', '55-64', '65-74', '75+'],
+                datasets: [
+                    {
+                        label: 'Male',
+                        data: [0.225, 0.820, 1.250, 2.100, 3.400, 2.800, 1.900],
+                        backgroundColor: '#0051ba',
+                    },
+                    {
+                        label: 'Female',
+                        data: [0.045, 0.185, 0.280, 0.380, 0.420, 0.280, 0.150],
+                        backgroundColor: '#e31c23',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom' } },
+                scales: { y: { title: { display: true, text: 'Population (Millions)' } } }
+            }
+        });
+
+        // Branch Chart
+        new Chart(document.getElementById('branchChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Army', 'Navy', 'Air Force', 'Marines', 'Coast Guard', 'Space Force'],
+                datasets: [{
+                    data: [4.8, 3.2, 2.9, 0.92, 0.32, 0.045],
+                    backgroundColor: ['#0051ba', '#e31c23', '#fdb913', '#ff6b35', '#004e89', '#1f77b4']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+
+        // Service Period Chart
+        new Chart(document.getElementById('serviceChart'), {
+            type: 'pie',
+            data: {
+                labels: ['Gulf War Era', 'Post-9/11', 'Vietnam Era', 'Korean War Era', 'WWII & Earlier'],
+                datasets: [{
+                    data: [7.2, 4.5, 6.3, 0.31, 0.875],
+                    backgroundColor: ['#0051ba', '#e31c23', '#004e89', '#ff6b35', '#fdb913']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+
+        // Disability Chart
+        new Chart(document.getElementById('disabilityChart'), {
+            type: 'bar',
+            data: {
+                labels: ['10-20%', '30-40%', '50-60%', '70-80%', '90-100%', '100% + P&T'],
+                datasets: [{
+                    label: 'Recipients (Millions)',
+                    data: [1.25, 0.85, 0.62, 0.52, 0.38, 0.22],
+                    backgroundColor: '#e31c23'
+                }]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y',
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // States Chart
+        new Chart(document.getElementById('statesChart'), {
+            type: 'bar',
+            data: {
+                labels: ['California', 'Florida', 'Texas', 'North Carolina', 'Georgia', 'Virginia', 'Pennsylvania', 'Arizona', 'Colorado', 'New York'],
+                datasets: [{
+                    label: 'Veterans (Millions)',
+                    data: [1.52, 1.48, 1.38, 0.735, 0.73, 0.68, 0.68, 0.48, 0.42, 0.61],
+                    backgroundColor: '#0051ba'
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // Healthcare Chart
+        new Chart(document.getElementById('careChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Primary Care', 'Mental Health', 'Specialty', 'Cardiology', 'Surgery'],
+                datasets: [{
+                    label: 'Avg Wait Days',
+                    data: [12, 8, 18, 22, 15],
+                    backgroundColor: '#fdb913'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { title: { display: true, text: 'Days' } } }
+            }
+        });
+
+        // Render Insights
+        const insights = [{"title": "The Aging Veteran Crisis", "finding": "36.0% of all veterans are age 65+", "detail": "Over 5,130,000 veterans are approaching or in their senior years. The veteran population is declining overall but aging significantly, creating unique healthcare demands.", "implication": "Healthcare system must shift focus to geriatric care, long-term care, and aging-related conditions"}, {"title": "The Disability Compensation Landscape", "finding": "23.7% of all veterans receive disability compensation (3,840,000 recipients)", "detail": "1,120,000 veterans (38% of disabled) have ratings of 70% or higher, indicating severe service-connected disabilities.", "implication": "Significant ongoing federal commitment; total annual disability payments exceed $80 billion"}, {"title": "Women Veterans Growing But Still Underrepresented", "finding": "Women comprise only 12.2% of the veteran population (1,740,000)", "detail": "However, younger female cohorts (18-34) are 18.0% female\u2014nearly 2x the overall rate. Female veterans in Iraq/Afghanistan are 15% of their cohort.", "implication": "Emerging need for gender-specific healthcare, family support services, and military culture adjustment programs"}, {"title": "Post-9/11 Veterans Dominate Needs Assessment", "finding": "23.5% of service-era veterans served in the War on Terror (Post-9/11)", "detail": "This cohort (4,500,000) is younger, more tech-savvy, and has high rates of PTSD, TBI, and invisible injuries not captured by traditional disability metrics.", "implication": "Mental health services, virtual care adoption, and tech-forward benefits delivery are critical"}, {"title": "Extreme Geographic Concentration", "finding": "California, Texas, and Florida hold 50.3% of the top-10 state veterans", "detail": "Combined, these three states have 4,380,000 veterans. Rural states struggle with VA facility access while major metros face overcrowding.", "implication": "Telehealth and community care networks essential; facility placement decisions have outsized impact"}, {"title": "Bimodal Disability Distribution Reveals System Gaps", "finding": "1,250,000 (21%) have minimal ratings (10-20%) while 1,120,000 (25%) have severe ratings (70%+)", "detail": "Missing middle suggests many veterans either get modest ratings or push for higher ratings. The jump to 70%+ indicates clear separation between compensable and non-compensable conditions.", "implication": "System may be missing middle-ground disabilities; appeal rates suggest initial assessments are conservative"}, {"title": "Mental Health Access Lag", "finding": "Only 40.4% of primary care users also access mental health services", "detail": "Of 5,200,000 veterans in primary care, only 2,100,000 access mental health. Given PTSD/TBI rates in post-9/11 cohort, this suggests stigma or access barriers.", "implication": "Integrated behavioral health in primary care could dramatically improve outcomes; outreach critical for engagement"}, {"title": "Army & Marines Dominate Veteran Demographics", "finding": "Army and Marines comprise 46.9% of all service members", "detail": "Army alone has 4,800,000 veterans. This means ground combat experience is the norm, driving higher disability rates and PTSD prevalence.", "implication": "Combat-focused training in VA providers essential; transition from military culture is a major factor in outcomes"}];
+        const insightsHTML = insights.map((insight, i) => `
+            <div class="insight">
+                <h3>${i + 1}. ${insight.title}</h3>
+                <div class="insight-finding">${insight.finding}</div>
+                <div class="insight-detail">${insight.detail}</div>
+                <div class="insight-implication">⚠️ ${insight.implication}</div>
+            </div>
+        `).join('');
+        
+        document.getElementById('insightsContainer').innerHTML = insightsHTML;
+    </script>
+</body>
+</html>

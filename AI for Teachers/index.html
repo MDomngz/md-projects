@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TeacherAI - 40+ AI prompts for K-5 teachers">
+    <title>TeacherAI Prompts</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #020617; color: #fff; }
+        
+        .min-h-screen { min-height: 100vh; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .p-2 { padding: 0.5rem; }
+        .p-4 { padding: 1rem; }
+        .p-5 { padding: 1.25rem; }
+        .p-8 { padding: 2rem; }
+        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 0.75rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .mb-12 { margin-bottom: 3rem; }
+        .mt-16 { margin-top: 4rem; }
+        .mt-4 { margin-top: 1rem; }
+        .pt-4 { padding-top: 1rem; }
+        .max-w-md { max-width: 28rem; }
+        .max-w-7xl { max-width: 80rem; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .w-full { width: 100%; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .rounded-xl { border-radius: 0.75rem; }
+        .rounded-2xl { border-radius: 1rem; }
+        .border { border: 1px solid; }
+        .border-slate-700 { border-color: #374151; }
+        .border-t { border-top: 1px solid; }
+        .bg-slate-950 { background: #020617; }
+        .bg-slate-900 { background: #0f172a; }
+        .bg-slate-800 { background: #1e293b; }
+        .bg-blue-600 { background: #2563eb; }
+        .bg-blue-700 { background: #1d4ed8; }
+        .text-white { color: #fff; }
+        .text-slate-300 { color: #cbd5e1; }
+        .text-slate-400 { color: #94a3b8; }
+        .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+        .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+        .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+        .text-lg { font-size: 1.125rem; }
+        .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.75rem; }
+        .font-bold { font-weight: 700; }
+        .font-semibold { font-weight: 600; }
+        
+        .grid { display: grid; }
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        @media (min-width: 768px) { .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (min-width: 1024px) { .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+        
+        .sticky { position: sticky; }
+        .top-0 { top: 0; }
+        .z-50 { z-index: 50; }
+        
+        .overflow-hidden { overflow: hidden; }
+        .flex-1 { flex: 1; }
+        .flex-wrap { flex-wrap: wrap; }
+        .cursor-pointer { cursor: pointer; }
+        .transition-colors { transition: background-color 0.2s, color 0.2s; }
+        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .whitespace-pre-wrap { white-space: pre-wrap; }
+        
+        button { border: none; cursor: pointer; transition: 0.2s; }
+        button:hover { opacity: 0.8; }
+        input { border: 1px solid #374151; }
+        input:focus { outline: none; border-color: #2563eb; }
+        
+        header { background: linear-gradient(to right, #0f172a, #1e293b); border-bottom: 1px solid #374151; }
+        footer { background: #0f172a; border-top: 1px solid #374151; }
+        
+        .bg-gradient-to-r { background: linear-gradient(to right, var(--tw-gradient-stops)); }
+        .from-blue-400 { --tw-gradient-stops: rgb(96 165 250) var(--tw-gradient-via-stops), rgb(96 165 250 / 0) 100%; }
+        .to-purple-500 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(168 85 247); }
+        .from-blue-500 { --tw-gradient-stops: rgb(59 130 246) var(--tw-gradient-via-stops), rgb(59 130 246 / 0) 100%; }
+        .to-blue-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(37 99 235); }
+        .from-purple-500 { --tw-gradient-stops: rgb(168 85 247) var(--tw-gradient-via-stops), rgb(168 85 247 / 0) 100%; }
+        .to-purple-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(147 51 234); }
+        .from-orange-500 { --tw-gradient-stops: rgb(249 115 22) var(--tw-gradient-via-stops), rgb(249 115 22 / 0) 100%; }
+        .to-orange-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(234 88 12); }
+        .from-pink-500 { --tw-gradient-stops: rgb(236 72 153) var(--tw-gradient-via-stops), rgb(236 72 153 / 0) 100%; }
+        .to-pink-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(219 39 119); }
+        .from-yellow-500 { --tw-gradient-stops: rgb(234 179 8) var(--tw-gradient-via-stops), rgb(234 179 8 / 0) 100%; }
+        .to-yellow-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(202 138 4); }
+        .from-green-500 { --tw-gradient-stops: rgb(34 197 94) var(--tw-gradient-via-stops), rgb(34 197 94 / 0) 100%; }
+        .to-green-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(22 163 74); }
+        .from-teal-500 { --tw-gradient-stops: rgb(20 184 166) var(--tw-gradient-via-stops), rgb(20 184 166 / 0) 100%; }
+        .to-teal-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(13 148 136); }
+        .from-indigo-500 { --tw-gradient-stops: rgb(99 102 241) var(--tw-gradient-via-stops), rgb(99 102 241 / 0) 100%; }
+        .to-indigo-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(79 70 229); }
+        .from-red-500 { --tw-gradient-stops: rgb(239 68 68) var(--tw-gradient-via-stops), rgb(239 68 68 / 0) 100%; }
+        .to-red-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(220 38 38); }
+        .from-cyan-500 { --tw-gradient-stops: rgb(6 182 212) var(--tw-gradient-via-stops), rgb(6 182 212 / 0) 100%; }
+        .to-cyan-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(8 145 178); }
+        .from-fuchsia-500 { --tw-gradient-stops: rgb(217 70 239) var(--tw-gradient-via-stops), rgb(217 70 239 / 0) 100%; }
+        .to-fuchsia-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(192 132 250); }
+        .from-violet-500 { --tw-gradient-stops: rgb(139 92 246) var(--tw-gradient-via-stops), rgb(139 92 246 / 0) 100%; }
+        .to-violet-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(124 58 255); }
+        .from-lime-500 { --tw-gradient-stops: rgb(132 204 22) var(--tw-gradient-via-stops), rgb(132 204 22 / 0) 100%; }
+        .to-lime-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(101 163 13); }
+        .from-sky-500 { --tw-gradient-stops: rgb(14 165 233) var(--tw-gradient-via-stops), rgb(14 165 233 / 0) 100%; }
+        .to-sky-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(2 132 199); }
+        .from-rose-500 { --tw-gradient-stops: rgb(244 63 94) var(--tw-gradient-via-stops), rgb(244 63 94 / 0) 100%; }
+        .to-rose-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(225 29 72); }
+        .from-amber-500 { --tw-gradient-stops: rgb(245 158 11) var(--tw-gradient-via-stops), rgb(245 158 11 / 0) 100%; }
+        .to-amber-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(217 119 6); }
+        .from-emerald-500 { --tw-gradient-stops: rgb(16 185 129) var(--tw-gradient-via-stops), rgb(16 185 129 / 0) 100%; }
+        .to-emerald-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(5 150 105); }
+        .from-slate-500 { --tw-gradient-stops: rgb(100 116 139) var(--tw-gradient-via-stops), rgb(100 116 139 / 0) 100%; }
+        .to-slate-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(71 85 105); }
+        .from-stone-500 { --tw-gradient-stops: rgb(120 113 108) var(--tw-gradient-via-stops), rgb(120 113 108 / 0) 100%; }
+        .to-stone-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(87 83 82); }
+        .from-zinc-500 { --tw-gradient-stops: rgb(113 113 122) var(--tw-gradient-via-stops), rgb(113 113 122 / 0) 100%; }
+        .to-zinc-600 { --tw-gradient-stops: var(--tw-gradient-via-stops), rgb(82 82 91); }
+        
+        .bg-white\/20 { background-color: rgba(255, 255, 255, 0.2); }
+        .hover\:bg-white\/30:hover { background-color: rgba(255, 255, 255, 0.3); }
+        .hover\:bg-slate-800:hover { background: #1e293b; }
+        .hover\:bg-slate-700:hover { background: #334155; }
+        .hover\:bg-blue-700:hover { background: #1d4ed8; }
+        .text-blue-400 { color: #60a5fa; }
+        .hover\:text-blue-300:hover { color: #93c5fd; }
+    </style>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-950">
+    <div id="root"></div>
+
+    <script>
+        const { useState, useEffect } = React;
+        const { BookOpen, Heart, Share2, Printer, LogOut, Search } = lucide;
+
+        function App() {
+            const [prompts, setPrompts] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [isLoggedIn, setIsLoggedIn] = useState(false);
+            const [userName, setUserName] = useState('');
+            const [savedPrompts, setSavedPrompts] = useState([]);
+            const [searchTerm, setSearchTerm] = useState('');
+            const [selectedCategory, setSelectedCategory] = useState('all');
+
+            useEffect(() => {
+                fetch('/Teacher-Assist/prompts.json')
+                    .then(res => res.json())
+                    .then(data => {
+                        setPrompts(data);
+                        setLoading(false);
+                    })
+                    .catch(err => {
+                        console.error('Error loading prompts:', err);
+                        setLoading(false);
+                    });
+            }, []);
+
+            if (loading) {
+                return React.createElement('div', { className: 'min-h-screen bg-slate-950 flex items-center justify-center' },
+                    React.createElement('p', { className: 'text-white text-lg' }, 'Loading...')
+                );
+            }
+
+            const categories = ['all', ...new Set(prompts.map(p => p.category))];
+            const filteredPrompts = prompts.filter(p => {
+                const matchCat = selectedCategory === 'all' || p.category === selectedCategory;
+                const matchSearch = p.title.toLowerCase().includes(searchTerm.toLowerCase()) || p.category.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchCat && matchSearch;
+            });
+            const savedList = prompts.filter(p => savedPrompts.includes(p.id));
+
+            const handleLogin = (name) => {
+                if (name.trim()) {
+                    setUserName(name.trim());
+                    setIsLoggedIn(true);
+                }
+            };
+
+            const handleLogout = () => {
+                setIsLoggedIn(false);
+                setUserName('');
+                setSavedPrompts([]);
+            };
+
+            const toggleSave = (id) => {
+                setSavedPrompts(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+            };
+
+            const copyToClipboard = (text) => {
+                navigator.clipboard.writeText(text);
+            };
+
+            if (!isLoggedIn) {
+                return React.createElement('div', { className: 'min-h-screen bg-slate-950 flex items-center justify-center p-4' },
+                    React.createElement('div', { className: 'bg-slate-900 rounded-2xl p-8 max-w-md w-full border border-slate-700' },
+                        React.createElement('h1', { className: 'text-4xl font-bold mb-2 text-white' }, 'TeacherAI 📚'),
+                        React.createElement('h2', { className: 'text-3xl font-bold mb-6 text-white' }, 'Welcome! 👋'),
+                        React.createElement('p', { className: 'text-slate-300 mb-6' }, 'Create a profile to save your favorite prompts.'),
+                        React.createElement('input', {
+                            type: 'text',
+                            placeholder: "What's your name?",
+                            id: 'nameInput',
+                            className: 'w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg mb-4 text-white',
+                            onKeyPress: (e) => {
+                                if (e.key === 'Enter') {
+                                    handleLogin(document.getElementById('nameInput').value);
+                                }
+                            }
+                        }),
+                        React.createElement('button', {
+                            onClick: () => handleLogin(document.getElementById('nameInput').value),
+                            className: 'w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold text-white transition-colors'
+                        }, 'Get Started →')
+                    )
+                );
+            }
+
+            return React.createElement('div', { className: 'min-h-screen bg-slate-950 text-white' },
+                React.createElement('header', { className: 'sticky top-0 z-50 border-b border-slate-700' },
+                    React.createElement('div', { className: 'max-w-7xl mx-auto px-4 py-4 flex items-center justify-between' },
+                        React.createElement('div', { className: 'flex items-center gap-3' },
+                            React.createElement('div', { className: 'bg-gradient-to-r from-blue-400 to-purple-500 p-2 rounded-lg' },
+                                React.createElement(BookOpen, { size: 24 })
+                            ),
+                            React.createElement('div', null,
+                                React.createElement('h1', { className: 'text-2xl font-bold' }, 'TeacherAI'),
+                                React.createElement('p', { className: 'text-xs text-slate-400' }, '40+ prompts for K-5 teachers')
+                            )
+                        ),
+                        React.createElement('div', { className: 'flex items-center gap-4' },
+                            React.createElement('div', { className: 'text-right text-sm' },
+                                React.createElement('p', { className: 'font-semibold' }, userName),
+                                React.createElement('p', { className: 'text-slate-400' }, savedPrompts.length + ' saved')
+                            ),
+                            React.createElement('button', {
+                                onClick: handleLogout,
+                                className: 'p-2 hover:bg-slate-800 rounded-lg transition-colors'
+                            }, React.createElement(LogOut, { size: 20 }))
+                        )
+                    )
+                ),
+
+                React.createElement('main', { className: 'max-w-7xl mx-auto px-4 py-8' },
+                    React.createElement('div', { className: 'mb-12' },
+                        React.createElement('h2', { className: 'text-4xl font-bold mb-3' }, 'Your AI Toolkit 🚀'),
+                        React.createElement('p', { className: 'text-xl text-slate-300' }, '40+ trauma-informed, evidence-based prompts for K-5 teachers.')
+                    ),
+
+                    React.createElement('div', { className: 'mb-8 flex flex-col gap-4' },
+                        React.createElement('div', { className: 'relative' },
+                            React.createElement(Search, { size: 20, style: { position: 'absolute', left: '1rem', top: '0.875rem', color: '#64748b' } }),
+                            React.createElement('input', {
+                                type: 'text',
+                                placeholder: 'Search prompts...',
+                                value: searchTerm,
+                                onChange: (e) => setSearchTerm(e.target.value),
+                                className: 'w-full pl-12 pr-4 py-3 bg-slate-900 border border-slate-700 rounded-lg text-white'
+                            })
+                        ),
+                        React.createElement('div', { className: 'flex flex-wrap gap-2' },
+                            categories.map(cat =>
+                                React.createElement('button', {
+                                    key: cat,
+                                    onClick: () => setSelectedCategory(cat),
+                                    className: `px-4 py-2 rounded-lg transition-colors text-sm font-semibold ${selectedCategory === cat ? 'bg-blue-600' : 'bg-slate-800 hover:bg-slate-700'}`
+                                }, cat.charAt(0).toUpperCase() + cat.slice(1))
+                            )
+                        )
+                    ),
+
+                    savedPrompts.length > 0 ? React.createElement('div', null,
+                        React.createElement('h3', { className: 'text-2xl font-bold mb-6' }, 'Saved Prompts ❤️'),
+                        React.createElement('div', { className: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12' },
+                            savedList.map(prompt =>
+                                React.createElement('div', { key: prompt.id, className: 'bg-slate-900 rounded-xl border border-slate-700 overflow-hidden' },
+                                    React.createElement('div', { className: `bg-gradient-to-r ${prompt.color} p-4` },
+                                        React.createElement('div', { className: 'flex items-center justify-between' },
+                                            React.createElement('span', { className: 'text-4xl' }, prompt.emoji),
+                                            React.createElement('button', {
+                                                onClick: () => toggleSave(prompt.id),
+                                                className: 'p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors'
+                                            }, React.createElement(Heart, { size: 20, fill: 'white' }))
+                                        )
+                                    ),
+                                    React.createElement('div', { className: 'p-5' },
+                                        React.createElement('p', { className: 'text-xs text-slate-400 mb-2' }, prompt.category),
+                                        React.createElement('h4', { className: 'text-lg font-bold mb-3' }, prompt.title),
+                                        React.createElement('p', { className: 'text-slate-300 text-sm mb-4 whitespace-pre-wrap' }, prompt.prompt),
+                                        React.createElement('button', {
+                                            onClick: () => copyToClipboard(prompt.title + '\n\n' + prompt.prompt),
+                                            className: 'w-full px-3 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm flex items-center justify-center gap-2 transition-colors font-semibold'
+                                        }, React.createElement(Share2, { size: 16 }), 'Copy')
+                                    )
+                                )
+                            )
+                        )
+                    ) : null,
+
+                    React.createElement('div', null,
+                        React.createElement('h3', { className: 'text-2xl font-bold mb-6' }, 'All Prompts'),
+                        React.createElement('div', { className: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' },
+                            filteredPrompts.map(prompt =>
+                                React.createElement('div', { key: prompt.id, className: 'bg-slate-900 rounded-xl border border-slate-700 overflow-hidden flex flex-col' },
+                                    React.createElement('div', { className: `bg-gradient-to-r ${prompt.color} p-4` },
+                                        React.createElement('div', { className: 'flex items-center justify-between' },
+                                            React.createElement('span', { className: 'text-4xl' }, prompt.emoji),
+                                            React.createElement('button', {
+                                                onClick: () => toggleSave(prompt.id),
+                                                className: 'p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors'
+                                            }, React.createElement(Heart, { size: 20, fill: savedPrompts.includes(prompt.id) ? 'white' : 'none' }))
+                                        )
+                                    ),
+                                    React.createElement('div', { className: 'p-5 flex-1 flex flex-col' },
+                                        React.createElement('p', { className: 'text-xs text-slate-400 mb-2 font-semibold' }, prompt.category),
+                                        React.createElement('h4', { className: 'text-lg font-bold mb-3' }, prompt.title),
+                                        React.createElement('p', { className: 'text-slate-300 text-sm leading-relaxed flex-1 mb-4 line-clamp-3' }, prompt.prompt.replace(/\[.*?\]/g, '[...]')),
+                                        React.createElement('div', { className: 'flex gap-2 pt-4 border-t border-slate-800' },
+                                            React.createElement('button', {
+                                                onClick: () => copyToClipboard(prompt.title + '\n\n' + prompt.prompt),
+                                                className: 'flex-1 px-3 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm flex items-center justify-center gap-2 transition-colors font-semibold'
+                                            }, React.createElement(Share2, { size: 16 }), 'Copy'),
+                                            React.createElement('button', {
+                                                onClick: () => window.print(),
+                                                className: 'flex-1 px-3 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm flex items-center justify-center gap-2 transition-colors font-semibold'
+                                            }, React.createElement(Printer, { size: 16 }), 'Print')
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+
+                React.createElement('footer', { className: 'border-t border-slate-700 mt-16 py-8' },
+                    React.createElement('div', { className: 'max-w-7xl mx-auto px-4 text-center text-slate-400' },
+                        React.createElement('p', { className: 'mb-2' }, 'Made with ❤️ to support teachers'),
+                        React.createElement('p', { className: 'text-sm' }, '40+ trauma-informed, evidence-based prompts for K-5 classrooms'),
+                        React.createElement('p', { className: 'text-xs mt-4' }, '🚀 Hosted on GitHub Pages | ',
+                            React.createElement('a', { href: 'https://github.com/MDomngz/Teacher-Assist', target: '_blank', className: 'text-blue-400 hover:text-blue-300' }, 'View on GitHub')
+                        )
+                    )
+                )
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(App));
+    </script>
+</body>
+</html>

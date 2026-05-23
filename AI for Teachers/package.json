@@ -1,0 +1,28 @@
+{
+  "name": "teacherai-backend",
+  "version": "1.0.0",
+  "description": "TeacherAI Backend - Express server with user auth and email feedback",
+  "main": "backend-server.js",
+  "scripts": {
+    "start": "node backend-server.js",
+    "dev": "nodemon backend-server.js"
+  },
+  "keywords": [
+    "teachers",
+    "ai-prompts",
+    "education"
+  ],
+  "author": "Marisa Dominguez",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "jsonwebtoken": "^9.0.0",
+    "bcryptjs": "^2.4.3",
+    "nodemailer": "^6.8.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}

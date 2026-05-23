@@ -1,0 +1,23 @@
+{
+  "skill_name": "elementary-educator-companion",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I teach 3rd grade in a school where a lot of families are dealing with housing instability and job uncertainty. My kids come to school hungry, and some miss school a lot because their families are moving around or working inconsistent schedules. I have 18 students with a huge range—some can read at grade level, but others are still sounding out CVC words. I want to teach a unit on reading comprehension, but I need to make sure nobody falls further behind AND I need something that works when kids are absent for weeks at a time. How do I structure this so everyone can access it and catch up when they return?",
+      "expected_output": "A structured approach to teaching reading comprehension that accounts for absences, mixed reading levels, and food insecurity. Should include: (1) asynchronous catch-up strategies, (2) differentiated comprehension activities at multiple reading levels, (3) acknowledgment of attendance gaps, (4) ideas for engaging struggling readers, (5) practical suggestions for a resource-limited classroom.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "My kindergarteners are showing a lot of stress behaviors—some are very aggressive, some shut down and won't participate, and I have a few who seem to be dealing with a lot at home (one mom mentioned they're between houses right now). Our school doesn't have much—I'm buying snacks with my own money. I need my classroom to feel safe and predictable so these kids can actually learn. How do I set up routines, manage behavior when it's clearly stress-related, and build relationships when I'm overwhelmed?",
+      "expected_output": "Trauma-informed classroom setup and management strategies. Should include: (1) routines and structures that create safety and predictability, (2) behavior management approaches grounded in understanding trauma responses (not punishment), (3) relationship-building strategies that don't require resources, (4) specific language/scripts for responding to stress behaviors, (5) acknowledgment of teacher overwhelm and self-care.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I have 12 ELL students in my 5th grade class—mostly Spanish-speaking, some Arabic speakers. Several families recently experienced immigration fears. Some kids are anxious or act out when frustrated. I just finished a unit on fractions and I want to know what they actually understand, not just who can sit still and take a test. I need an assessment that works in multiple languages if possible, isn't stressful, and helps me see where kids are without making them feel judged. And I need to know who's actually keeping up vs. who's lost.",
+      "expected_output": "Multi-modal, low-stress assessment strategies for multilingual learners. Should include: (1) non-written assessment options (oral, visual, kinesthetic), (2) ways to assess content knowledge separately from English proficiency, (3) strategies for reducing test anxiety in stressed learners, (4) practical ideas for language support (sentence frames, visuals, etc.), (5) ways to identify who's keeping up vs. who needs support, (6) trauma-informed language/approach.",
+      "files": []
+    }
+  ]
+}

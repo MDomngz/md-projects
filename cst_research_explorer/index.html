@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Cst Research Explorer",
+  "schemaVersion": 1,
+  "description": "Interactive research explorer for Claims Status Tool synthesis — filterable by priority, searchable, with roadmap and research source reference. Reusable template for other VA products."
+}
+</script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VA Research Explorer - Claims Status Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #003f87;
+            --primary-light: #005ea2;
+            --primary-lighter: #0073b8;
+            --success: #28a745;
+            --warning: #ff9800;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --gray-light: #f5f5f5;
+            --gray-lighter: #fafafa;
+            --gray-dark: #555;
+            --text: #222;
+            --border: #ddd;
+            --spacing: 1rem;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--gray-lighter);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing);
+        }
+
+        /* Header */
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem var(--spacing);
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+
+        /* Controls & Filters */
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing);
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        select, input {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 63, 135, 0.1);
+        }
+
+        /* Summary Stats */
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing);
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 4px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--primary);
+        }
+
+        .stat-card.high {
+            border-left-color: var(--danger);
+        }
+
+        .stat-card.medium {
+            border-left-color: var(--warning);
+        }
+
+        .stat-card.low {
+            border-left-color: var(--info);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--gray-dark);
+        }
+
+        /* Theme Cards */
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .theme-card {
+            background: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .theme-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .theme-card.hidden {
+            display: none;
+        }
+
+        .theme-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+        }
+
+        .theme-number {
+            background: rgba(255,255,255,0.3);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .theme-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .theme-subtitle {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .theme-body {
+            padding: 1.5rem;
+        }
+
+        .challenge {
+            background: var(--gray-lighter);
+            padding: 1rem;
+            border-radius: 3px;
+            margin-bottom: 1.5rem;
+        }
+
+        .challenge-label {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .challenge-text {
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .implications {
+            margin-top: 1rem;
+        }
+
+        .implications-label {
+            font-weight: 600;
+            color: var(--success);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .implication-item {
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .implication-item::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-top: 0.75rem;
+        }
+
+        .priority-badge.high {
+            background: #ffe6e6;
+            color: var(--danger);
+        }
+
+        .priority-badge.medium {
+            background: #fff3e0;
+            color: var(--warning);
+        }
+
+        .priority-badge.low {
+            background: #e3f2fd;
+            color: var(--info);
+        }
+
+        /* Research Sources */
+        .research-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .research-section h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .research-category {
+            margin-bottom: 1.5rem;
+        }
+
+        .research-category h3 {
+            color: var(--primary-light);
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .research-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .research-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .research-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Gaps & Follow-up */
+        .gaps-section {
+            background: #fef3cd;
+            border-left: 4px solid var(--warning);
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin-bottom: 2rem;
+        }
+
+        .gaps-section h2 {
+            color: var(--warning);
+            margin-bottom: 1rem;
+        }
+
+        /* Roadmap */
+        .roadmap-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .roadmap-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--primary);
+        }
+
+        .roadmap-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .roadmap-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .roadmap-card li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .roadmap-card li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--gray-light);
+            padding: 2rem var(--spacing);
+            margin-top: 3rem;
+            text-align: center;
+            color: var(--gray-dark);
+            border-top: 1px solid var(--border);
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+            .themes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .roadmap-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .controls,
+            .summary {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            .theme-card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Toggle expanded state */
+        .theme-card.expanded .theme-body {
+            max-height: none;
+        }
+
+        .theme-card:not(.expanded) .toggle-content {
+            max-height: 200px;
+            overflow: hidden;
+        }
+
+        /* Metadata */
+        .metadata {
+            font-size: 0.8rem;
+            color: var(--gray-dark);
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--gray-light);
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            margin-right: 0.5rem;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>VA Research Explorer</h1>
+            <p>Interactive research synthesis template for VA products</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Controls -->
+        <div class="controls">
+            <div class="control-group">
+                <label for="productFilter">Product</label>
+                <select id="productFilter">
+                    <option value="">All Products</option>
+                    <option value="Claims Status Tool">Claims Status Tool</option>
+                    <option value="Other">Other VA Products</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="priorityFilter">Priority Level</label>
+                <select id="priorityFilter">
+                    <option value="">All Priorities</option>
+                    <option value="high">High Priority</option>
+                    <option value="medium">Medium Priority</option>
+                    <option value="low">Low Priority</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="searchInput">Search Themes</label>
+                <input type="text" id="searchInput" placeholder="Type to search...">
+            </div>
+            <div class="control-group">
+                <button onclick="resetFilters()" style="padding: 0.75rem; background: var(--primary); color: white; border: none; border-radius: 3px; cursor: pointer; font-weight: 600;">Reset Filters</button>
+            </div>
+        </div>
+
+        <!-- Summary Stats -->
+        <div class="summary">
+            <div class="stat-card high">
+                <div class="stat-number" id="highCount">4</div>
+                <div class="stat-label">High Priority Items</div>
+            </div>
+            <div class="stat-card medium">
+                <div class="stat-number" id="mediumCount">3</div>
+                <div class="stat-label">Medium Priority Items</div>
+            </div>
+            <div class="stat-card low">
+                <div class="stat-number" id="lowCount">2</div>
+                <div class="stat-label">Lower Priority Items</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalThemes">7</div>
+                <div class="stat-label">Research Themes</div>
+            </div>
+        </div>
+
+        <!-- Research Themes Grid -->
+        <h2 style="margin-bottom: 1.5rem; color: var(--primary);">Research Themes</h2>
+        <div class="themes-grid" id="themesGrid"></div>
+
+        <!-- Roadmap Section -->
+        <div class="research-section">
+            <h2>Roadmap Prioritization</h2>
+            <div class="roadmap-grid" id="roadmapGrid"></div>
+        </div>
+
+        <!-- Research Sources -->
+        <div class="research-section">
+            <h2>Research Studies</h2>
+            <div id="researchSources"></div>
+        </div>
+
+        <!-- Research Gaps -->
+        <div class="gaps-section">
+            <h2>Research Gaps & Underserved Groups</h2>
+            <p style="margin-bottom: 1rem;">The following populations are underrepresented in current research and should be prioritized in future studies:</p>
+            <ul class="research-list">
+                <li>Transgender and LGBTQ+ veterans</li>
+                <li>Veterans aged 55+ (underrepresented in most studies)</li>
+                <li>Veterans with cognitive disabilities</li>
+                <li>Assistive technology users (screen reader, magnification, voice input)</li>
+                <li>Other-than-honorable discharge status</li>
+                <li>Immigrant-origin and expat veterans</li>
+                <li>Asian, biracial, and Native American veterans</li>
+                <li>Veterans using mobile devices primarily</li>
+            </ul>
+            <h3 style="margin-top: 1.5rem; color: var(--warning); font-size: 1rem;">Recommended Follow-up Research</h3>
+            <ul class="research-list" style="margin-top: 0.75rem;">
+                <li>Accessibility testing with assistive technology users across all product phases</li>
+                <li>Mobile-first usability testing</li>
+                <li>Research with underserved demographic groups</li>
+                <li>Long-term engagement research</li>
+                <li>Transgender veteran experience across all phases</li>
+            </ul>
+        </div>
+
+        <!-- Metadata -->
+        <div class="research-section">
+            <h2>About This Research</h2>
+            <p><strong>Synthesis Period:</strong> 2019-2026</p>
+            <p><strong>Number of Studies:</strong> 50+</p>
+            <p><strong>Primary Research Methods:</strong> Semi-structured interviews, usability testing, contextual inquiry, scenario-based testing, SME interviews</p>
+            <p><strong>Sample Sizes:</strong> 8-16 veterans per study</p>
+            <p><strong>Diversity Focus:</strong> Rural, urban, varying education levels, multiple racial/ethnic groups, underserved populations</p>
+        </div>
+    </div>
+
+    <footer>
+        <p><strong>VA Research Explorer</strong> — Interactive template for synthesizing and sharing veteran research</p>
+        <p>This interface can be adapted for any VA product. Update the data object to customize for your product.</p>
+        <p style="margin-top: 1rem; font-size: 0.8rem;">Last updated: May 2026</p>
+    </footer>
+
+    <script>
+        // Research data - CUSTOMIZE THIS for your product
+        const researchData = {
+            product: "Claims Status Tool",
+            themes: [
+                {
+                    id: 1,
+                    title: "The Learning Curve",
+                    subtitle: "Understanding Claims Basics",
+                    priority: "high",
+                    challenge: "Veterans find the claims process learning curve to be steep. Many lack baseline understanding of how claims work, what information to track, and what outcomes to expect.",
+                    whyMatters: "Without foundational knowledge, veterans struggle to interpret status information. They default to calling the help line or searching YouTube/forums for guidance. This creates support burden and delays claim decisions when veterans miss critical deadlines.",
+                    sources: ["2023-03 Initial Decisions", "2022-Discovery"],
+                    implications: [
+                        "Provide contextual onboarding and progressive disclosure",
+                        "Help veterans understand the claims process before diving into status details",
+                        "Surface the most relevant information first"
+                    ]
+                },
+                {
+                    id: 2,
+                    title: "Status Comprehension",
+                    subtitle: "What is Happening to My Claim?",
+                    priority: "high",
+                    challenge: "Duplicative, inconsistent, and out-of-date content forces veterans to 'play detective' across multiple tabs to establish a coherent picture of their claim.",
+                    whyMatters: "Vague language and unclear terminology create uncertainty about claim status and veteran responsibilities. Veterans need to know: what the VA is doing, what they must do, what's blocking favorable determination, outcomes for contentions, and expected timeline.",
+                    sources: ["2023-03 Initial Decisions", "2023-05 Evidence Submission"],
+                    implications: [
+                        "Restructure and consolidate claim detail pages",
+                        "Use action-oriented design: 'What you need to do' and 'What we're doing'",
+                        "Ensure information is specific, current, and clear"
+                    ]
+                },
+                {
+                    id: 3,
+                    title: "Evidence & Requests",
+                    subtitle: "Submitting What the VA Needs",
+                    priority: "high",
+                    challenge: "Veterans struggle with understanding what evidence is needed, how to submit it, and whether submission was successful. Delays in responding to evidence requests directly delay claim decisions.",
+                    whyMatters: "Form identification, download/upload workflows, and confirmation of receipt are sources of friction. Veterans don't understand form requirements, the distinction between online tools and PDF forms, or get confirmation that documents were received.",
+                    sources: ["2023-05 Evidence Submission", "2024-07 Development Letters", "2025-06 Evidence Requests"],
+                    implications: [
+                        "Prioritize action items and reduce cognitive load on evidence request pages",
+                        "Use plain language and spell out abbreviations",
+                        "Provide clear form guidance or online tools",
+                        "Confirm receipt of documents and show status updates"
+                    ]
+                },
+                {
+                    id: 4,
+                    title: "Document Upload & Tracking",
+                    subtitle: "Knowing What Has Been Submitted",
+                    priority: "medium",
+                    challenge: "Veterans lack visibility into document upload status. Upload failures cause anxiety and uncertainty about whether to resubmit. Inconsistent status messaging undermines trust in the digital submission process.",
+                    whyMatters: "7 of 8 research participants expected automatic confirmation that physical documents were received and added to their claim. Upload failures without explanation erode confidence.",
+                    sources: ["2024-11 Document Status"],
+                    implications: [
+                        "Show clear, real-time upload status (in progress → submitted → received)",
+                        "Explain upload failures with substantive feedback and re-submission options",
+                        "Send notifications confirming physical document receipt",
+                        "Use consistent terminology and visual hierarchy"
+                    ]
+                },
+                {
+                    id: 5,
+                    title: "Notifications & Communication",
+                    subtitle: "Being Informed and Understanding Urgency",
+                    priority: "medium",
+                    challenge: "Veterans don't understand what notifications mean, which channel to check first, and what action is required. Unclear deadlines create missed windows for response.",
+                    whyMatters: "Veterans check text/push first but complete actions on desktop/app. Email is preferred for detailed updates. Tone can make veterans feel 'on trial' or viewed with suspicion.",
+                    sources: ["2025-10 Notifications Research"],
+                    implications: [
+                        "Differentiate informational vs. action-required messages clearly",
+                        "Use multi-channel approach (email for details, text for urgency)",
+                        "Make deadlines explicit and actionable",
+                        "Use transparent, reassuring language"
+                    ]
+                },
+                {
+                    id: 6,
+                    title: "Claims Complexity",
+                    subtitle: "Multiple Claims, Multiple Phases, Multiple Actions",
+                    priority: "low",
+                    challenge: "Veterans with multiple claims struggle to keep track of what's active, relevant, and requires action. Claims can be structured with multiple conditions under one claim or one condition per claim.",
+                    whyMatters: "3 of 16 participants had 15+ events listed. Veterans want to see 'the most recent claim — the one that's active.' Keeping track of relevant claims is difficult with greater complexity.",
+                    sources: ["2023-03 Initial Decisions", "2024-06 Claim Phase Experience"],
+                    implications: [
+                        "Improve listing page organization by grouping associated claims",
+                        "Show active claims prominently",
+                        "Display contentions clearly",
+                        "Provide filters or progressive disclosure for complex situations"
+                    ]
+                },
+                {
+                    id: 7,
+                    title: "Trust & Reciprocity",
+                    subtitle: "Feeling Heard and Understood",
+                    priority: "low",
+                    challenge: "Veterans feel a lack of reciprocity in the process. Legalist language can feel incendiary. Lack of file access prevents veterans from catching errors before appeals become necessary.",
+                    whyMatters: "Quote: 'You're rushing me to gather all the evidence. But once it's in, you give yourself all the time in the world to decide.' Some veterans feel they're 'on trial' rather than being supported.",
+                    sources: ["2023-03 Initial Decisions"],
+                    implications: [
+                        "Use transparent, reassuring language",
+                        "Provide access to files and exam results",
+                        "Show VA progress and timelines",
+                        "Acknowledge unique needs of underserved groups"
+                    ]
+                }
+            ],
+            roadmap: [
+                {
+                    tier: "High Priority: Foundation & Clarity",
+                    items: [
+                        "Restructure and consolidate claim detail pages",
+                        "Revise content for clarity and specificity",
+                        "Implement progressive disclosure",
+                        "Use plain language consistently"
+                    ]
+                },
+                {
+                    tier: "Medium Priority: Action Support",
+                    items: [
+                        "Improve evidence request comprehension",
+                        "Enhance document upload/status tracking",
+                        "Provide submission confirmation",
+                        "Streamline form submission experience"
+                    ]
+                },
+                {
+                    tier: "Medium Priority: Communication & Notifications",
+                    items: [
+                        "Differentiate message types clearly",
+                        "Use multi-channel approach",
+                        "Make deadlines explicit",
+                        "Provide context in messages"
+                    ]
+                },
+                {
+                    tier: "Lower Priority: Handling Complexity",
+                    items: [
+                        "Improve listing page organization",
+                        "Display contentions on listing page",
+                        "Provide filtering/sorting options",
+                        "Support claim contextualization"
+                    ]
+                }
+            ],
+            studies: {
+                "Discovery & Initial Understanding (2019-2022)": [
+                    "Discovery SEP 2019 — Initial needs exploration",
+                    "April-2020 Discovery Concept Usability — Comparative analysis",
+                    "Co-Design Usability June — Veteran co-creation",
+                    "Discovery Oct-21 — Business process research"
+                ],
+                "Core Features & Workflows (2023-2024)": [
+                    "2023-03 Initial Decisions CST",
+                    "2023-05 Evidence Submission",
+                    "2023-10 Claim Contextualization",
+                    "2024-07 Development Letters",
+                    "2024-06 Claim Phase Experience"
+                ],
+                "Document & Status Tracking (2024-2025)": [
+                    "2024-11 Document Status",
+                    "2026-03 Letter Findability",
+                    "2026-03 Mailing Address & Benefit Letters"
+                ],
+                "Communication & Notifications (2025)": [
+                    "2025-06 Evidence Requests",
+                    "2025-10 Notifications Research"
+                ]
+            }
+        };
+
+        // Initialize
+        function init() {
+            renderThemes();
+            renderRoadmap();
+            renderSources();
+            setupEventListeners();
+        }
+
+        function renderThemes() {
+            const grid = document.getElementById('themesGrid');
+            grid.innerHTML = researchData.themes.map(theme => `
+                <div class="theme-card" data-theme-id="${theme.id}" data-priority="${theme.priority}">
+                    <div class="theme-header">
+                        <div>
+                            <div class="theme-title">${theme.title}</div>
+                            <div class="theme-subtitle">${theme.subtitle}</div>
+                        </div>
+                        <div class="theme-number">${theme.id}</div>
+                    </div>
+                    <div class="theme-body">
+                        <div class="challenge">
+                            <div class="challenge-label">Core Challenge</div>
+                            <div class="challenge-text">${theme.challenge}</div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-weight: 600; color: var(--primary); font-size: 0.9rem; margin-bottom: 0.5rem;">Why It Matters</div>
+                            <div style="font-size: 0.95rem; line-height: 1.5;">${theme.whyMatters}</div>
+                        </div>
+                        <div class="implications">
+                            <div class="implications-label">Design Implications</div>
+                            ${theme.implications.map(impl => `<div class="implication-item">${impl}</div>`).join('')}
+                        </div>
+                        <div class="metadata">
+                            <strong>Research Sources:</strong> ${theme.sources.join(', ')}
+                            <div style="margin-top: 0.5rem;">
+                                <span class="priority-badge ${theme.priority}">${theme.priority} Priority</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderRoadmap() {
+            const grid = document.getElementById('roadmapGrid');
+            grid.innerHTML = researchData.roadmap.map(section => `
+                <div class="roadmap-card">
+                    <h3>${section.tier}</h3>
+                    <ul>
+                        ${section.items.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+        }
+
+        function renderSources() {
+            const container = document.getElementById('researchSources');
+            container.innerHTML = Object.entries(researchData.studies).map(([category, items]) => `
+                <div class="research-category">
+                    <h3>${category}</h3>
+                    <ul class="research-list">
+                        ${items.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+        }
+
+        function setupEventListeners() {
+            document.getElementById('priorityFilter').addEventListener('change', filterThemes);
+            document.getElementById('searchInput').addEventListener('input', filterThemes);
+            document.getElementById('productFilter').addEventListener('change', filterThemes);
+        }
+
+        function filterThemes() {
+            const priorityFilter = document.getElementById('priorityFilter').value;
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.theme-card');
+
+            let visibleCount = { high: 0, medium: 0, low: 0 };
+
+            cards.forEach(card => {
+                const priority = card.dataset.priority;
+                const title = card.querySelector('.theme-title').textContent.toLowerCase();
+                const subtitle = card.querySelector('.theme-subtitle').textContent.toLowerCase();
+                const challenge = card.querySelector('.challenge-text').textContent.toLowerCase();
+
+                const matchesPriority = !priorityFilter || priority === priorityFilter;
+                const matchesSearch = !searchQuery ||
+                    title.includes(searchQuery) ||
+                    subtitle.includes(searchQuery) ||
+                    challenge.includes(searchQuery);
+
+                if (matchesPriority && matchesSearch) {
+                    card.classList.remove('hidden');
+                    visibleCount[priority]++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            document.getElementById('highCount').textContent = visibleCount.high;
+            document.getElementById('mediumCount').textContent = visibleCount.medium;
+            document.getElementById('lowCount').textContent = visibleCount.low;
+        }
+
+        function resetFilters() {
+            document.getElementById('priorityFilter').value = '';
+            document.getElementById('searchInput').value = '';
+            filterThemes();
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
