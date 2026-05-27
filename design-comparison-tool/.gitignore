@@ -3,7 +3,6 @@ node_modules/
 ai-scripts/node_modules/
 
 # Build output
-dist/
 lib/
 
 # Local environment / API keys
