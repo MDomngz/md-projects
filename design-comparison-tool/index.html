@@ -6,6 +6,19 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Design Comparison Tool</title>
       <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230b0b0b'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-size='12' fill='%23ffffff' font-family='Arial,sans-serif'%3EDC%3C/text%3E%3C/svg%3E" />
+      <script>
+        (function () {
+          var isLocalDev =
+            location.hostname === 'localhost' ||
+            location.hostname === '127.0.0.1' ||
+            location.hostname === '::1';
+          var inDist = location.pathname.indexOf('/dist/') !== -1;
+
+          if (!isLocalDev && !inDist) {
+            location.replace('./dist/index.html' + location.search + location.hash);
+          }
+        })();
+      </script>
       <style>html, body { height: 100%; margin: 0; } #root { height: 100%; }</style>
     </head>
 
