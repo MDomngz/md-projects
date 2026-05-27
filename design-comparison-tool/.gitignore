@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+ai-scripts/node_modules/
+
+# Build output
+dist/
+lib/
+
+# Local environment / API keys
+.env
+.env.*
+!.env.example
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Local snapshots / backups
+.snapshot-*.tar.gz
+
+# User-imported assets (screenshots, exported reports — machine-local)
+src/imports/*.png
+src/imports/*.jpg
+src/imports/*.jpeg
+src/imports/*.webp
+src/imports/*.json
+!src/imports/.gitkeep
+
+# AI script generated output (analysis results, validation images)
+ai-scripts/discrepancies*.json
+ai-scripts/validation-*.png
+ai-scripts/Figma-*.png
+ai-scripts/Prod-*.png
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# Editor
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
