@@ -1,0 +1,27 @@
+{
+  "name": "design-comparison-ai-scripts",
+  "version": "1.0.0",
+  "description": "AI-powered image comparison scripts for Design Comparison Tool",
+  "type": "module",
+  "scripts": {
+    "analyze:openai": "node ai-analysis-script.js --provider openai",
+    "analyze:claude": "node ai-analysis-script.js --provider anthropic"
+  },
+  "keywords": [
+    "ai",
+    "vision",
+    "image-comparison",
+    "design",
+    "figma"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "jimp": "^1.6.1",
+    "openai": "^4.77.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

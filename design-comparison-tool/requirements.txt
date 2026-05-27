@@ -1,0 +1,14 @@
+# AI Vision Analysis Script - Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# OpenAI SDK (for GPT-4 Vision)
+openai>=1.54.0
+
+# Anthropic SDK (for Claude Vision)
+anthropic>=0.39.0
+
+# Image processing
+Pillow>=10.0.0
+
+# Optional: For better CLI experience
+rich>=13.0.0
