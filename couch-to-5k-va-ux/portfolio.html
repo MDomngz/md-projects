@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Augmented UX Research: 30-Day Portfolio Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary-blue: #0071BB;
+      --primary-dark-blue: #003366;
+      --accent-gold: #FFB81C;
+      --light-gray: #F5F8FB;
+      --medium-gray: #E8EBEE;
+      --dark-gray: #3E3E3E;
+      --success-green: #00A651;
+      --text-dark: #1A1A1A;
+      --text-light: #505050;
+      --border-gray: #D0D5DD;
+      --white: #FFFFFF;
+
+      --font-serif: 'Bitter', serif;
+      --font-sans: 'Source Sans 3', sans-serif;
+
+      --spacing-xs: 8px;
+      --spacing-sm: 12px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+      --spacing-xxl: 48px;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--text-dark);
+      background-color: var(--light-gray);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    /* ===== Header & Nav ===== */
+    header {
+      background: linear-gradient(135deg, var(--primary-dark-blue) 0%, var(--primary-blue) 100%);
+      color: var(--white);
+      padding: var(--spacing-lg) var(--spacing-md);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: var(--spacing-md);
+      list-style: none;
+    }
+
+    .nav-tabs button {
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.8);
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .nav-tabs button.active {
+      color: var(--accent-gold);
+      border-bottom-color: var(--accent-gold);
+    }
+
+    .nav-tabs button:hover {
+      color: var(--white);
+    }
+
+    /* ===== Main Container ===== */
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: var(--spacing-xl) var(--spacing-md);
+    }
+
+    /* ===== Hero Section ===== */
+    .hero {
+      margin-bottom: var(--spacing-xxl);
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-family: var(--font-serif);
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: var(--spacing-md);
+      color: var(--primary-dark-blue);
+    }
+
+    .hero .subtitle {
+      font-size: 18px;
+      color: var(--text-light);
+      max-width: 700px;
+      margin: 0 auto var(--spacing-lg);
+      line-height: 1.6;
+    }
+
+    .hero-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-lg);
+      margin-top: var(--spacing-lg);
+    }
+
+    .hero-card {
+      background: var(--white);
+      border-left: 4px solid var(--primary-blue);
+      padding: var(--spacing-lg);
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .hero-card h3 {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      margin-bottom: var(--spacing-sm);
+      color: var(--primary-blue);
+    }
+
+    .hero-card p {
+      font-size: 14px;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    /* ===== Tab Content ===== */
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ===== Overview Section ===== */
+    .overview {
+      background: var(--white);
+      padding: var(--spacing-xl);
+      border-radius: 4px;
+      margin-bottom: var(--spacing-xl);
+      border-left: 4px solid var(--primary-blue);
+    }
+
+    .overview h2 {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      margin-bottom: var(--spacing-lg);
+      color: var(--primary-dark-blue);
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .overview-item {
+      padding: var(--spacing-lg);
+      background: var(--light-gray);
+      border-radius: 4px;
+      border-left: 3px solid var(--accent-gold);
+    }
+
+    .overview-item strong {
+      display: block;
+      color: var(--primary-blue);
+      margin-bottom: var(--spacing-sm);
+      font-size: 14px;
+    }
+
+    .overview-item span {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .overview p {
+      color: var(--text-light);
+      margin-bottom: var(--spacing-md);
+      line-height: 1.6;
+    }
+
+    /* ===== Week Section ===== */
+    .week-selector {
+      display: flex;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-xl);
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .week-btn {
+      padding: var(--spacing-md) var(--spacing-lg);
+      background: var(--white);
+      border: 1px solid var(--border-gray);
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      color: var(--text-dark);
+    }
+
+    .week-btn:hover {
+      border-color: var(--primary-blue);
+      color: var(--primary-blue);
+    }
+
+    .week-btn.active {
+      background: var(--primary-blue);
+      color: var(--white);
+      border-color: var(--primary-blue);
+    }
+
+    /* ===== Day Cards ===== */
+    .days-container {
+      display: grid;
+      gap: var(--spacing-lg);
+    }
+
+    .day-card {
+      background: var(--white);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      border-left: 4px solid var(--primary-blue);
+    }
+
+    .day-header {
+      padding: var(--spacing-lg);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--light-gray);
+      transition: background 0.2s ease;
+    }
+
+    .day-header:hover {
+      background: #F0F3F7;
+    }
+
+    .day-header h3 {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      margin-bottom: var(--spacing-sm);
+      color: var(--primary-blue);
+    }
+
+    .day-header p {
+      color: var(--text-light);
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .day-header .icon {
+      font-size: 20px;
+      color: var(--primary-blue);
+      transition: transform 0.2s ease;
+    }
+
+    .day-card.expanded .day-header .icon {
+      transform: rotate(180deg);
+    }
+
+    .day-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .day-card.expanded .day-content {
+      max-height: 2000px;
+    }
+
+    .day-body {
+      padding: var(--spacing-lg);
+      border-top: 1px solid var(--border-gray);
+    }
+
+    .day-body h4 {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      margin-top: var(--spacing-lg);
+      margin-bottom: var(--spacing-sm);
+      color: var(--text-dark);
+    }
+
+    .day-body h4:first-child {
+      margin-top: 0;
+    }
+
+    .day-body p {
+      color: var(--text-light);
+      margin-bottom: var(--spacing-md);
+      line-height: 1.6;
+    }
+
+    .prompt-box {
+      background: #F0F8FF;
+      border-left: 3px solid var(--primary-blue);
+      padding: var(--spacing-md);
+      border-radius: 2px;
+      margin: var(--spacing-md) 0;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      overflow-x: auto;
+    }
+
+    .prompt-label {
+      display: inline-block;
+      background: var(--primary-blue);
+      color: var(--white);
+      padding: 2px 8px;
+      border-radius: 2px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+      font-family: var(--font-sans);
+      letter-spacing: 0.5px;
+    }
+
+    .tip-box {
+      background: #FFFBF0;
+      border-left: 3px solid var(--accent-gold);
+      padding: var(--spacing-md);
+      border-radius: 2px;
+      margin: var(--spacing-md) 0;
+    }
+
+    .tip-label {
+      display: inline-block;
+      background: var(--accent-gold);
+      color: var(--text-dark);
+      padding: 2px 8px;
+      border-radius: 2px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+      font-family: var(--font-sans);
+      letter-spacing: 0.5px;
+    }
+
+    .artifact-box {
+      background: #F0FFF4;
+      border-left: 3px solid var(--success-green);
+      padding: var(--spacing-md);
+      border-radius: 2px;
+      margin: var(--spacing-md) 0;
+    }
+
+    .artifact-label {
+      display: inline-block;
+      background: var(--success-green);
+      color: var(--white);
+      padding: 2px 8px;
+      border-radius: 2px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+      font-family: var(--font-sans);
+      letter-spacing: 0.5px;
+    }
+
+    .step-list {
+      margin: var(--spacing-md) 0;
+      padding-left: var(--spacing-lg);
+    }
+
+    .step-list li {
+      margin-bottom: var(--spacing-sm);
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    /* ===== Completion Checklist ===== */
+    .checklist {
+      display: flex;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
+      flex-wrap: wrap;
+    }
+
+    .checklist label {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    .checklist input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--primary-blue);
+    }
+
+    /* ===== Portfolio Section ===== */
+    .portfolio-section {
+      background: var(--white);
+      padding: var(--spacing-xl);
+      border-radius: 4px;
+      border-left: 4px solid var(--success-green);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .portfolio-section h2 {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      margin-bottom: var(--spacing-lg);
+      color: var(--primary-dark-blue);
+    }
+
+    .portfolio-artifacts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--spacing-lg);
+    }
+
+    .artifact {
+      background: var(--light-gray);
+      padding: var(--spacing-lg);
+      border-radius: 4px;
+      border: 1px solid var(--border-gray);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .artifact h3 {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      margin-bottom: var(--spacing-sm);
+      color: var(--primary-blue);
+    }
+
+    .artifact p {
+      color: var(--text-light);
+      font-size: 14px;
+      margin-bottom: var(--spacing-md);
+      flex-grow: 1;
+    }
+
+    .artifact button {
+      align-self: flex-start;
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: var(--primary-blue);
+      color: var(--white);
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.2s ease;
+    }
+
+    .artifact button:hover {
+      background: var(--primary-dark-blue);
+    }
+
+    /* ===== FAQ Section ===== */
+    .faq-section {
+      background: var(--white);
+      padding: var(--spacing-xl);
+      border-radius: 4px;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .faq-section h2 {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      margin-bottom: var(--spacing-lg);
+      color: var(--primary-dark-blue);
+    }
+
+    .faq-item {
+      margin-bottom: var(--spacing-lg);
+      border-bottom: 1px solid var(--border-gray);
+      padding-bottom: var(--spacing-lg);
+    }
+
+    .faq-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .faq-question {
+      font-weight: 600;
+      color: var(--text-dark);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .faq-question .icon {
+      font-size: 16px;
+      transition: transform 0.2s ease;
+    }
+
+    .faq-item.expanded .faq-question .icon {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    .faq-item.expanded .faq-answer {
+      max-height: 500px;
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      background: var(--primary-dark-blue);
+      color: var(--white);
+      padding: var(--spacing-xl) var(--spacing-md);
+      text-align: center;
+      margin-top: var(--spacing-xxl);
+    }
+
+    footer p {
+      margin: var(--spacing-sm) 0;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    /* ===== Accessibility & Responsive ===== */
+    @media (max-width: 768px) {
+      .header-container {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        text-align: center;
+      }
+
+      .nav-tabs {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .hero h1 {
+        font-size: 32px;
+      }
+
+      .overview-grid {
+        grid-template-columns: 1fr;
+      }
+
+      main {
+        padding: var(--spacing-lg) var(--spacing-md);
+      }
+    }
+
+    /* Keyboard navigation */
+    button:focus,
+    input:focus {
+      outline: 2px solid var(--primary-blue);
+      outline-offset: 2px;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* High contrast mode */
+    @media (prefers-contrast: more) {
+      .day-header {
+        border-bottom: 2px solid var(--border-gray);
+      }
+
+      .prompt-box,
+      .tip-box,
+      .artifact-box {
+        border-left-width: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <div class="logo">AI Research Lab</div>
+      <nav>
+        <ul class="nav-tabs">
+          <li><button class="nav-btn active" data-tab="program">Program</button></li>
+          <li><button class="nav-btn" data-tab="portfolio">Portfolio</button></li>
+          <li><button class="nav-btn" data-tab="faq">FAQ</button></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== PROGRAM TAB ===== -->
+    <div id="program" class="tab-content active">
+      <section class="hero">
+        <h1>AI-Augmented UX Research</h1>
+        <p class="subtitle">
+          A structured 30-day program to master AI tools for research, build practical skills, and create a portfolio-ready research project that showcases AI-enhanced methodology.
+        </p>
+        <div class="hero-cards">
+          <div class="hero-card">
+            <h3>Learn by Doing</h3>
+            <p>Daily exercises progress from foundational concepts to advanced research synthesis. Each task builds toward a complete research artifact.</p>
+          </div>
+          <div class="hero-card">
+            <h3>Portfolio-Ready</h3>
+            <p>By day 30, you'll have a documented research case study, methodology guide, and reusable prompt library you can share with employers or clients.</p>
+          </div>
+          <div class="hero-card">
+            <h3>VA Principles</h3>
+            <p>Learn research best practices rooted in accessibility, clarity, inclusivity, and user-centeredness—applicable to any research context.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="overview">
+        <h2>How It Works</h2>
+        <div class="overview-grid">
+          <div class="overview-item">
+            <strong>Duration</strong>
+            <span>30 Days</span>
+          </div>
+          <div class="overview-item">
+            <strong>Time per Day</strong>
+            <span>~10 min</span>
+          </div>
+          <div class="overview-item">
+            <strong>Weeks</strong>
+            <span>4 Phases</span>
+          </div>
+          <div class="overview-item">
+            <strong>Output</strong>
+            <span>Case Study</span>
+          </div>
+        </div>
+        <p>
+          <strong>Week 1 (Foundation):</strong> Learn AI tools, research fundamentals, and prompt engineering basics.
+        </p>
+        <p>
+          <strong>Week 2 (Exploration):</strong> Conduct a mini-research project with AI assistance. Document methods and findings.
+        </p>
+        <p>
+          <strong>Week 3 (Synthesis):</strong> Analyze research data, use AI to identify patterns, and create research artifacts (personas, insights, frameworks).
+        </p>
+        <p>
+          <strong>Week 4 (Portfolio):</strong> Compile your work into a case study, write a methodology guide, and create a reusable prompt library for future projects.
+        </p>
+      </section>
+
+      <!-- Week Selector -->
+      <div class="week-selector">
+        <button class="week-btn active" data-week="week1">Week 1: Foundation</button>
+        <button class="week-btn" data-week="week2">Week 2: Exploration</button>
+        <button class="week-btn" data-week="week3">Week 3: Synthesis</button>
+        <button class="week-btn" data-week="week4">Week 4: Portfolio</button>
+      </div>
+
+      <!-- Days Container -->
+      <div class="days-container" id="daysContainer"></div>
+    </div>
+
+    <!-- ===== PORTFOLIO TAB ===== -->
+    <div id="portfolio" class="tab-content">
+      <section class="portfolio-section">
+        <h2>Your Research Portfolio</h2>
+        <p style="color: var(--text-light); margin-bottom: var(--spacing-lg);">
+          Track your progress and access completed artifacts from the 30-day program. These documents demonstrate your research methodology, AI integration, and ability to deliver actionable insights.
+        </p>
+
+        <h3 style="font-family: var(--font-serif); font-size: 20px; margin-top: var(--spacing-xl); margin-bottom: var(--spacing-lg); color: var(--primary-blue);">
+          Week 1 Artifacts
+        </h3>
+        <div class="portfolio-artifacts">
+          <div class="artifact">
+            <h3>AI Tools Inventory</h3>
+            <p>A documented overview of AI research tools tested, their capabilities, limitations, and best use cases for your research context.</p>
+            <button onclick="alert('Download artifact: AI Tools Inventory\n\nThis would be generated from Week 1 exercises and compiled into a shareable document.')">View/Export</button>
+          </div>
+          <div class="artifact">
+            <h3>Prompt Templates</h3>
+            <p>10+ reusable prompts for common research tasks: interview analysis, synthesis, persona generation, insight extraction.</p>
+            <button onclick="alert('Download artifact: Prompt Templates\n\nA library of proven prompts you can use in future research projects.')">View/Export</button>
+          </div>
+        </div>
+
+        <h3 style="font-family: var(--font-serif); font-size: 20px; margin-top: var(--spacing-xl); margin-bottom: var(--spacing-lg); color: var(--primary-blue);">
+          Week 2 Artifacts
+        </h3>
+        <div class="portfolio-artifacts">
+          <div class="artifact">
+            <h3>Research Project Brief</h3>
+            <p>Your research question, methodology, participant plan, and success metrics. Demonstrates clear research thinking.</p>
+            <button onclick="alert('Download artifact: Research Project Brief\n\nShows employers/clients your structured research approach.')">View/Export</button>
+          </div>
+          <div class="artifact">
+            <h3>Raw Research Data</h3>
+            <p>Interview transcripts, survey responses, observation notes—with ethical considerations documented.</p>
+            <button onclick="alert('Download artifact: Research Data\n\nAnonymized and structured data from your mini-research project.')">View/Export</button>
+          </div>
+        </div>
+
+        <h3 style="font-family: var(--font-serif); font-size: 20px; margin-top: var(--spacing-xl); margin-bottom: var(--spacing-lg); color: var(--primary-blue);">
+          Week 3 Artifacts
+        </h3>
+        <div class="portfolio-artifacts">
+          <div class="artifact">
+            <h3>Research Artifacts</h3>
+            <p>User personas, journey maps, insight frameworks, and other visual artifacts generated from your research findings.</p>
+            <button onclick="alert('Download artifact: Research Artifacts\n\nPersonas, journey maps, and other visual outputs from data synthesis.')">View/Export</button>
+          </div>
+          <div class="artifact">
+            <h3>Key Findings Report</h3>
+            <p>Synthesized insights with quotes, supporting data, and implications. Demonstrates analytical rigor.</p>
+            <button onclick="alert('Download artifact: Key Findings Report\n\nA polished research insights document ready for stakeholders.')">View/Export</button>
+          </div>
+        </div>
+
+        <h3 style="font-family: var(--font-serif); font-size: 20px; margin-top: var(--spacing-xl); margin-bottom: var(--spacing-lg); color: var(--primary-blue);">
+          Week 4: Complete Case Study
+        </h3>
+        <div class="portfolio-artifacts">
+          <div class="artifact" style="grid-column: span 2;">
+            <h3>AI-Augmented Research Case Study</h3>
+            <p>
+              Your complete case study combining research question, methodology (including AI integration), data analysis process, key findings, recommendations, and reflection on how AI enhanced your research. This is your primary portfolio piece.
+            </p>
+            <button onclick="alert('Download artifact: Complete Case Study\n\nYour portfolio-ready research case study documenting the full 30-day journey and how AI augmented your methodology.')">View/Export</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== FAQ TAB ===== -->
+    <div id="faq" class="tab-content">
+      <section class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Do I need to have a specific research topic in mind?</span>
+            <span class="icon">▼</span>
+          </div>
+          <div class="faq-answer">
+            <p>No, but having one helps. If you don't have a topic, we suggest exploring a research question relevant to your current work or choosing a hypothetical scenario (e.g., "How do users experience payment forms in mobile apps?"). The exercises are designed to work with any UX research context.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Can I skip days or do this at my own pace?</span>
+            <span class="icon">▼</span>
+          </div>
+          <div class="faq-answer">
+            <p>Absolutely. The program is structured for 30 days, but you can move through it at your own pace. Exercises build on each other (especially across weeks), so we recommend maintaining the week-by-week sequence.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>What AI tools do I need access to?</span>
+            <span class="icon">▼</span>
+          </div>
+          <div class="faq-answer">
+            <p>The program uses tools with free or freemium tiers: ChatGPT (free tier available), Claude, and Perplexity. You can complete the program without paid subscriptions, though advanced features (like GPT-4) may enhance some exercises. All prompts are tool-agnostic and adaptable.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>How much does this cost?</span>
+            <span class="icon">▼</span>
+          </div>
+          <div class="faq-answer">
+            <p>This program is completely free. We believe research skills and AI literacy should be accessible to everyone. AI tools have their own pricing, but free options are available for the entire 30 days.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Can I use this case study in my portfolio or job interviews?</span>
+            <span class="icon">▼</span>
+          </div>
+          <div class="faq-answer">
+            <p>Yes! The entire point is to build artifacts you can showcase. Your case study, prompt library, and methodology guide are yours to share. They demonstrate research thinking, AI fluency, and ability to deliver structured work—all attractive to employers and clients.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>What if I'm new to research or AI?</span>
+            <span class="icon">▼</span>
+          </div>
+          <div class="faq-answer">
+            <p>Perfect—this program is designed for learners at all levels. Week 1 covers fundamentals, and each exercise includes clear explanations and example prompts. You'll learn by doing, which is the most effective way to develop both research and AI skills.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>How is this different from other AI or research courses?</span>
+            <span class="icon">▼</span>
+          </div>
+          <div class="faq-answer">
+            <p>This program is project-based and practical. Rather than abstract lessons, you conduct actual research and use AI to enhance real analysis. By day 30, you have a complete, portfolio-ready artifact—not just knowledge, but demonstrable work. It's also built on accessibility and clarity principles, making AI research approachable for everyone.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <p><strong>AI-Augmented UX Research</strong></p>
+    <p>A free 30-day program to master AI tools, conduct better research, and build your portfolio.</p>
+    <p style="margin-top: var(--spacing-lg); font-size: 12px; opacity: 0.7;">Designed with principles of accessibility, clarity, and inclusion.</p>
+  </footer>
+
+  <script>
+    // Day data structure
+    const programData = {
+      week1: {
+        title: "Week 1: Foundation",
+        days: [
+          {
+            day: 1,
+            title: "AI in UX Research: Why It Matters",
+            description: "Understand what AI can and cannot do in research contexts.",
+            exercises: [
+              {
+                title: "Learn",
+                content: "Read/watch (10-15 min): Overview of AI capabilities in research (prompt engineering, data analysis, synthesis, ideation)."
+              },
+              {
+                title: "Reflect",
+                content: "Write 2-3 sentences: What's one way AI could enhance your current research work?"
+              },
+              {
+                title: "Artifact",
+                content: "Start an 'AI Research Notebook' to document learnings throughout the program."
+              }
+            ]
+          },
+          {
+            day: 2,
+            title: "Prompt Engineering Fundamentals",
+            description: "Master the skill of writing effective AI prompts."
+          },
+          {
+            day: 3,
+            title: "AI Tool Audit",
+            description: "Evaluate ChatGPT, Claude, and Perplexity for research tasks."
+          },
+          {
+            day: 4,
+            title: "Research Ethics & AI",
+            description: "Understand ethical considerations when using AI in research."
+          },
+          {
+            day: 5,
+            title: "Your Research Question",
+            description: "Define the research topic you'll explore for the next 4 weeks."
+          },
+          {
+            day: 6,
+            title: "Research Methodology Primer",
+            description: "Choose your research approach: qualitative, quantitative, or mixed."
+          },
+          {
+            day: 7,
+            title: "Prompt Library: Week 1 Recap",
+            description: "Compile 5 reusable prompts you've created this week."
+          }
+        ]
+      },
+      week2: {
+        title: "Week 2: Exploration",
+        days: [
+          {
+            day: 8,
+            title: "Design Your Mini Research Project",
+            description: "Plan participant recruitment, timeline, and success metrics."
+          },
+          {
+            day: 9,
+            title: "Conduct Interviews with AI Preparation",
+            description: "Use AI to prepare interview guides and note-taking templates."
+          },
+          {
+            day: 10,
+            title: "Gather Additional Data",
+            description: "Collect survey responses, behavioral data, or observation notes."
+          },
+          {
+            day: 11,
+            title: "Document Everything",
+            description: "Organize transcripts, notes, and raw data with proper labeling."
+          },
+          {
+            day: 12,
+            title: "Initial AI-Assisted Review",
+            description: "Use AI to summarize interviews and identify initial themes."
+          },
+          {
+            day: 13,
+            title: "Gut Check: Does the Data Tell a Story?",
+            description: "Reflect on data quality and refine your research focus."
+          },
+          {
+            day: 14,
+            title: "Week 2 Project Brief",
+            description: "Document your research methodology and initial findings overview."
+          }
+        ]
+      },
+      week3: {
+        title: "Week 3: Synthesis",
+        days: [
+          {
+            day: 15,
+            title: "AI-Assisted Thematic Analysis",
+            description: "Use AI to identify patterns, themes, and insights from your data."
+          },
+          {
+            day: 16,
+            title: "Create User Personas",
+            description: "Use AI to synthesize persona descriptions from research data."
+          },
+          {
+            day: 17,
+            title: "Build a Journey Map",
+            description: "Map user emotions, pain points, and opportunities over time."
+          },
+          {
+            day: 18,
+            title: "Generate Actionable Insights",
+            description: "Turn themes into clear, prioritized recommendations."
+          },
+          {
+            day: 19,
+            title: "Challenge Your Findings",
+            description: "Use AI to stress-test your conclusions against counterarguments."
+          },
+          {
+            day: 20,
+            title: "Create Visual Artifacts",
+            description: "Develop infographics, frameworks, or diagrams from findings."
+          },
+          {
+            day: 21,
+            title: "Week 3 Synthesis: Full Findings Report",
+            description: "Compile all research artifacts into a coherent narrative."
+          }
+        ]
+      },
+      week4: {
+        title: "Week 4: Portfolio",
+        days: [
+          {
+            day: 22,
+            title: "Write Your Research Case Study: Part 1",
+            description: "Draft the research question, methodology, and process sections."
+          },
+          {
+            day: 23,
+            title: "Write Your Research Case Study: Part 2",
+            description: "Write findings, insights, and recommendations sections."
+          },
+          {
+            day: 24,
+            title: "Reflect on AI's Role",
+            description: "Document where and how AI enhanced your research process."
+          },
+          {
+            day: 25,
+            title: "Create Your Prompt Library",
+            description: "Compile 15-20 reusable prompts you've tested throughout the program."
+          },
+          {
+            day: 26,
+            title: "Write a Methodology Guide",
+            description: "Create a framework others could use to replicate your research process."
+          },
+          {
+            day: 27,
+            title: "Polish & Proofread",
+            description: "Refine your case study, check for clarity and accessibility."
+          },
+          {
+            day: 28,
+            title: "Add Executive Summary",
+            description: "Write a 1-page summary of your research and key takeaways."
+          },
+          {
+            day: 29,
+            title: "Create Presentation Slides",
+            description: "Prepare a 10-slide overview of your research for future interviews."
+          },
+          {
+            day: 30,
+            title: "Portfolio Launch & Reflection",
+            description: "Finalize all artifacts and reflect on your 30-day journey."
+          }
+        ]
+      }
+    };
+
+    // Initialize tabs
+    function initTabs() {
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const tabName = e.target.dataset.tab;
+
+          document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+
+          e.target.classList.add('active');
+          document.getElementById(tabName).classList.add('active');
+        });
+      });
+    }
+
+    // Render days
+    function renderDays(weekKey) {
+      const container = document.getElementById('daysContainer');
+      const weekData = programData[weekKey];
+
+      container.innerHTML = '';
+
+      weekData.days.forEach(dayObj => {
+        const dayCard = document.createElement('div');
+        dayCard.className = 'day-card';
+
+        let contentHTML = `
+          <div class="day-header">
+            <div>
+              <h3>Day ${dayObj.day}: ${dayObj.title}</h3>
+              <p>${dayObj.description}</p>
+            </div>
+            <span class="icon">▼</span>
+          </div>
+          <div class="day-content">
+            <div class="day-body">
+        `;
+
+        if (dayObj.exercises) {
+          dayObj.exercises.forEach((exercise, idx) => {
+            contentHTML += `
+              <h4>${exercise.title}</h4>
+              <p>${exercise.content}</p>
+            `;
+          });
+        }
+
+        contentHTML += `
+              <div class="checklist">
+                <label>
+                  <input type="checkbox">
+                  <span>Day ${dayObj.day} complete</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        `;
+
+        dayCard.innerHTML = contentHTML;
+
+        // Toggle expand/collapse
+        dayCard.querySelector('.day-header').addEventListener('click', () => {
+          dayCard.classList.toggle('expanded');
+        });
+
+        container.appendChild(dayCard);
+      });
+    }
+
+    // Week selector
+    function initWeekSelector() {
+      document.querySelectorAll('.week-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+
+          const weekKey = e.target.dataset.week;
+          renderDays(weekKey);
+        });
+      });
+    }
+
+    // FAQ toggle
+    function initFAQ() {
+      document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', (e) => {
+          const faqItem = e.currentTarget.parentElement;
+          faqItem.classList.toggle('expanded');
+        });
+      });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      initTabs();
+      initWeekSelector();
+      renderDays('week1');
+      initFAQ();
+    });
+  </script>
+</body>
+</html>
