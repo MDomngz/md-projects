@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Environment Setup Guide for UX Designers</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius: 10px;
+  --radius-lg: 16px;
+  --sidebar-w: 260px;
+  --topbar-h: 56px;
+  --transition: 0.2s ease;
+  --gold: #c4a040;
+  --gold-dim: rgba(196,160,64,0.12);
+  --gold-border: rgba(196,160,64,0.25);
+  --blue: #3b82c4;
+  --blue-dim: rgba(59,130,196,0.12);
+  --sage: #5b9e85;
+  --sage-dim: rgba(91,158,133,0.12);
+  --rose: #b8605a;
+  --rose-dim: rgba(184,96,90,0.10);
+  --violet: #7a6ec4;
+  --violet-dim: rgba(122,110,196,0.12);
+  --teal: #4ab5a8;
+  --teal-dim: rgba(74,181,168,0.12);
+}
+
+[data-theme="dark"] {
+  --bg: #0e1014;
+  --bg2: #131519;
+  --surface: #181c24;
+  --surface2: #1e2330;
+  --surface3: #252c3c;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.14);
+  --text: #ede9e1;
+  --text-mid: #98a0ae;
+  --text-muted: #5a6170;
+  --shadow: rgba(0,0,0,0.4);
+  --code-bg: #141820;
+  --code-border: rgba(255,255,255,0.06);
+  --badge-text: #ede9e1;
+}
+
+[data-theme="light"] {
+  --bg: #f5f4f1;
+  --bg2: #efede9;
+  --surface: #ffffff;
+  --surface2: #f0eee9;
+  --surface3: #e8e5df;
+  --border: rgba(0,0,0,0.09);
+  --border-hover: rgba(0,0,0,0.18);
+  --text: #1a1d24;
+  --text-mid: #4a5260;
+  --text-muted: #8a9098;
+  --shadow: rgba(0,0,0,0.10);
+  --code-bg: #f8f7f4;
+  --code-border: rgba(0,0,0,0.08);
+  --badge-text: #1a1d24;
+}
+
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow: hidden;
+  transition: background var(--transition), color var(--transition);
+}
+
+.app { display: flex; height: 100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 50;
+  transition: transform 0.28s cubic-bezier(.4,0,.2,1), background var(--transition);
+}
+
+.sidebar-header {
+  padding: 20px 18px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wordmark { display: flex; align-items: flex-start; gap: 9px; }
+.wordmark-flag {
+  width: 20px; height: 20px;
+  background: linear-gradient(135deg, var(--gold) 50%, var(--blue) 50%);
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.wordmark-text {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+}
+.wordmark-sub {
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+.theme-toggle {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  transition: all 0.15s;
+}
+.theme-toggle:hover { border-color: var(--border-hover); color: var(--text); background: var(--surface2); }
+
+.sidebar-nav { flex: 1; overflow-y: auto; padding: 12px 0; }
+
+.nav-group { margin-bottom: 8px; }
+.nav-group-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--text-muted);
+  padding: 8px 20px 4px;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 20px;
+  cursor: pointer;
+  color: var(--text-mid);
+  font-size: 13px;
+  font-weight: 400;
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: all 0.15s;
+}
+.nav-item:hover { color: var(--text); background: var(--surface2); }
+.nav-item.active {
+  color: var(--gold);
+  background: var(--gold-dim);
+  border-left-color: var(--gold);
+  font-weight: 500;
+}
+.nav-icon { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
+.nav-badge {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: var(--surface3);
+  color: var(--text-muted);
+}
+
+.sidebar-footer {
+  padding: 14px 18px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ── PROGRESS BAR (sidebar bottom) ── */
+.progress-wrap {
+  padding: 14px 18px;
+  border-top: 1px solid var(--border);
+}
+.progress-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+.progress-bar {
+  height: 4px;
+  background: var(--surface3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--teal));
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+/* ── MOBILE TOGGLE ── */
+.mobile-toggle {
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 2px 12px var(--shadow);
+}
+
+/* ── MAIN CONTENT ── */
+.main { flex: 1; overflow-y: auto; scroll-behavior: smooth; }
+.main::-webkit-scrollbar { width: 6px; }
+.main::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 3px; }
+.main::-webkit-scrollbar-track { background: transparent; }
+
+/* Hero */
+.hero {
+  padding: 80px 60px 60px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.hero h1 {
+  font-family: var(--font-serif);
+  font-size: 38px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+.hero p {
+  font-size: 16px;
+  color: var(--text-mid);
+  max-width: 640px;
+  line-height: 1.7;
+}
+
+/* Overview cards */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  padding: 0 60px 40px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.overview-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: border-color 0.2s, transform 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+.overview-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+.overview-card .oc-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+.overview-card .oc-title {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.overview-card .oc-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Section */
+.section {
+  padding: 50px 60px;
+  max-width: 900px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+}
+.section-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.section h2 {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.section .section-intro {
+  color: var(--text-mid);
+  font-size: 14px;
+  margin-bottom: 28px;
+  max-width: 640px;
+}
+
+/* Steps */
+.steps { display: flex; flex-direction: column; gap: 20px; }
+.step {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.step:hover { border-color: var(--border-hover); }
+.step-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 24px;
+  cursor: pointer;
+  user-select: none;
+}
+.step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.step-header-text { flex: 1; }
+.step-title {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+.step-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.step-toggle {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-top: 6px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.step.open .step-toggle { transform: rotate(180deg); }
+.step-body {
+  display: none;
+  padding: 0 24px 24px 66px;
+}
+.step.open .step-body { display: block; }
+.step-body p { margin-bottom: 12px; color: var(--text-mid); font-size: 13px; line-height: 1.7; }
+.step-body ul, .step-body ol {
+  margin: 0 0 14px 18px;
+  color: var(--text-mid);
+  font-size: 13px;
+  line-height: 1.8;
+}
+.step-body li { margin-bottom: 4px; }
+.step-body strong { color: var(--text); font-weight: 600; }
+.step-body a { color: var(--blue); text-decoration: none; }
+.step-body a:hover { text-decoration: underline; }
+
+/* Code blocks */
+.code-block {
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  border-radius: 8px;
+  padding: 16px 18px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  overflow-x: auto;
+  margin: 12px 0 16px;
+  color: var(--text);
+  position: relative;
+}
+.code-block .code-label {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+}
+.code-block .copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: all 0.15s;
+}
+.code-block .copy-btn:hover { color: var(--text); border-color: var(--border-hover); }
+
+.code-inline {
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+/* Callout */
+.callout {
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin: 14px 0;
+  font-size: 13px;
+  line-height: 1.6;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.callout-body { flex: 1; }
+.callout-body strong { display: block; margin-bottom: 2px; }
+
+.callout.info { background: var(--blue-dim); border: 1px solid rgba(59,130,196,0.2); color: var(--text); }
+.callout.tip { background: var(--sage-dim); border: 1px solid rgba(91,158,133,0.2); color: var(--text); }
+.callout.warn { background: var(--rose-dim); border: 1px solid rgba(184,96,90,0.2); color: var(--text); }
+.callout.note { background: var(--violet-dim); border: 1px solid rgba(122,110,196,0.2); color: var(--text); }
+
+/* Color utility for step numbers */
+.c-blue .step-num { background: var(--blue-dim); color: var(--blue); }
+.c-sage .step-num { background: var(--sage-dim); color: var(--sage); }
+.c-violet .step-num { background: var(--violet-dim); color: var(--violet); }
+.c-teal .step-num { background: var(--teal-dim); color: var(--teal); }
+.c-gold .step-num { background: var(--gold-dim); color: var(--gold); }
+.c-rose .step-num { background: var(--rose-dim); color: var(--rose); }
+
+/* Section label color */
+.sl-blue { color: var(--blue); }
+.sl-sage { color: var(--sage); }
+.sl-violet { color: var(--violet); }
+.sl-teal { color: var(--teal); }
+.sl-gold { color: var(--gold); }
+.sl-rose { color: var(--rose); }
+
+/* Checklist */
+.checklist {
+  list-style: none;
+  margin: 0 0 14px 0;
+  padding: 0;
+}
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 13px;
+  color: var(--text-mid);
+  border-bottom: 1px solid var(--border);
+}
+.checklist li:last-child { border-bottom: none; }
+.checklist input[type="checkbox"] {
+  margin-top: 3px;
+  accent-color: var(--gold);
+  flex-shrink: 0;
+}
+
+/* Table */
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 14px 0;
+}
+.info-table th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.info-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-mid);
+  vertical-align: top;
+}
+.info-table tr:last-child td { border-bottom: none; }
+
+/* Badge */
+.badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  letter-spacing: 0.04em;
+}
+.badge-blue { background: var(--blue-dim); color: var(--blue); }
+.badge-sage { background: var(--sage-dim); color: var(--sage); }
+.badge-violet { background: var(--violet-dim); color: var(--violet); }
+.badge-gold { background: var(--gold-dim); color: var(--gold); }
+.badge-teal { background: var(--teal-dim); color: var(--teal); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .sidebar { position: fixed; left: 0; top: 0; bottom: 0; transform: translateX(-100%); z-index: 100; }
+  .sidebar.open { transform: translateX(0); }
+  .mobile-toggle { display: flex; }
+  .hero { padding: 70px 24px 40px; }
+  .hero h1 { font-size: 28px; }
+  .overview-grid { padding: 0 24px 30px; }
+  .section { padding: 36px 24px; }
+  .step-body { padding: 0 16px 20px 50px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Mobile sidebar toggle -->
+<button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="app">
+
+<!-- ══════ SIDEBAR ══════ -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="wordmark">
+      <div class="wordmark-flag"></div>
+      <div>
+        <div class="wordmark-text">AI Setup Guide</div>
+        <div class="wordmark-sub">For UX Designers</div>
+      </div>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme">&#9790;</button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-group">
+      <div class="nav-group-label">Getting Started</div>
+      <a class="nav-item active" href="#overview" data-section="overview">
+        <span class="nav-icon">&#9671;</span> Overview
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Environment Setup</div>
+      <a class="nav-item" href="#github" data-section="github">
+        <span class="nav-icon">&#10070;</span> GitHub Account & Repos
+        <span class="nav-badge">4 steps</span>
+      </a>
+      <a class="nav-item" href="#vscode" data-section="vscode">
+        <span class="nav-icon">&#9998;</span> VS Code Setup
+        <span class="nav-badge">5 steps</span>
+      </a>
+      <a class="nav-item" href="#copilot" data-section="copilot">
+        <span class="nav-icon">&#10024;</span> GitHub Copilot
+        <span class="nav-badge">4 steps</span>
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Advanced</div>
+      <a class="nav-item" href="#mcp" data-section="mcp">
+        <span class="nav-icon">&#9881;</span> MCP Overview
+        <span class="nav-badge">3 steps</span>
+      </a>
+      <a class="nav-item" href="#figma-mcp" data-section="figma-mcp">
+        <span class="nav-icon">&#9830;</span> Figma MCP
+        <span class="nav-badge">5 steps</span>
+      </a>
+      <a class="nav-item" href="#checklist" data-section="checklist">
+        <span class="nav-icon">&#9745;</span> Final Checklist
+      </a>
+    </div>
+  </nav>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Setup Progress</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+  </div>
+</aside>
+
+<!-- ══════ MAIN CONTENT ══════ -->
+<main class="main" id="main-content">
+
+  <!-- HERO -->
+  <div class="hero" id="overview">
+    <div class="hero-eyebrow">AI Environment Setup</div>
+    <h1>Set Up Your AI-Powered Design Workflow</h1>
+    <p>A step-by-step guide for UX designers to configure GitHub, VS Code, GitHub Copilot, and MCP integrations &mdash; including how to connect Figma directly to your AI tools.</p>
+  </div>
+
+  <!-- OVERVIEW CARDS -->
+  <div class="overview-grid">
+    <a class="overview-card" href="#github">
+      <div class="oc-icon">&#10070;</div>
+      <div class="oc-title">GitHub</div>
+      <div class="oc-desc">Create your account, set up repos, and learn the basics of version control.</div>
+    </a>
+    <a class="overview-card" href="#vscode">
+      <div class="oc-icon">&#9998;</div>
+      <div class="oc-title">VS Code</div>
+      <div class="oc-desc">Install and configure VS Code with essential extensions for design work.</div>
+    </a>
+    <a class="overview-card" href="#copilot">
+      <div class="oc-icon">&#10024;</div>
+      <div class="oc-title">GitHub Copilot</div>
+      <div class="oc-desc">Connect AI-powered code suggestions directly in your editor.</div>
+    </a>
+    <a class="overview-card" href="#figma-mcp">
+      <div class="oc-icon">&#9830;</div>
+      <div class="oc-title">Figma MCP</div>
+      <div class="oc-desc">Bridge your Figma designs with AI tools using the Model Context Protocol.</div>
+    </a>
+  </div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- SECTION: GITHUB -->
+  <!-- ══════════════════════════════ -->
+  <div class="section" id="github">
+    <div class="section-label sl-blue">Section 1</div>
+    <h2>GitHub Account & Repositories</h2>
+    <p class="section-intro">GitHub is where your code and design system components live. Even as a UX designer, having a GitHub account enables collaboration with developers and access to AI tools like Copilot.</p>
+
+    <div class="steps">
+
+      <div class="step c-blue open">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">1</div>
+          <div class="step-header-text">
+            <div class="step-title">Create a GitHub Account</div>
+            <div class="step-subtitle">Sign up and configure your profile</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <ol>
+            <li>Go to <a href="https://github.com/signup" target="_blank">github.com/signup</a></li>
+            <li>Enter your email address (use your work email if setting up for your team)</li>
+            <li>Create a password and choose a username</li>
+            <li>Verify your account via the email confirmation</li>
+            <li>On the welcome screen, select your interests &mdash; "Design" and "Web development" are good picks</li>
+          </ol>
+          <div class="callout tip">
+            <span class="callout-icon">&#9889;</span>
+            <div class="callout-body">
+              <strong>Tip: Enable Two-Factor Authentication</strong>
+              Go to Settings &rarr; Password and authentication &rarr; Enable 2FA. This is required for many organizations and is a security best practice.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step c-blue">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">2</div>
+          <div class="step-header-text">
+            <div class="step-title">Understand Repos, Branches, and Commits</div>
+            <div class="step-subtitle">Core concepts you'll use daily</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <table class="info-table">
+            <tr>
+              <th>Concept</th>
+              <th>What It Means</th>
+              <th>Design Analogy</th>
+            </tr>
+            <tr>
+              <td><strong>Repository (Repo)</strong></td>
+              <td>A project folder that tracks all changes</td>
+              <td>Like a Figma file with full version history</td>
+            </tr>
+            <tr>
+              <td><strong>Branch</strong></td>
+              <td>A parallel copy for making changes safely</td>
+              <td>Like duplicating a Figma page to try new layouts</td>
+            </tr>
+            <tr>
+              <td><strong>Commit</strong></td>
+              <td>A saved snapshot of your changes with a message</td>
+              <td>Like naming a version in Figma's history</td>
+            </tr>
+            <tr>
+              <td><strong>Pull Request (PR)</strong></td>
+              <td>A request to merge your branch into the main code</td>
+              <td>Like presenting your design for team review</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step c-blue">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">3</div>
+          <div class="step-header-text">
+            <div class="step-title">Create Your First Repository</div>
+            <div class="step-subtitle">Set up a project to work with</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <ol>
+            <li>Click the <strong>+</strong> icon in the top-right of GitHub, then <strong>New repository</strong></li>
+            <li>Name it something descriptive, like <span class="code-inline">my-design-system</span> or <span class="code-inline">ux-prototypes</span></li>
+            <li>Add a description (e.g., "Component prototypes and design tokens")</li>
+            <li>Choose <strong>Public</strong> or <strong>Private</strong> visibility</li>
+            <li>Check <strong>Add a README file</strong></li>
+            <li>Click <strong>Create repository</strong></li>
+          </ol>
+          <div class="callout info">
+            <span class="callout-icon">&#8505;</span>
+            <div class="callout-body">
+              If you're joining an existing team, your organization admin will likely invite you to existing repos. You can skip this step and clone the team's repos instead.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step c-blue">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">4</div>
+          <div class="step-header-text">
+            <div class="step-title">Clone a Repo to Your Computer</div>
+            <div class="step-subtitle">Download a repo so you can work on it locally</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <p>Cloning copies the repo to your local machine. You'll do this from VS Code (which we'll set up next) or the terminal.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+# Using the terminal
+git clone https://github.com/YOUR-USERNAME/my-design-system.git
+
+# Navigate into the folder
+cd my-design-system
+          </div>
+          <p>Or in VS Code: press <span class="code-inline">Cmd+Shift+P</span> (Mac) / <span class="code-inline">Ctrl+Shift+P</span> (Windows), type <strong>Git: Clone</strong>, and paste the repo URL.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- SECTION: VS CODE -->
+  <!-- ══════════════════════════════ -->
+  <div class="section" id="vscode">
+    <div class="section-label sl-sage">Section 2</div>
+    <h2>VS Code Setup</h2>
+    <p class="section-intro">Visual Studio Code is a free, lightweight code editor that integrates with GitHub, Copilot, and MCP servers. It's the hub of your AI-powered workflow.</p>
+
+    <div class="steps">
+
+      <div class="step c-sage">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">1</div>
+          <div class="step-header-text">
+            <div class="step-title">Download & Install VS Code</div>
+            <div class="step-subtitle">Get the editor on your machine</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <ol>
+            <li>Go to <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a></li>
+            <li>Download the installer for your operating system (Mac, Windows, or Linux)</li>
+            <li>Run the installer and follow the prompts</li>
+            <li>Launch VS Code when installation is complete</li>
+          </ol>
+          <div class="callout tip">
+            <span class="callout-icon">&#9889;</span>
+            <div class="callout-body">
+              <strong>Mac Users:</strong> After installing, open VS Code, press <span class="code-inline">Cmd+Shift+P</span>, and type <strong>Shell Command: Install 'code' command in PATH</strong>. This lets you open VS Code from the terminal by typing <span class="code-inline">code .</span> in any folder.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step c-sage">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">2</div>
+          <div class="step-header-text">
+            <div class="step-title">Sign In with GitHub</div>
+            <div class="step-subtitle">Link your GitHub account to VS Code</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <ol>
+            <li>In VS Code, click the <strong>Accounts</strong> icon (person silhouette) in the bottom-left of the sidebar</li>
+            <li>Click <strong>Sign in with GitHub</strong></li>
+            <li>A browser window will open &mdash; authorize the connection</li>
+            <li>You'll be redirected back to VS Code, now connected</li>
+          </ol>
+          <p>This connection enables syncing your settings, accessing private repos, and using GitHub Copilot.</p>
+        </div>
+      </div>
+
+      <div class="step c-sage">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">3</div>
+          <div class="step-header-text">
+            <div class="step-title">Install Essential Extensions</div>
+            <div class="step-subtitle">Extensions that make VS Code designer-friendly</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <p>Open the Extensions panel with <span class="code-inline">Cmd+Shift+X</span> (Mac) / <span class="code-inline">Ctrl+Shift+X</span> (Windows) and search for these:</p>
+          <table class="info-table">
+            <tr>
+              <th>Extension</th>
+              <th>What It Does</th>
+              <th>Category</th>
+            </tr>
+            <tr>
+              <td><strong>GitHub Copilot</strong></td>
+              <td>AI code suggestions as you type</td>
+              <td><span class="badge badge-violet">AI</span></td>
+            </tr>
+            <tr>
+              <td><strong>GitHub Copilot Chat</strong></td>
+              <td>Chat with AI about your code in a sidebar</td>
+              <td><span class="badge badge-violet">AI</span></td>
+            </tr>
+            <tr>
+              <td><strong>Live Server</strong></td>
+              <td>Preview HTML files in a browser with auto-reload</td>
+              <td><span class="badge badge-sage">Preview</span></td>
+            </tr>
+            <tr>
+              <td><strong>Prettier</strong></td>
+              <td>Auto-format your code to look clean</td>
+              <td><span class="badge badge-blue">Formatting</span></td>
+            </tr>
+            <tr>
+              <td><strong>HTML CSS Support</strong></td>
+              <td>Better autocomplete for HTML and CSS</td>
+              <td><span class="badge badge-blue">Language</span></td>
+            </tr>
+            <tr>
+              <td><strong>GitLens</strong></td>
+              <td>See who changed what and when, right in the editor</td>
+              <td><span class="badge badge-gold">Git</span></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step c-sage">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">4</div>
+          <div class="step-header-text">
+            <div class="step-title">Open a Repo in VS Code</div>
+            <div class="step-subtitle">Start working on your project</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <p>There are three easy ways to open a project:</p>
+          <ol>
+            <li><strong>File &rarr; Open Folder:</strong> Navigate to your cloned repo folder and open it</li>
+            <li><strong>Terminal:</strong> Navigate to your project folder and type <span class="code-inline">code .</span></li>
+            <li><strong>Command Palette:</strong> Press <span class="code-inline">Cmd+Shift+P</span>, type <strong>Git: Clone</strong>, and paste a repo URL</li>
+          </ol>
+          <p>Once open, you'll see the file tree on the left, editor in the center, and terminal at the bottom (toggle with <span class="code-inline">Ctrl+`</span>).</p>
+        </div>
+      </div>
+
+      <div class="step c-sage">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">5</div>
+          <div class="step-header-text">
+            <div class="step-title">Learn the Key Shortcuts</div>
+            <div class="step-subtitle">Navigate VS Code like a pro</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <table class="info-table">
+            <tr>
+              <th>Action</th>
+              <th>Mac</th>
+              <th>Windows/Linux</th>
+            </tr>
+            <tr>
+              <td>Command Palette</td>
+              <td><span class="code-inline">Cmd+Shift+P</span></td>
+              <td><span class="code-inline">Ctrl+Shift+P</span></td>
+            </tr>
+            <tr>
+              <td>Quick Open File</td>
+              <td><span class="code-inline">Cmd+P</span></td>
+              <td><span class="code-inline">Ctrl+P</span></td>
+            </tr>
+            <tr>
+              <td>Toggle Terminal</td>
+              <td><span class="code-inline">Ctrl+`</span></td>
+              <td><span class="code-inline">Ctrl+`</span></td>
+            </tr>
+            <tr>
+              <td>Search All Files</td>
+              <td><span class="code-inline">Cmd+Shift+F</span></td>
+              <td><span class="code-inline">Ctrl+Shift+F</span></td>
+            </tr>
+            <tr>
+              <td>Toggle Sidebar</td>
+              <td><span class="code-inline">Cmd+B</span></td>
+              <td><span class="code-inline">Ctrl+B</span></td>
+            </tr>
+            <tr>
+              <td>Open Copilot Chat</td>
+              <td><span class="code-inline">Cmd+Shift+I</span></td>
+              <td><span class="code-inline">Ctrl+Shift+I</span></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- SECTION: COPILOT -->
+  <!-- ══════════════════════════════ -->
+  <div class="section" id="copilot">
+    <div class="section-label sl-violet">Section 3</div>
+    <h2>Connect GitHub Copilot to VS Code</h2>
+    <p class="section-intro">GitHub Copilot is an AI pair programmer that suggests code as you type. It can help UX designers write HTML prototypes, CSS components, and even React code faster.</p>
+
+    <div class="steps">
+
+      <div class="step c-violet">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">1</div>
+          <div class="step-header-text">
+            <div class="step-title">Get a Copilot Subscription</div>
+            <div class="step-subtitle">Choose the right plan for you</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <table class="info-table">
+            <tr>
+              <th>Plan</th>
+              <th>Price</th>
+              <th>Best For</th>
+            </tr>
+            <tr>
+              <td><strong>Copilot Free</strong></td>
+              <td>$0/month</td>
+              <td>Trying it out &mdash; limited completions per month</td>
+            </tr>
+            <tr>
+              <td><strong>Copilot Pro</strong></td>
+              <td>$10/month</td>
+              <td>Individual designers and freelancers</td>
+            </tr>
+            <tr>
+              <td><strong>Copilot Business</strong></td>
+              <td>$19/user/month</td>
+              <td>Teams &mdash; your org may already provide this</td>
+            </tr>
+          </table>
+          <div class="callout info">
+            <span class="callout-icon">&#8505;</span>
+            <div class="callout-body">
+              Check with your team lead &mdash; many organizations provide Copilot Business licenses to all team members. You may already have access.
+            </div>
+          </div>
+          <ol>
+            <li>Go to <a href="https://github.com/features/copilot" target="_blank">github.com/features/copilot</a></li>
+            <li>Click <strong>Get Copilot</strong> and choose your plan</li>
+            <li>Complete the signup process</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="step c-violet">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">2</div>
+          <div class="step-header-text">
+            <div class="step-title">Install Copilot Extensions in VS Code</div>
+            <div class="step-subtitle">Add Copilot and Copilot Chat</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <ol>
+            <li>Open VS Code</li>
+            <li>Go to Extensions (<span class="code-inline">Cmd+Shift+X</span> / <span class="code-inline">Ctrl+Shift+X</span>)</li>
+            <li>Search for <strong>"GitHub Copilot"</strong> and click <strong>Install</strong></li>
+            <li>Search for <strong>"GitHub Copilot Chat"</strong> and click <strong>Install</strong></li>
+            <li>VS Code will prompt you to sign in with GitHub &mdash; authorize the connection</li>
+          </ol>
+          <p>After installation, you'll see a Copilot icon in the bottom-right status bar. A filled icon means it's active and ready.</p>
+        </div>
+      </div>
+
+      <div class="step c-violet">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">3</div>
+          <div class="step-header-text">
+            <div class="step-title">Using Copilot for Design Work</div>
+            <div class="step-subtitle">Practical ways designers can leverage Copilot</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <p><strong>Inline Suggestions:</strong> Start typing and Copilot will suggest completions in gray text. Press <span class="code-inline">Tab</span> to accept, or <span class="code-inline">Esc</span> to dismiss.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+/* Type a comment describing what you want: */
+/* Create a card component with rounded corners, shadow, and hover effect */
+
+/* Copilot will suggest the full CSS below your comment */
+.card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+  padding: 24px;
+}
+.card:hover {
+  transform: translateY(-2px);
+}
+          </div>
+          <p><strong>Copilot Chat:</strong> Press <span class="code-inline">Cmd+Shift+I</span> to open the chat panel. Ask questions like:</p>
+          <ul>
+            <li>"Convert this CSS to match the VA Design System spacing tokens"</li>
+            <li>"Create an accessible button component in HTML"</li>
+            <li>"Explain what this React component does"</li>
+            <li>"Help me write a responsive grid layout"</li>
+          </ul>
+          <div class="callout tip">
+            <span class="callout-icon">&#9889;</span>
+            <div class="callout-body">
+              <strong>Designer Tip:</strong> Use comments as prompts. Write a plain-English description of the component you want, and Copilot will generate the code. This works especially well for HTML/CSS prototypes.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step c-violet">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">4</div>
+          <div class="step-header-text">
+            <div class="step-title">Copilot Agent Mode</div>
+            <div class="step-subtitle">Let Copilot handle multi-step tasks</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <p>Copilot's <strong>Agent Mode</strong> (available in Copilot Chat) can handle complex, multi-step tasks &mdash; like scaffolding a full component, editing multiple files, or running terminal commands.</p>
+          <ol>
+            <li>Open Copilot Chat (<span class="code-inline">Cmd+Shift+I</span>)</li>
+            <li>Look for the model selector dropdown at the top of the chat &mdash; you can pick models like GPT-4o or Claude</li>
+            <li>In the chat input, toggle to <strong>Agent</strong> mode (look for the mode selector)</li>
+            <li>Describe what you need: "Create a responsive navigation component using the VADS header pattern"</li>
+            <li>Copilot will plan the steps, create files, and ask for your approval before making changes</li>
+          </ol>
+          <div class="callout note">
+            <span class="callout-icon">&#9733;</span>
+            <div class="callout-body">
+              <strong>Agent vs. Chat vs. Edit:</strong> Use <strong>Chat</strong> for questions and explanations. Use <strong>Edit</strong> (Cmd+Shift+I and select Edit mode) for targeted code changes. Use <strong>Agent</strong> for multi-file tasks where you want Copilot to drive.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- SECTION: MCP -->
+  <!-- ══════════════════════════════ -->
+  <div class="section" id="mcp">
+    <div class="section-label sl-teal">Section 4</div>
+    <h2>Understanding MCP</h2>
+    <p class="section-intro">The Model Context Protocol (MCP) is an open standard that lets AI tools connect to external services &mdash; your design files, databases, APIs, and more. Think of it as giving your AI assistant eyes and hands beyond just code.</p>
+
+    <div class="steps">
+
+      <div class="step c-teal">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">1</div>
+          <div class="step-header-text">
+            <div class="step-title">What Is MCP?</div>
+            <div class="step-subtitle">The bridge between AI and your tools</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <p>MCP (Model Context Protocol) is a standard created by Anthropic that defines how AI assistants communicate with external tools and data sources. Without MCP, an AI can only see the text you type. With MCP, it can:</p>
+          <ul>
+            <li><strong>Read your Figma designs</strong> and understand component structure</li>
+            <li><strong>Access your file system</strong> to read and write code</li>
+            <li><strong>Query APIs</strong> and databases for real data</li>
+            <li><strong>Run commands</strong> in your terminal</li>
+            <li><strong>Search the web</strong> for documentation and references</li>
+          </ul>
+          <table class="info-table">
+            <tr>
+              <th>Term</th>
+              <th>Meaning</th>
+            </tr>
+            <tr>
+              <td><strong>MCP Server</strong></td>
+              <td>A small program that connects a specific tool (Figma, GitHub, Slack, etc.) to AI</td>
+            </tr>
+            <tr>
+              <td><strong>MCP Client</strong></td>
+              <td>The AI application (VS Code Copilot, Claude Code, Cursor, etc.) that talks to MCP servers</td>
+            </tr>
+            <tr>
+              <td><strong>Tools</strong></td>
+              <td>Actions the MCP server exposes &mdash; like "get design," "create file," "search"</td>
+            </tr>
+            <tr>
+              <td><strong>Resources</strong></td>
+              <td>Data the MCP server can provide &mdash; like file contents, design metadata, etc.</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step c-teal">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">2</div>
+          <div class="step-header-text">
+            <div class="step-title">How MCP Works in VS Code</div>
+            <div class="step-subtitle">Configure MCP servers for Copilot</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <p>VS Code supports MCP servers through its settings. When you configure an MCP server, GitHub Copilot (in Agent mode) can use its tools.</p>
+          <p><strong>Where to configure:</strong></p>
+          <ul>
+            <li><strong>User-level:</strong> In your VS Code settings (<span class="code-inline">settings.json</span>) &mdash; available in all projects</li>
+            <li><strong>Project-level:</strong> In a <span class="code-inline">.vscode/mcp.json</span> file &mdash; shared with your team via the repo</li>
+          </ul>
+          <p>The configuration format looks like this:</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+// .vscode/mcp.json
+{
+  "servers": {
+    "my-server-name": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@example/mcp-server"],
+      "env": {
+        "API_KEY": "${input:apiKey}"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "id": "apiKey",
+      "description": "API key for the service",
+      "type": "promptString",
+      "password": true
+    }
+  ]
+}
+          </div>
+          <div class="callout info">
+            <span class="callout-icon">&#8505;</span>
+            <div class="callout-body">
+              The <span class="code-inline">${input:apiKey}</span> syntax prompts you for the value when the server starts, so you never have to hard-code secrets in your config files.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step c-teal">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">3</div>
+          <div class="step-header-text">
+            <div class="step-title">Popular MCP Servers for Designers</div>
+            <div class="step-subtitle">Servers that are especially useful for UX work</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <table class="info-table">
+            <tr>
+              <th>MCP Server</th>
+              <th>What It Connects</th>
+              <th>Use Case</th>
+            </tr>
+            <tr>
+              <td><strong>Figma MCP</strong></td>
+              <td>Your Figma files and design system</td>
+              <td>Design-to-code, component inspection, style extraction</td>
+            </tr>
+            <tr>
+              <td><strong>Filesystem</strong></td>
+              <td>Your local file system</td>
+              <td>Reading/writing project files, managing assets</td>
+            </tr>
+            <tr>
+              <td><strong>GitHub</strong></td>
+              <td>GitHub repos, issues, PRs</td>
+              <td>Creating issues, reviewing PRs, searching code</td>
+            </tr>
+            <tr>
+              <td><strong>Fetch / Web Search</strong></td>
+              <td>The web</td>
+              <td>Looking up documentation, research, accessibility guidelines</td>
+            </tr>
+            <tr>
+              <td><strong>Slack</strong></td>
+              <td>Your Slack workspace</td>
+              <td>Reading team context, sharing updates</td>
+            </tr>
+          </table>
+          <p>The next section covers the most important one for UX designers: <strong>Figma MCP</strong>.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- SECTION: FIGMA MCP -->
+  <!-- ══════════════════════════════ -->
+  <div class="section" id="figma-mcp">
+    <div class="section-label sl-gold">Section 5</div>
+    <h2>Setting Up Figma MCP</h2>
+    <p class="section-intro">The Figma MCP server lets AI tools read your designs, extract styles, understand component structure, and even write designs back into Figma. It's the bridge between your design files and code.</p>
+
+    <div class="steps">
+
+      <div class="step c-gold">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">1</div>
+          <div class="step-header-text">
+            <div class="step-title">Get a Figma Access Token</div>
+            <div class="step-subtitle">Create a personal access token in Figma</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <ol>
+            <li>Open Figma and click your <strong>profile icon</strong> in the top-left</li>
+            <li>Go to <strong>Settings</strong></li>
+            <li>Scroll down to <strong>Personal access tokens</strong></li>
+            <li>Click <strong>Generate new token</strong></li>
+            <li>Give it a descriptive name like "MCP Server Access"</li>
+            <li>Set the expiration (90 days is a good balance of security and convenience)</li>
+            <li>For scopes, enable at minimum:
+              <ul>
+                <li><strong>File content</strong> &mdash; Read access (required)</li>
+                <li><strong>File content</strong> &mdash; Write access (needed for code-to-design)</li>
+                <li><strong>Dev resources</strong> &mdash; Read and Write (for Code Connect)</li>
+              </ul>
+            </li>
+            <li>Click <strong>Generate token</strong> and <strong>copy it immediately</strong> &mdash; you won't be able to see it again</li>
+          </ol>
+          <div class="callout warn">
+            <span class="callout-icon">&#9888;</span>
+            <div class="callout-body">
+              <strong>Keep your token secret.</strong> Never commit it to a repo, paste it in Slack, or share it in a document. Store it in a password manager or use environment variables.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step c-gold">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">2</div>
+          <div class="step-header-text">
+            <div class="step-title">Configure Figma MCP in VS Code</div>
+            <div class="step-subtitle">Add the Figma MCP server to your project</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <p>Create a <span class="code-inline">.vscode/mcp.json</span> file in your project root:</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+// .vscode/mcp.json
+{
+  "servers": {
+    "figma": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "figma-developer-mcp", "--stdio"],
+      "env": {
+        "FIGMA_API_KEY": "${input:figmaApiKey}"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "id": "figmaApiKey",
+      "description": "Your Figma Personal Access Token",
+      "type": "promptString",
+      "password": true
+    }
+  ]
+}
+          </div>
+          <p>When you start a Copilot Agent session, VS Code will prompt you for the Figma token. It's stored securely in your session and never written to disk.</p>
+
+          <div class="callout tip">
+            <span class="callout-icon">&#9889;</span>
+            <div class="callout-body">
+              <strong>Alternative: Environment variable.</strong> If you prefer not to be prompted each time, set <span class="code-inline">FIGMA_API_KEY</span> in your shell profile (<span class="code-inline">~/.zshrc</span> or <span class="code-inline">~/.bashrc</span>) and replace the env value with just <span class="code-inline">"FIGMA_API_KEY": "${env:FIGMA_API_KEY}"</span>.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step c-gold">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">3</div>
+          <div class="step-header-text">
+            <div class="step-title">What Figma MCP Can Do</div>
+            <div class="step-subtitle">Capabilities and practical workflows</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <p>Once connected, the Figma MCP server gives your AI assistant these abilities:</p>
+
+          <table class="info-table">
+            <tr>
+              <th>Capability</th>
+              <th>How to Use It</th>
+            </tr>
+            <tr>
+              <td><strong>Read designs</strong></td>
+              <td>Paste a Figma URL and ask "Implement this design" &mdash; the AI reads the layout, colors, typography, and spacing</td>
+            </tr>
+            <tr>
+              <td><strong>Extract styles</strong></td>
+              <td>Ask "What colors and fonts does this component use?" to get design tokens</td>
+            </tr>
+            <tr>
+              <td><strong>Generate code from designs</strong></td>
+              <td>Paste a component URL and ask for HTML/CSS or React code that matches</td>
+            </tr>
+            <tr>
+              <td><strong>Write designs to Figma</strong></td>
+              <td>Describe a component and have the AI create it in your Figma file</td>
+            </tr>
+            <tr>
+              <td><strong>Code Connect</strong></td>
+              <td>Map Figma components to code components, so developers see code snippets in Figma's Dev Mode</td>
+            </tr>
+            <tr>
+              <td><strong>Screenshots</strong></td>
+              <td>Ask for a screenshot of any Figma frame or component for reference</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step c-gold">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">4</div>
+          <div class="step-header-text">
+            <div class="step-title">Using Figma MCP with Copilot</div>
+            <div class="step-subtitle">Step-by-step design-to-code workflow</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <p>Here's how to go from a Figma design to code using Copilot + Figma MCP:</p>
+          <ol>
+            <li>Open your project in VS Code</li>
+            <li>Open Copilot Chat (<span class="code-inline">Cmd+Shift+I</span>) and switch to <strong>Agent</strong> mode</li>
+            <li>Copy the URL of a Figma frame or component (right-click &rarr; Copy link in Figma)</li>
+            <li>In the chat, type something like:</li>
+          </ol>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+Look at this Figma design: [paste your Figma URL here]
+
+Create an accessible HTML/CSS component that matches this
+design. Use semantic HTML, ARIA attributes where needed,
+and follow WCAG 2.1 AA standards.
+          </div>
+          <ol start="5">
+            <li>Copilot will use the Figma MCP to read the design, then generate matching code</li>
+            <li>Review the generated code &mdash; check spacing, colors, and accessibility</li>
+            <li>Click <strong>Accept</strong> to apply the changes to your files</li>
+          </ol>
+          <div class="callout note">
+            <span class="callout-icon">&#9733;</span>
+            <div class="callout-body">
+              <strong>Pro tip:</strong> Be specific in your prompts. Instead of "make this design," say "Create a React component using USWDS classes that matches this card design. Include responsive breakpoints at 768px and 1024px."
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step c-gold">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">5</div>
+          <div class="step-header-text">
+            <div class="step-title">Using Figma MCP with Claude Code</div>
+            <div class="step-subtitle">Alternative setup for the Claude Code CLI</div>
+          </div>
+          <div class="step-toggle">&#9660;</div>
+        </div>
+        <div class="step-body">
+          <p>If you use <strong>Claude Code</strong> (Anthropic's CLI tool), you can also connect Figma MCP there. Claude Code supports MCP servers natively.</p>
+          <p>Add the Figma MCP server to your project's <span class="code-inline">.claude/settings.json</span>:</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+// .claude/settings.json
+{
+  "mcpServers": {
+    "figma": {
+      "command": "npx",
+      "args": ["-y", "figma-developer-mcp", "--stdio"],
+      "env": {
+        "FIGMA_API_KEY": "your-token-here"
+      }
+    }
+  }
+}
+          </div>
+          <p>Or set the token as an environment variable first:</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+# Add to ~/.zshrc or ~/.bashrc
+export FIGMA_API_KEY="your-token-here"
+
+# Then in .claude/settings.json, reference it:
+# "FIGMA_API_KEY": "${FIGMA_API_KEY}"
+          </div>
+          <p>Once configured, you can use Claude Code with commands like:</p>
+          <ul>
+            <li><span class="code-inline">"Look at this Figma design and create a matching component"</span></li>
+            <li><span class="code-inline">"Generate a design library in Figma based on our codebase"</span></li>
+            <li><span class="code-inline">"Set up Code Connect for our component library"</span></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- SECTION: CHECKLIST -->
+  <!-- ══════════════════════════════ -->
+  <div class="section" id="checklist">
+    <div class="section-label sl-rose">Final Check</div>
+    <h2>Setup Checklist</h2>
+    <p class="section-intro">Use this checklist to verify your environment is fully configured. Check off each item as you complete it.</p>
+
+    <ul class="checklist" id="setup-checklist">
+      <li><input type="checkbox" onchange="updateProgress()"> GitHub account created with 2FA enabled</li>
+      <li><input type="checkbox" onchange="updateProgress()"> At least one repository created or cloned</li>
+      <li><input type="checkbox" onchange="updateProgress()"> VS Code installed and connected to GitHub</li>
+      <li><input type="checkbox" onchange="updateProgress()"> GitHub Copilot extension installed</li>
+      <li><input type="checkbox" onchange="updateProgress()"> GitHub Copilot Chat extension installed</li>
+      <li><input type="checkbox" onchange="updateProgress()"> Copilot subscription active (Free, Pro, or Business)</li>
+      <li><input type="checkbox" onchange="updateProgress()"> Copilot generating suggestions in the editor</li>
+      <li><input type="checkbox" onchange="updateProgress()"> Figma personal access token generated</li>
+      <li><input type="checkbox" onchange="updateProgress()"> Figma MCP server configured in <span class="code-inline">.vscode/mcp.json</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"> Tested Figma MCP by reading a design in Copilot Agent mode</li>
+      <li><input type="checkbox" onchange="updateProgress()"> Live Server extension installed for HTML previews</li>
+      <li><input type="checkbox" onchange="updateProgress()"> Prettier extension installed for code formatting</li>
+    </ul>
+
+    <div class="callout tip" style="margin-top: 24px;">
+      <span class="callout-icon">&#9889;</span>
+      <div class="callout-body">
+        <strong>You're all set!</strong> Once everything is checked off, you have a fully configured AI-powered design environment. You can now use Copilot to write code faster, use Figma MCP to bridge design and development, and leverage MCP servers to connect any tool to your AI workflow.
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer spacer -->
+  <div style="height: 80px;"></div>
+
+</main>
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  document.querySelector('.theme-toggle').innerHTML = next === 'dark' ? '&#9790;' : '&#9728;';
+}
+
+function toggleStep(header) {
+  const step = header.closest('.step');
+  step.classList.toggle('open');
+}
+
+function copyCode(btn) {
+  const block = btn.closest('.code-block');
+  const text = block.textContent.replace('Copy', '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+}
+
+function updateProgress() {
+  const boxes = document.querySelectorAll('#setup-checklist input[type="checkbox"]');
+  const checked = document.querySelectorAll('#setup-checklist input[type="checkbox"]:checked').length;
+  const pct = Math.round((checked / boxes.length) * 100);
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+// Sidebar active state on scroll
+const main = document.getElementById('main-content');
+const sections = ['overview', 'github', 'vscode', 'copilot', 'mcp', 'figma-mcp', 'checklist'];
+const navItems = document.querySelectorAll('.nav-item');
+
+main.addEventListener('scroll', () => {
+  let current = sections[0];
+  for (const id of sections) {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top < 200) {
+      current = id;
+    }
+  }
+  navItems.forEach(item => {
+    item.classList.toggle('active', item.getAttribute('data-section') === current);
+  });
+});
+
+// Smooth scroll for nav links
+navItems.forEach(item => {
+  item.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.querySelector(item.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    // Close mobile sidebar
+    document.querySelector('.sidebar').classList.remove('open');
+  });
+});
+
+// Overview card smooth scroll
+document.querySelectorAll('.overview-card').forEach(card => {
+  card.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.querySelector(card.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+
+</body>
+</html>
