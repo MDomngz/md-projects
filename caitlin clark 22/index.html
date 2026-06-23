@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caitlin Clark — The Record Breaker</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,700;0,900;1,400;1,900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gold: #F5C242; --gold-dim: #C49A1F;
+    --court: #0B0C0E; --surface: #141618; --surface2: #1E2124;
+    --border: rgba(245,194,66,0.2); --text: #F0EDE6;
+    --muted: #888680; --accent: #E8533A;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--court); color: var(--text); font-family: 'Barlow', sans-serif; font-weight: 300; line-height: 1.6; overflow-x: hidden; }
+
+  .site-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; background: rgba(11,12,14,0.88); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(245,194,66,0.08); }
+  .nav-logo { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--gold); }
+
+  .hero { min-height: 100vh; display: grid; place-items: center; position: relative; padding: 80px 40px 60px; overflow: hidden; background: radial-gradient(ellipse 60% 50% at 50% 80%, rgba(245,194,66,0.06) 0%, transparent 70%), linear-gradient(180deg, #0B0C0E 0%, #0f1012 100%); }
+  .hero::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(245,194,66,0.04) 59px, rgba(245,194,66,0.04) 60px), repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(245,194,66,0.03) 59px, rgba(245,194,66,0.03) 60px); pointer-events: none; }
+  .hero-eyebrow { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(11px,1.5vw,14px); font-weight: 700; letter-spacing: 0.25em; color: var(--gold); text-transform: uppercase; margin-bottom: 24px; text-align: center; }
+  .hero-title { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(80px,18vw,200px); font-weight: 900; line-height: 0.88; text-transform: uppercase; letter-spacing: -0.02em; text-align: center; position: relative; z-index: 1; }
+  .hero-title .name-cc { display: block; color: var(--text); }
+  .hero-title .name-effect { display: block; color: var(--gold); font-style: italic; }
+  .hero-sub { font-size: clamp(14px,2vw,18px); font-weight: 300; color: var(--muted); text-align: center; max-width: 520px; margin: 32px auto 0; line-height: 1.8; }
+  .hero-sub strong { color: var(--text); font-weight: 500; }
+  .scroll-cue { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--muted); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; animation: bob 2s ease-in-out infinite; }
+  .scroll-cue::after { content: ''; display: block; width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gold), transparent); }
+  @keyframes bob { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+  section { padding: 100px 40px; max-width: 1100px; margin: 0 auto; }
+  .section-label { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); max-width: 80px; }
+  .section-heading { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(42px,7vw,80px); font-weight: 900; text-transform: uppercase; line-height: 0.92; letter-spacing: -0.01em; margin-bottom: 48px; }
+
+  .full-bleed { max-width: 100%; }
+  .full-bleed-inner { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+
+  .effect-section { background: linear-gradient(135deg, var(--surface) 0%, var(--court) 100%); padding: 100px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .effect-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 48px; }
+  .effect-card { background: var(--surface2); padding: 48px 40px; position: relative; overflow: hidden; transition: background 0.3s; }
+  .effect-card:hover { background: #252830; }
+  .effect-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--gold); }
+  .effect-card.accent::before { background: var(--accent); }
+  .effect-number { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(56px,9vw,96px); font-weight: 900; line-height: 1; color: var(--gold); margin-bottom: 8px; letter-spacing: -0.03em; }
+  .effect-card.accent .effect-number { color: var(--accent); }
+  .effect-label { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text); margin-bottom: 12px; }
+  .effect-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+  .arena-section { padding: 100px 0; border-bottom: 1px solid var(--border); }
+  .arena-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 48px; }
+  .arena-card { background: var(--surface2); padding: 40px 32px; position: relative; overflow: hidden; }
+  .arena-card::after { content: attr(data-team); position: absolute; bottom: 16px; right: 16px; font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.2em; color: rgba(136,134,128,0.35); text-transform: uppercase; }
+  .arena-stat { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(36px,5vw,56px); font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: 8px; letter-spacing: -0.02em; }
+  .arena-label { font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text); margin-bottom: 8px; }
+  .arena-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  .timeline { position: relative; margin-top: 48px; padding-left: 40px; }
+  .timeline::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 0; width: 1px; background: linear-gradient(to bottom, var(--gold), var(--accent), rgba(136,134,128,0.15)); }
+  .timeline-entry { position: relative; margin-bottom: 48px; }
+  .timeline-entry::before { content: ''; position: absolute; left: -44px; top: 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); border: 2px solid var(--court); box-shadow: 0 0 0 3px rgba(245,194,66,0.2); }
+  .timeline-entry:nth-child(even)::before { background: var(--accent); box-shadow: 0 0 0 3px rgba(232,83,58,0.2); }
+  .timeline-year { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .timeline-head { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(20px,3vw,28px); font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: 8px; }
+  .timeline-body { font-size: 14px; color: var(--muted); line-height: 1.7; max-width: 600px; }
+
+  .records-list { margin-top: 48px; display: flex; flex-direction: column; }
+  .record-item { display: grid; grid-template-columns: 120px 1fr auto; gap: 32px; align-items: start; padding: 32px 0; border-bottom: 1px solid rgba(255,255,255,0.06); transition: all 0.2s; }
+  .record-item:hover { padding-left: 16px; padding-right: 16px; margin-left: -16px; margin-right: -16px; background: rgba(245,194,66,0.03); border-radius: 4px; }
+  .record-era { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); padding-top: 4px; }
+  .record-title { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(20px,3vw,28px); font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: 6px; }
+  .record-detail { font-size: 14px; color: var(--muted); }
+  .record-badge { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 4px 12px; border-radius: 2px; white-space: nowrap; align-self: start; margin-top: 4px; }
+  .badge-ncaa { background: rgba(245,194,66,0.12); color: var(--gold); }
+  .badge-wnba { background: rgba(232,83,58,0.12); color: var(--accent); }
+
+  .spotlight { background: var(--gold); color: var(--court); padding: 100px 40px; position: relative; overflow: hidden; }
+  .spotlight::before { content: '"'; position: absolute; top: -40px; right: 40px; font-family: 'Barlow Condensed', sans-serif; font-size: 400px; font-weight: 900; color: rgba(0,0,0,0.08); line-height: 1; pointer-events: none; }
+  .spotlight-inner { max-width: 1100px; margin: 0 auto; }
+  .spotlight .section-label { color: rgba(0,0,0,0.5); }
+  .spotlight .section-label::after { background: rgba(0,0,0,0.15); }
+  .spotlight-quote { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(32px,6vw,72px); font-weight: 900; text-transform: uppercase; line-height: 0.95; letter-spacing: -0.02em; color: var(--court); max-width: 900px; margin-bottom: 40px; }
+  .spotlight-quote em { font-style: italic; color: rgba(11,12,14,0.5); }
+  .spotlight-stats { display: flex; gap: 48px; flex-wrap: wrap; margin-top: 40px; padding-top: 40px; border-top: 2px solid rgba(0,0,0,0.15); }
+  .spotlight-stat .num { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(40px,6vw,64px); font-weight: 900; line-height: 1; color: var(--court); letter-spacing: -0.03em; }
+  .spotlight-stat .lbl { font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(11,12,14,0.55); margin-top: 4px; }
+
+  .arc-section { background: var(--surface); padding: 100px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .arc-canvas-wrap { position: relative; width: 100%; max-width: 860px; margin: 0 auto; background: #0f1114; border: 1px solid rgba(245,194,66,0.1); border-radius: 4px; overflow: hidden; }
+  #arcSvg { width: 100%; display: block; }
+  .arc-legend { display: flex; gap: 32px; flex-wrap: wrap; margin-top: 24px; justify-content: center; }
+  .arc-legend-item { display: flex; align-items: center; gap: 8px; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+  .arc-legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  .nil-section { background: linear-gradient(180deg, #0f1012, var(--court)); padding: 100px 0; border-bottom: 1px solid var(--border); }
+  .nil-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 48px; align-items: start; }
+  .nil-text { font-size: 16px; color: var(--muted); line-height: 1.9; }
+  .nil-text strong { color: var(--text); font-weight: 500; }
+  .nil-text p+p { margin-top: 20px; }
+  .nil-deals { display: flex; flex-direction: column; gap: 2px; }
+  .nil-deal { background: var(--surface2); padding: 28px 32px; display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; border-left: 3px solid transparent; transition: border-color 0.3s; }
+  .nil-deal:hover { border-left-color: var(--gold); }
+  .nil-deal-name { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text); margin-bottom: 4px; }
+  .nil-deal-context { font-size: 13px; color: var(--muted); }
+  .nil-deal-value { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 900; color: var(--gold); white-space: nowrap; text-align: right; letter-spacing: -0.02em; }
+  .nil-deal-value span { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.15em; color: var(--muted); margin-top: 2px; }
+
+  .rivalry-block { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 48px; align-items: start; }
+  .rivalry-text { font-size: 16px; color: var(--muted); line-height: 1.9; }
+  .rivalry-text strong { color: var(--text); font-weight: 500; }
+  .comparison-box { background: var(--surface); border: 1px solid var(--border); padding: 32px; border-radius: 2px; }
+  .comparison-title { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 24px; }
+  .comparison-pair { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .comparison-pair:last-child { border-bottom: none; }
+  .comp-name { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+  .comp-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
+  .comp-era { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  .critique-section { background: #100a09; padding: 100px 0; border-top: 1px solid rgba(232,83,58,0.25); border-bottom: 1px solid rgba(232,83,58,0.25); }
+  .critique-section .section-label { color: var(--accent); }
+  .critique-section .section-label::after { background: rgba(232,83,58,0.25); }
+  .critique-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 48px; }
+  .critique-card { background: #1a1210; padding: 40px 36px; border-left: 3px solid var(--accent); }
+  .critique-claim { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(18px,2.5vw,24px); font-weight: 700; text-transform: uppercase; color: var(--text); line-height: 1.2; margin-bottom: 16px; }
+  .critique-body { font-size: 14px; color: var(--muted); line-height: 1.8; }
+  .critique-body strong { color: #c4876e; font-weight: 500; }
+
+  .awards-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap: 2px; margin-top: 48px; }
+  .award-tile { background: var(--surface2); padding: 28px 24px; border-top: 2px solid transparent; transition: border-color 0.3s, background 0.2s; }
+  .award-tile:hover { border-color: var(--gold); background: #252830; }
+  .award-tile:nth-child(even):hover { border-color: var(--accent); }
+  .award-icon { font-size: 24px; margin-bottom: 12px; }
+  .award-title { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text); line-height: 1.2; margin-bottom: 6px; }
+  .award-meta { font-size: 12px; color: var(--muted); }
+
+  .divider { width: 100%; height: 1px; background: var(--border); }
+  .site-footer { border-top: 1px solid var(--border); padding: 40px; text-align: center; font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+  .hero-eyebrow { animation: fadeUp 0.7s ease forwards; }
+  .hero-title    { animation: fadeUp 0.8s 0.1s ease both; }
+  .hero-sub      { animation: fadeUp 0.8s 0.25s ease both; }
+
+  @media (max-width: 700px) {
+    .effect-grid,.nil-grid,.rivalry-block,.critique-grid,.arena-grid { grid-template-columns: 1fr; }
+    .record-item { grid-template-columns: 1fr; gap: 8px; }
+    .record-badge { display: none; }
+    section,.full-bleed-inner { padding-left: 24px; padding-right: 24px; }
+    .site-nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero,.spotlight { padding-left: 24px; padding-right: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-logo">CC22</div>
+  <ul class="nav-links">
+    <li><a href="#effect">The Effect</a></li>
+    <li><a href="#records">Records</a></li>
+    <li><a href="#range">The Shot</a></li>
+    <li><a href="#business">Business</a></li>
+    <li><a href="#legacy">Legacy</a></li>
+    <li><a href="#critique">Critics</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div>
+    <p class="hero-eyebrow">Indiana Fever · No. 22 · The Record Breaker</p>
+    <h1 class="hero-title">
+      <span class="name-cc">Caitlin</span>
+      <span class="name-cc">Clark</span>
+      <span class="name-effect">Effect.</span>
+    </h1>
+    <p class="hero-sub">She didn't just break records. She <strong>rewrote what's possible</strong> — in college, in the pros, and in the entire business of women's basketball.</p>
+  </div>
+  <div class="scroll-cue">Scroll</div>
+</div>
+
+<!-- THE EFFECT -->
+<div class="effect-section full-bleed" id="effect">
+  <div class="full-bleed-inner">
+    <p class="section-label">The Clark Effect</p>
+    <h2 class="section-heading">She Moved<br>The Needle.</h2>
+    <div class="effect-grid">
+      <div class="effect-card">
+        <div class="effect-number">$82.5M</div>
+        <div class="effect-label">Consumer Spending Generated</div>
+        <div class="effect-desc">Her college run at Iowa generated an estimated $82.5M in consumer spending and boosted Iowa's GDP by up to $52.3 million.</div>
+      </div>
+      <div class="effect-card accent">
+        <div class="effect-number">25%+</div>
+        <div class="effect-label">Of Total WNBA Revenue (2024)</div>
+        <div class="effect-desc">Finance experts estimate a single rookie was responsible for more than a quarter of the entire league's revenue in her first professional season.</div>
+      </div>
+      <div class="effect-card accent">
+        <div class="effect-number">$370M</div>
+        <div class="effect-label">Indiana Fever Franchise Value</div>
+        <div class="effect-desc">The Fever led the WNBA with an estimated $32M in revenue for 2024. The franchise's value skyrocketed. One player. One season.</div>
+      </div>
+      <div class="effect-card">
+        <div class="effect-number">340,715</div>
+        <div class="effect-label">Home Fans — A WNBA Record</div>
+        <div class="effect-desc">Indiana Fever set the WNBA single-season home attendance record. Her final college game alone drew 18.9 million viewers — shattering television records across multiple networks.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ARENA LIFT -->
+<div class="arena-section full-bleed">
+  <div class="full-bleed-inner">
+    <p class="section-label">League-Wide Impact</p>
+    <h2 class="section-heading">Every Arena<br>She Entered.</h2>
+    <p style="color:var(--muted);font-size:16px;max-width:620px;line-height:1.9;">It wasn't just Indiana. When Clark came to town, <strong style="color:var(--text);">opposing arenas sold out</strong>. Road games became events. Her presence lifted attendance numbers across every WNBA market.</p>
+    <div class="arena-grid">
+      <div class="arena-card" data-team="Home">
+        <div class="arena-stat">340,715</div>
+        <div class="arena-label">Fever Home Attendance</div>
+        <div class="arena-desc">A WNBA single-season record. A franchise that struggled to sell tickets became the hottest ticket in women's sports.</div>
+      </div>
+      <div class="arena-card" data-team="National">
+        <div class="arena-stat">18.9M</div>
+        <div class="arena-label">Viewers — Final College Game</div>
+        <div class="arena-desc">Not just a Final Four record. An all-time record for any women's college basketball game, on any network, in any era.</div>
+      </div>
+      <div class="arena-card" data-team="Road">
+        <div class="arena-stat">Sold Out</div>
+        <div class="arena-label">Road Arenas — Consistently</div>
+        <div class="arena-desc">Opposing franchises moved games to larger venues. Clark road game tickets sold at multiples above face value in every WNBA market.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CAREER TIMELINE -->
+<section>
+  <p class="section-label">Career Arc</p>
+  <h2 class="section-heading">High School<br>to History.</h2>
+  <div class="timeline">
+    <div class="timeline-entry">
+      <div class="timeline-year">Iowa · 2020–2024</div>
+      <div class="timeline-head">NCAA All-Time Scoring Leader — 3,951 Points</div>
+      <div class="timeline-body">She finished as the greatest scorer in Division I history — men's or women's — averaging 28.4 points per game across 139 games. The previous record belonged to Pete Maravich for over 50 years.</div>
+    </div>
+    <div class="timeline-entry">
+      <div class="timeline-year">Iowa · 2022 &amp; 2024</div>
+      <div class="timeline-head">Only Player to Lead D-I in Points AND Assists — Twice</div>
+      <div class="timeline-body">1,144 career assists. 548 three-pointers. No one in NCAA history had led the nation in scoring and assists in the same season. She did it twice.</div>
+    </div>
+    <div class="timeline-entry">
+      <div class="timeline-year">WNBA Rookie · 2024</div>
+      <div class="timeline-head">Single-Season Assist Record — 337</div>
+      <div class="timeline-body">As a rookie. She also set the single-game assist record at 19. The playmaking that defined her college career translated immediately and completely to the professional game.</div>
+    </div>
+    <div class="timeline-entry">
+      <div class="timeline-year">WNBA · 59 Games</div>
+      <div class="timeline-head">Fastest to 1,000 Points + 500 Assists in WNBA History</div>
+      <div class="timeline-body">She shattered Sue Bird's record of 82 games — reaching the milestone in 59. The combination of elite scoring and elite playmaking from day one is without precedent in league history.</div>
+    </div>
+    <div class="timeline-entry">
+      <div class="timeline-year">WNBA Rookie · 2024</div>
+      <div class="timeline-head">Most Turnovers in a Single WNBA Season — 223</div>
+      <div class="timeline-body">Even her flaws are record-setting. She plays so fast, handles so much ball, and takes so many risks that her mistakes are historic too. This is the one the critics lead with — and they're not wrong.</div>
+    </div>
+  </div>
+</section>
+
+<!-- RECORDS LIST -->
+<section style="padding-top:0;" id="records">
+  <p class="section-label">Record Book</p>
+  <h2 class="section-heading">Every Level.<br>Every Record.</h2>
+  <div class="records-list">
+    <div class="record-item">
+      <div class="record-era">NCAA Career</div>
+      <div class="record-body"><div class="record-title">All-Time NCAA Division I Scoring Leader</div><div class="record-detail">3,951 career points across 139 games — the most in the history of college basketball.</div></div>
+      <span class="record-badge badge-ncaa">NCAA</span>
+    </div>
+    <div class="record-item">
+      <div class="record-era">NCAA Career</div>
+      <div class="record-body"><div class="record-title">1,144 Career Assists &amp; 548 Career Three-Pointers</div><div class="record-detail">One of the most complete offensive players in the history of the college game.</div></div>
+      <span class="record-badge badge-ncaa">NCAA</span>
+    </div>
+    <div class="record-item">
+      <div class="record-era">2022 &amp; 2024</div>
+      <div class="record-body"><div class="record-title">Only Player to Lead D-I in Points AND Assists — Twice</div><div class="record-detail">No one in NCAA history had done it once. She did it twice.</div></div>
+      <span class="record-badge badge-ncaa">NCAA</span>
+    </div>
+    <div class="record-item">
+      <div class="record-era">WNBA 2024</div>
+      <div class="record-body"><div class="record-title">WNBA Single-Season Assist Record — 337</div><div class="record-detail">As a rookie. The single-game record is also hers — 19 assists in one game.</div></div>
+      <span class="record-badge badge-wnba">WNBA</span>
+    </div>
+    <div class="record-item">
+      <div class="record-era">59 Games</div>
+      <div class="record-body"><div class="record-title">Fastest to 1,000 Points + 500 Assists in WNBA History</div><div class="record-detail">Shattered Sue Bird's previous record of 82 games.</div></div>
+      <span class="record-badge badge-wnba">WNBA</span>
+    </div>
+    <div class="record-item">
+      <div class="record-era">WNBA Rookie</div>
+      <div class="record-body"><div class="record-title">Most Turnovers in a Single WNBA Season — 223</div><div class="record-detail">She plays so fast and so ball-dominant that even her weaknesses are record-setting.</div></div>
+      <span class="record-badge badge-wnba">WNBA</span>
+    </div>
+  </div>
+</section>
+
+<!-- SPOTLIGHT -->
+<div class="spotlight">
+  <div class="spotlight-inner">
+    <p class="section-label">Why She's Great</p>
+    <p class="spotlight-quote">She created more total points per game than Swoopes, Cooper, Taurasi, or Bird <em>ever did in a single season.</em></p>
+    <div class="spotlight-stats">
+      <div class="spotlight-stat"><div class="num">19.2</div><div class="lbl">Points per game</div></div>
+      <div class="spotlight-stat"><div class="num">8.4</div><div class="lbl">Assists per game</div></div>
+      <div class="spotlight-stat"><div class="num">5.7</div><div class="lbl">Rebounds per game</div></div>
+      <div class="spotlight-stat"><div class="num">28.4</div><div class="lbl">College PPG average</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ANIMATED SHOT ARC -->
+<div class="arc-section full-bleed" id="range">
+  <div class="full-bleed-inner">
+    <p class="section-label">Scoring Gravity</p>
+    <h2 class="section-heading">The Shot<br>No One Else Takes.</h2>
+    <p style="color:var(--muted);font-size:16px;max-width:620px;line-height:1.9;margin-bottom:8px;">Her average made three-pointer comes from <strong style="color:var(--text);">28 feet, 1.1 inches</strong> — further than Steph Curry, Damian Lillard, or Trae Young as their career averages. And she shoots more accurately the further she goes.</p>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:48px;">From 30–34 feet: <strong style="color:var(--gold);">37.5% accuracy.</strong> Most players don't attempt those shots at all.</p>
+    <div class="arc-canvas-wrap">
+      <svg id="arcSvg" viewBox="0 0 860 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Animated arc diagram comparing shot release distances: Lillard at ~26.8ft, Curry at ~27ft, Clark at 28.1ft average distance on made threes">
+        <!-- court floor -->
+        <rect x="0" y="255" width="860" height="55" fill="#131518"/>
+        <line x1="0" y1="255" x2="860" y2="255" stroke="rgba(245,194,66,0.1)" stroke-width="1"/>
+        <!-- soft 3pt line suggestion -->
+        <path d="M 60 255 Q 430 55 800 255" fill="none" stroke="rgba(136,134,128,0.07)" stroke-width="1" stroke-dasharray="4 4"/>
+        <!-- basket -->
+        <rect x="414" y="243" width="32" height="7" rx="2" fill="#4a4845"/>
+        <line x1="430" y1="243" x2="430" y2="224" stroke="#4a4845" stroke-width="2"/>
+        <text x="430" y="219" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-size="11" fill="#666462" letter-spacing="0.15em" font-weight="700">BASKET</text>
+        <!-- scale labels -->
+        <text x="340" y="272" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-size="10" fill="rgba(136,134,128,0.45)" letter-spacing="0.08em">3PT LINE</text>
+        <line x1="340" y1="250" x2="340" y2="257" stroke="rgba(136,134,128,0.25)" stroke-width="1"/>
+        <text x="480" y="272" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-size="10" fill="rgba(136,134,128,0.45)" letter-spacing="0.08em">25 ft</text>
+        <text x="560" y="272" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-size="10" fill="rgba(136,134,128,0.45)" letter-spacing="0.08em">27 ft</text>
+        <text x="655" y="272" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-size="10" fill="rgba(136,134,128,0.45)" letter-spacing="0.08em">28 ft</text>
+        <text x="760" y="272" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-size="10" fill="rgba(136,134,128,0.45)" letter-spacing="0.08em">30+ ft</text>
+
+        <!-- LILLARD arc -->
+        <path id="arcLillard" d="M 470 255 Q 420 105 430 249" fill="none" stroke="#4a4845" stroke-width="2" stroke-dasharray="5 3" stroke-dashoffset="320"/>
+        <circle id="dotLillard" cx="470" cy="255" r="5" fill="#4a4845" opacity="0"/>
+        <text id="lblLillard" x="485" y="248" font-family="'Barlow Condensed',sans-serif" font-size="12" fill="#666462" font-weight="700" letter-spacing="0.06em" opacity="0">LILLARD ~26.8 ft</text>
+
+        <!-- CURRY arc -->
+        <path id="arcCurry" d="M 560 255 Q 445 80 430 249" fill="none" stroke="#777572" stroke-width="2" stroke-dasharray="5 3" stroke-dashoffset="380"/>
+        <circle id="dotCurry" cx="560" cy="255" r="5" fill="#777572" opacity="0"/>
+        <text id="lblCurry" x="575" y="248" font-family="'Barlow Condensed',sans-serif" font-size="12" fill="#888680" font-weight="700" letter-spacing="0.06em" opacity="0">CURRY ~27 ft</text>
+
+        <!-- CLARK arc (gold, bold) -->
+        <path id="arcClark" d="M 655 255 Q 475 35 430 249" fill="none" stroke="#F5C242" stroke-width="4" stroke-dashoffset="520" stroke-dasharray="520"/>
+        <circle id="dotClark" cx="655" cy="255" r="8" fill="#F5C242" opacity="0"/>
+        <text id="lblClark" x="670" y="244" font-family="'Barlow Condensed',sans-serif" font-size="14" fill="#F5C242" font-weight="900" letter-spacing="0.06em" opacity="0">CLARK 28.1 ft</text>
+        <text id="sublClark" x="670" y="259" font-family="'Barlow Condensed',sans-serif" font-size="10" fill="rgba(245,194,66,0.55)" font-weight="700" letter-spacing="0.1em" opacity="0">AVG ON MADE 3s</text>
+
+        <!-- 30-34ft zone -->
+        <rect id="zoneRect" x="715" y="205" width="110" height="48" rx="3" fill="rgba(245,194,66,0.05)" stroke="rgba(245,194,66,0.18)" stroke-width="1" opacity="0"/>
+        <text id="zoneT1" x="770" y="229" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-size="16" fill="#F5C242" font-weight="900" opacity="0">37.5%</text>
+        <text id="zoneT2" x="770" y="245" text-anchor="middle" font-family="'Barlow Condensed',sans-serif" font-size="9" fill="rgba(245,194,66,0.55)" font-weight="700" letter-spacing="0.12em" opacity="0">30-34 FT ACC.</text>
+      </svg>
+    </div>
+    <div class="arc-legend">
+      <div class="arc-legend-item"><div class="arc-legend-dot" style="background:#F5C242;"></div>Clark — 28.1 ft avg</div>
+      <div class="arc-legend-item"><div class="arc-legend-dot" style="background:#777572;"></div>Curry — ~27 ft avg</div>
+      <div class="arc-legend-item"><div class="arc-legend-dot" style="background:#4a4845;border:1px dashed #666;"></div>Lillard — ~26.8 ft avg</div>
+    </div>
+  </div>
+</div>
+
+<!-- NIL / BUSINESS -->
+<div class="nil-section full-bleed" id="business">
+  <div class="full-bleed-inner">
+    <p class="section-label">Off the Court</p>
+    <h2 class="section-heading">She Changed<br>The Business.</h2>
+    <div class="nil-grid">
+      <div class="nil-text">
+        <p>Before Clark, the ceiling for a WNBA player's off-court earning power was defined by a small number of Nike or Adidas deals, largely invisible to mainstream audiences. She didn't just raise that ceiling — <strong>she blew it off.</strong></p>
+        <p>Her arrival forced a reckoning: agents, brands, and the league itself had to recalibrate what women's basketball players are worth. Veterans who had been underpaid for years used Clark's market moment to renegotiate their own value — with sponsors and inside the league.</p>
+        <p>The WNBA salary structure — where max players earn a fraction of their NBA counterparts — became a national conversation, not a footnote. <strong>Her commercial success is an argument in every contract negotiation that comes after her.</strong></p>
+        <p>She didn't just benefit from the moment. She created the conditions for the next generation to earn more than she did.</p>
+      </div>
+      <div class="nil-deals">
+        <div class="nil-deal">
+          <div>
+            <div class="nil-deal-name">Nike</div>
+            <div class="nil-deal-context">Signature shoe deal — one of the first for a WNBA player at this scale</div>
+          </div>
+          <div class="nil-deal-value">~$28M<span>8-year deal</span></div>
+        </div>
+        <div class="nil-deal">
+          <div>
+            <div class="nil-deal-name">Wilson</div>
+            <div class="nil-deal-context">Signature basketball — outsold NBA equivalents at retail</div>
+          </div>
+          <div class="nil-deal-value">Multi-year<span>Signature ball</span></div>
+        </div>
+        <div class="nil-deal">
+          <div>
+            <div class="nil-deal-name">Gatorade, State Farm + more</div>
+            <div class="nil-deal-context">National brand deals treating her as a top-tier mainstream athlete</div>
+          </div>
+          <div class="nil-deal-value">National<span>Multi-brand</span></div>
+        </div>
+        <div class="nil-deal">
+          <div>
+            <div class="nil-deal-name">WNBA Base Salary</div>
+            <div class="nil-deal-context">What the league actually paid her — the structural inequality she's helping expose</div>
+          </div>
+          <div class="nil-deal-value">~$76K<span>Rookie scale</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LEGACY / RIVALRY -->
+<section id="legacy">
+  <p class="section-label">Cultural Legacy</p>
+  <h2 class="section-heading">Bigger Than<br>Basketball.</h2>
+  <div class="rivalry-block">
+    <div class="rivalry-text">
+      <p>The rivalry between Clark and Angel Reese didn't begin in the viral 2023 NCAA Championship — it traces back to their <strong>AAU days</strong> and Big Ten matchups.</p>
+      <br>
+      <p>Their dynamic has sparked national conversations about <strong>race, privilege, and media double standards</strong> in women's sports. Clark herself has acknowledged the white privilege she carries in a league predominantly built by Black women.</p>
+      <br>
+      <p>Analysts now regularly compare their rivalry to <strong>Magic Johnson and Larry Bird</strong> — the kind of friction that doesn't just make the game better, it makes the culture pay attention.</p>
+    </div>
+    <div class="comparison-box">
+      <div class="comparison-title">Historical Parallel</div>
+      <div class="comparison-pair">
+        <div><div class="comp-name" style="color:var(--gold);">Clark vs. Reese</div><div class="comp-label">Fever · Sky · 2023–</div></div>
+        <div class="comp-era">Now</div>
+      </div>
+      <div class="comparison-pair">
+        <div><div class="comp-name" style="color:var(--muted);">Magic vs. Bird</div><div class="comp-label">Lakers · Celtics · 1979–</div></div>
+        <div class="comp-era">Legend</div>
+      </div>
+      <div style="padding-top:20px;font-size:13px;color:var(--muted);line-height:1.7;">Both rivalries arrived when their sport needed a story large enough to capture a mainstream audience that wasn't already watching.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CRITIQUE -->
+<div class="critique-section full-bleed" id="critique">
+  <div class="full-bleed-inner">
+    <p class="section-label">The Critique</p>
+    <h2 class="section-heading">What Her<br>Critics Say.</h2>
+    <p style="color:var(--muted);font-size:16px;max-width:640px;line-height:1.9;margin-bottom:0;">The criticism isn't just noise. Some of it is fair. Here's the unfiltered version — no spin.</p>
+    <div class="critique-grid">
+      <div class="critique-card">
+        <div class="critique-claim">She gets more coverage than Black players who outperformed her</div>
+        <div class="critique-body">This one lands. Veterans like Arike Ogunbowale, Breanna Stewart, and A'ja Wilson put up comparable or superior numbers for years with a fraction of the media coverage Clark receives. The disparity is real, documented, and uncomfortable. <strong>Her whiteness in a majority-Black league is not incidental to her fame.</strong></div>
+      </div>
+      <div class="critique-card">
+        <div class="critique-claim">223 turnovers in one season is a serious problem</div>
+        <div class="critique-body">The record for turnovers in a WNBA season is hers — and it's not a badge of honor. She is frequently careless with the ball. A product of her speed and shot creation, yes, but also of habits opponents have learned to exploit. <strong>In close games, it has cost Indiana wins.</strong></div>
+      </div>
+      <div class="critique-card">
+        <div class="critique-claim">Her defense is below WNBA standard</div>
+        <div class="critique-body">Opponents target her in isolation repeatedly. She gets beaten off the dribble at a rate that good coaches exploit. The offensive numbers are historic — the defensive profile, by advanced metrics, is a liability. <strong>She is not a two-way player. Not yet.</strong></div>
+      </div>
+      <div class="critique-card">
+        <div class="critique-claim">The savior narrative erases the women who built this league</div>
+        <div class="critique-body">Swoopes, Cooper, Leslie, Taurasi — these women built women's basketball before it was profitable or visible. The "Clark saved the WNBA" framing implicitly diminishes their contributions. <strong>The league didn't need saving. It needed the attention it always deserved.</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AWARDS -->
+<div class="divider"></div>
+<section>
+  <p class="section-label">Honors</p>
+  <h2 class="section-heading">The Trophy<br>Case.</h2>
+  <div class="awards-grid">
+    <div class="award-tile"><div class="award-icon">🏆</div><div class="award-title">2024 WNBA Rookie of the Year</div><div class="award-meta">Unanimous. Not close.</div></div>
+    <div class="award-tile"><div class="award-icon">⭐</div><div class="award-title">All-WNBA First Team</div><div class="award-meta">Rookie season, 2024</div></div>
+    <div class="award-tile"><div class="award-icon">🏅</div><div class="award-title">Two-Time WNBA All-Star</div><div class="award-meta">Selected by fans and coaches</div></div>
+    <div class="award-tile"><div class="award-icon">🥇</div><div class="award-title">2025 Commissioner's Cup Champion</div><div class="award-meta">Indiana Fever</div></div>
+    <div class="award-tile"><div class="award-icon">📰</div><div class="award-title">TIME Athlete of the Year</div><div class="award-meta">2024</div></div>
+    <div class="award-tile"><div class="award-icon">🗞️</div><div class="award-title">AP Female Athlete of the Year</div><div class="award-meta">2024</div></div>
+    <div class="award-tile"><div class="award-icon">💼</div><div class="award-title">Forbes 100 Most Powerful Women</div><div class="award-meta">Youngest athlete on the list</div></div>
+    <div class="award-tile"><div class="award-icon">🎓</div><div class="award-title">Iowa No. 22 Retired</div><div class="award-meta">By the Iowa Hawkeyes — forever.</div></div>
+    <div class="award-tile"><div class="award-icon">🏀</div><div class="award-title">Two-Time National Player of the Year</div><div class="award-meta">2023 and 2024</div></div>
+    <div class="award-tile"><div class="award-icon">🎯</div><div class="award-title">Two-Time Honda Cup Winner</div><div class="award-meta">Top female college athlete in any sport</div></div>
+  </div>
+</section>
+
+<footer class="site-footer">Built from the record books &nbsp;·&nbsp; Caitlin Clark #22 &nbsp;·&nbsp; Indiana Fever</footer>
+
+<script>
+  const arcWrap = document.querySelector('.arc-canvas-wrap');
+  let fired = false;
+
+  function go() {
+    if (fired) return;
+    fired = true;
+
+    const ease = '1.4s cubic-bezier(0.4,0,0.2,1)';
+    const fade = 'opacity 0.45s ease';
+
+    // prep transitions
+    ['arcLillard','arcCurry','arcClark'].forEach(id => {
+      document.getElementById(id).style.transition = 'stroke-dashoffset ' + ease;
+    });
+    ['dotLillard','lblLillard','dotCurry','lblCurry','dotClark','lblClark','sublClark','zoneRect','zoneT1','zoneT2'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.transition = fade;
+    });
+
+    // Lillard
+    setTimeout(() => { document.getElementById('arcLillard').style.strokeDashoffset = '0'; }, 100);
+    setTimeout(() => { ['dotLillard','lblLillard'].forEach(id => document.getElementById(id).style.opacity = '1'); }, 1600);
+
+    // Curry
+    setTimeout(() => { document.getElementById('arcCurry').style.strokeDashoffset = '0'; }, 500);
+    setTimeout(() => { ['dotCurry','lblCurry'].forEach(id => document.getElementById(id).style.opacity = '1'); }, 2000);
+
+    // Clark
+    setTimeout(() => { document.getElementById('arcClark').style.strokeDashoffset = '0'; }, 1000);
+    setTimeout(() => { ['dotClark','lblClark','sublClark'].forEach(id => document.getElementById(id).style.opacity = '1'); }, 2500);
+
+    // zone callout
+    setTimeout(() => { ['zoneRect','zoneT1','zoneT2'].forEach(id => document.getElementById(id).style.opacity = '1'); }, 3000);
+  }
+
+  new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) go();
+  }, { threshold: 0.25 }).observe(arcWrap);
+</script>
+</body>
+</html>
