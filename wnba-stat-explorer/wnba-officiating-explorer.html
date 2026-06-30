@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caitlin Clark Officiating Data Explorer</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{--ink:#1a1a2e;--muted:#6b7280;--fever:#FDBB30;--feverb:#002D62;--red:#c1121f;--gray:#9aa0a6;--bg:#f7f7f9;--card:#fff;--line:#e5e7eb;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;}
+  .wrap{max-width:920px;margin:0 auto;padding:28px 20px 80px;}
+  header h1{font-size:26px;margin:0 0 6px;letter-spacing:-.01em;}
+  header p{color:var(--muted);margin:0 0 4px;font-size:15px;}
+  .tag{display:inline-block;background:var(--feverb);color:#fff;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:99px;margin-bottom:14px;}
+  nav{display:flex;gap:6px;flex-wrap:wrap;margin:22px 0 8px;border-bottom:1px solid var(--line);}
+  nav button{background:none;border:none;border-bottom:2px solid transparent;padding:9px 14px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;}
+  nav button.active{color:var(--ink);border-bottom-color:var(--fever);}
+  .panel{display:none;animation:fade .2s ease;}
+  .panel.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:16px 0;box-shadow:0 1px 2px rgba(0,0,0,.03);}
+  .card h2{font-size:18px;margin:0 0 4px;}
+  .card .sub{color:var(--muted);font-size:13.5px;margin:0 0 14px;}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:6px 0 4px;}
+  .kpi{background:var(--bg);border-radius:10px;padding:14px 16px;}
+  .kpi .v{font-size:26px;font-weight:700;letter-spacing:-.02em;}
+  .kpi .v.red{color:var(--red);} .kpi .v.blue{color:var(--feverb);}
+  .kpi .l{font-size:12px;color:var(--muted);margin-top:2px;}
+  .chartbox{position:relative;height:340px;margin-top:8px;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px;}
+  th,td{padding:7px 9px;text-align:right;border-bottom:1px solid var(--line);}
+  th:first-child,td:first-child{text-align:left;}
+  thead th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em;}
+  tr.cc{background:#fff7e6;font-weight:600;}
+  tr.zero td{color:var(--red);}
+  .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px;font-size:14px;}
+  select{padding:6px 10px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:#fff;}
+  .pill{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;background:#fde7e9;color:var(--red);margin-left:6px;}
+  .note{font-size:12.5px;color:var(--muted);margin-top:12px;border-top:1px dashed var(--line);padding-top:10px;}
+  footer{margin-top:30px;font-size:12.5px;color:var(--muted);}
+  .H{color:var(--feverb);font-weight:700;} .A{color:#8a6d00;font-weight:700;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="tag">Interactive Data Explorer</span>
+    <h1>How Is Caitlin Clark Officiated? Explore the Data.</h1>
+    <p>Every WNBA regular-season game, 2022&ndash;2026 &middot; 1,123 games &middot; 41,000+ logged fouls &middot; source: public <code>nba_api</code> feed.</p>
+    <p style="font-size:13px;">Descriptive only. Shows what was called, not whether calls were correct. 2026 is partial (through late June). Small samples flagged in red.</p>
+  </header>
+
+  <nav id="nav">
+    <button data-t="league" class="active">League trend</button>
+    <button data-t="cc">Clark by season</button>
+    <button data-t="road">The road whistle</button>
+    <button data-t="stars">Stars compared</button>
+    <button data-t="log">Clark 2026 game log</button>
+  </nav>
+
+  <div id="league" class="panel active"></div>
+  <div id="cc" class="panel"></div>
+  <div id="road" class="panel"></div>
+  <div id="stars" class="panel"></div>
+  <div id="log" class="panel"></div>
+
+  <footer>
+    Built from WNBA box scores and play-by-play via the public <code>nba_api</code> feed. Figures are descriptive and unadjusted for shot location, defender proximity, pace, opponent, or contact severity. There is no correct-call ground truth in WNBA data. "Games played" excludes games a player missed. High-usage = 14+ field-goal attempts. FT rate = free-throw attempts &divide; field-goal attempts.
+  </footer>
+</div>
+
+<script>
+const D = {"meta":{"generated":"2026-06-28 data","last_game":"2026-06-24 (CC)"},"league_trend":[{"season":"2022","games":216,"fouls_per_game":36.2,"fta_per_game":36.3,"fta_fga":0.267,"tech_per_game":0.61},{"season":"2023","games":240,"fouls_per_game":36.7,"fta_per_game":37.1,"fta_fga":0.271,"tech_per_game":0.58},{"season":"2024","games":240,"fouls_per_game":35.3,"fta_per_game":36.1,"fta_fga":0.264,"tech_per_game":0.64},{"season":"2025","games":286,"fouls_per_game":35.7,"fta_per_game":36.4,"fta_fga":0.27,"tech_per_game":0.55},{"season":"2026","games":141,"fouls_per_game":42.0,"fta_per_game":43.3,"fta_fga":0.321,"tech_per_game":0.67}],"cc_trend":{"2024":{"g":40,"fga":14.5,"fta":4.5,"pf":2.77,"fd":4.47,"shsh":26.8,"ff":0.31,"tech":0.125},"2025":{"g":13,"fga":15.08,"fta":3.85,"pf":2.69,"fd":4.54,"shsh":28.8,"ff":0.255,"tech":0.077},"2026":{"g":17,"fga":15.59,"fta":6.06,"pf":3.59,"fd":6.71,"shsh":28.9,"ff":0.389,"tech":0.294}},"cc_homeaway":{"2024":{"home":{"g":20,"fga":15.65,"fta":5.0,"pf":2.8,"fd":4.7,"shsh":27.7,"ff":0.319,"tech":0.2},"away":{"g":20,"fga":13.35,"fta":4.0,"pf":2.75,"fd":4.25,"shsh":25.9,"ff":0.3,"tech":0.05}},"2025":{"home":{"g":8,"fga":15.5,"fta":3.75,"pf":2.62,"fd":4.75,"shsh":31.6,"ff":0.242,"tech":0.125},"away":{"g":5,"fga":14.4,"fta":4.0,"pf":2.8,"fd":4.2,"shsh":23.8,"ff":0.278,"tech":0.0}},"2026":{"home":{"g":10,"fga":16.4,"fta":8.0,"pf":3.7,"fd":7.4,"shsh":33.8,"ff":0.488,"tech":0.3},"away":{"g":7,"fga":14.43,"fta":3.29,"pf":3.43,"fd":5.71,"shsh":20.0,"ff":0.228,"tech":0.286}}},"cc_homeaway_hu":{"home":{"g":8,"fga":18.12,"fta":8.12,"pf":4.0,"fd":7.75,"shsh":30.6,"ff":0.448,"tech":0.375},"away":{"g":5,"fga":16.4,"fta":2.0,"pf":3.0,"fd":5.6,"shsh":17.9,"ff":0.122,"tech":0.4}},"plum_homeaway":{"2024":{"home":{"g":18,"fga":15.17,"fta":2.83,"pf":2.5,"fd":3.22,"shsh":34.5,"ff":0.187,"tech":0.0},"away":{"g":20,"fga":13.8,"fta":3.4,"pf":2.95,"fd":3.3,"shsh":37.9,"ff":0.246,"tech":0.2}},"2025":{"home":{"g":21,"fga":14.62,"fta":5.43,"pf":2.86,"fd":4.71,"shsh":41.4,"ff":0.371,"tech":0.048},"away":{"g":22,"fga":14.14,"fta":5.91,"pf":2.59,"fd":5.09,"shsh":42.9,"ff":0.418,"tech":0.136}},"2026":{"home":{"g":7,"fga":14.86,"fta":5.86,"pf":3.43,"fd":4.71,"shsh":45.5,"ff":0.394,"tech":0.0},"away":{"g":5,"fga":16.8,"fta":6.2,"pf":3.4,"fd":6.2,"shsh":35.5,"ff":0.369,"tech":0.0}}},"cohort_2026":{"Caitlin Clark":{"g":17,"fga":15.59,"fta":6.06,"pf":3.59,"fd":6.71,"shsh":28.9,"ff":0.389,"tech":0.294},"Kelsey Plum":{"g":12,"fga":15.67,"fta":6.0,"pf":3.42,"fd":5.33,"shsh":40.6,"ff":0.383,"tech":0.0},"Sabrina Ionescu":{"g":7,"fga":9.71,"fta":1.86,"pf":1.71,"fd":2.14,"shsh":40.0,"ff":0.191,"tech":0.0},"Skylar Diggins":{"g":17,"fga":11.65,"fta":4.76,"pf":2.06,"fd":2.88,"shsh":73.5,"ff":0.409,"tech":0.118},"Jackie Young":{"g":18,"fga":13.61,"fta":2.11,"pf":2.5,"fd":1.83,"shsh":36.4,"ff":0.155,"tech":0.0},"Breanna Stewart":{"g":18,"fga":14.06,"fta":7.22,"pf":2.5,"fd":6.33,"shsh":39.5,"ff":0.514,"tech":0.0},"A'ja Wilson":{"g":18,"fga":17.67,"fta":7.39,"pf":1.83,"fd":7.83,"shsh":43.3,"ff":0.418,"tech":0.056}},"cohort_shsh":{"2024":{"Caitlin Clark":{"shsh":26.8,"tech":0.125,"ff":0.31,"g":40},"Kelsey Plum":{"shsh":36.3,"tech":0.105,"ff":0.217,"g":38},"Sabrina Ionescu":{"shsh":44.1,"tech":0.079,"ff":0.195,"g":38},"Skylar Diggins":{"shsh":51.5,"tech":0.075,"ff":0.294,"g":40},"Jackie Young":{"shsh":57.1,"tech":0.027,"ff":0.274,"g":37},"Napheesa Collier":{"shsh":43.4,"tech":0.0,"ff":0.29,"g":34},"Breanna Stewart":{"shsh":55.5,"tech":0.0,"ff":0.412,"g":38},"A'ja Wilson":{"shsh":57.5,"tech":0.053,"ff":0.37,"g":38}},"2025":{"Caitlin Clark":{"shsh":28.8,"tech":0.077,"ff":0.255,"g":13},"Kelsey Plum":{"shsh":42.2,"tech":0.093,"ff":0.395,"g":43},"Sabrina Ionescu":{"shsh":46.6,"tech":0.053,"ff":0.284,"g":38},"Skylar Diggins":{"shsh":55.6,"tech":0.047,"ff":0.351,"g":43},"Jackie Young":{"shsh":45.0,"tech":0.0,"ff":0.26,"g":44},"Napheesa Collier":{"shsh":37.5,"tech":0.03,"ff":0.33,"g":33},"Breanna Stewart":{"shsh":54.1,"tech":0.0,"ff":0.495,"g":31},"A'ja Wilson":{"shsh":52.1,"tech":0.05,"ff":0.441,"g":40}},"2026":{"Caitlin Clark":{"shsh":28.9,"tech":0.294,"ff":0.389,"g":17},"Kelsey Plum":{"shsh":40.6,"tech":0.0,"ff":0.383,"g":12},"Sabrina Ionescu":{"shsh":40.0,"tech":0.0,"ff":0.191,"g":7},"Skylar Diggins":{"shsh":73.5,"tech":0.118,"ff":0.409,"g":17},"Jackie Young":{"shsh":36.4,"tech":0.0,"ff":0.155,"g":18},"Breanna Stewart":{"shsh":39.5,"tech":0.0,"ff":0.514,"g":18},"A'ja Wilson":{"shsh":43.3,"tech":0.056,"ff":0.418,"g":18}}},"cc_2026_log":[{"date":"2026-05-09","loc":"H","opp":"DAL","fga":18,"fta":4,"pf":4,"ff":0.222,"officials":["Tim Greene","Kevin Fahy","Catherine Chang"]},{"date":"2026-05-13","loc":"A","opp":"LAS","fga":17,"fta":5,"pf":2,"ff":0.294,"officials":["Agon Abazi","Clare Simmons","Jason Alabanza"]},{"date":"2026-05-15","loc":"H","opp":"WAS","fga":28,"fta":5,"pf":3,"ff":0.179,"officials":["Gina Cross","Tiara Cruse","Kelsey Reynolds"]},{"date":"2026-05-17","loc":"H","opp":"SEA","fga":10,"fta":9,"pf":3,"ff":0.9,"officials":["Charles Watson","Isaac Barnett","Blanca Burns"]},{"date":"2026-05-22","loc":"H","opp":"GSV","fga":15,"fta":5,"pf":5,"ff":0.333,"officials":["Maj Forsberg","Kelly Broomfield","Randy Richardson"]},{"date":"2026-05-28","loc":"A","opp":"GSV","fga":12,"fta":8,"pf":4,"ff":0.667,"officials":["Roy Gulbeyan","Tyler Mirkovich","Agon Abazi"]},{"date":"2026-05-30","loc":"A","opp":"PDX","fga":7,"fta":5,"pf":5,"ff":0.714,"officials":["Tim Greene","Isaac Barnett","Blanca Burns"]},{"date":"2026-06-04","loc":"H","opp":"ATL","fga":17,"fta":4,"pf":4,"ff":0.235,"officials":["Amy Bonner","Kelly Broomfield","Gerda Gatling"]},{"date":"2026-06-06","loc":"A","opp":"NYL","fga":14,"fta":0,"pf":5,"ff":0.0,"officials":["Gina Cross","Angelica Suffren","Maj Forsberg"]},{"date":"2026-06-08","loc":"A","opp":"WAS","fga":16,"fta":3,"pf":3,"ff":0.188,"officials":["Charles Watson","Isaac Barnett","Clare Simmons"]},{"date":"2026-06-11","loc":"H","opp":"CHI","fga":18,"fta":15,"pf":4,"ff":0.833,"officials":["Roy Gulbeyan","Blanca Burns","Sarah Williams"]},{"date":"2026-06-13","loc":"A","opp":"CON","fga":17,"fta":0,"pf":2,"ff":0.0,"officials":["Tyler Mirkovich","Kevin Fahy","Clare Simmons"]},{"date":"2026-06-16","loc":"H","opp":"TOR","fga":15,"fta":14,"pf":2,"ff":0.933,"officials":["Tiara Cruse","Angel Kent","Kelsey Reynolds"]},{"date":"2026-06-18","loc":"H","opp":"ATL","fga":17,"fta":12,"pf":5,"ff":0.706,"officials":["Tim Greene","Ashley Gloss","Sarah Williams"]},{"date":"2026-06-20","loc":"A","opp":"ATL","fga":18,"fta":2,"pf":3,"ff":0.111,"officials":["Roy Gulbeyan","Toni Patillo","Catherine Chang"]},{"date":"2026-06-22","loc":"H","opp":"PHX","fga":17,"fta":6,"pf":5,"ff":0.353,"officials":["Amy Bonner","Gerda Gatling","RJ Johnson"]},{"date":"2026-06-24","loc":"H","opp":"PHX","fga":9,"fta":6,"pf":2,"ff":0.667,"officials":["Gina Cross","Angelica Suffren","Teresa Stuck"]}]};
+const C={ink:'#1a1a2e',muted:'#6b7280',fever:'#FDBB30',feverb:'#002D62',red:'#c1121f',gray:'#9aa0a6'};
+Chart.defaults.font.family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif";
+Chart.defaults.color=C.muted;
+let charts={};
+function mk(id,cfg){ if(charts[id])charts[id].destroy(); charts[id]=new Chart(document.getElementById(id),cfg); }
+const fmt=v=>v==null?'\u2014':v;
+function smallFlag(n){return n<10?'<span class="pill">small n='+n+'</span>':'';}
+
+// ---- LEAGUE ----
+function renderLeague(){
+  const lg=D.league_trend, last=lg[lg.length-1], avg=(lg.slice(0,4).reduce((a,b)=>a+b.fouls_per_game,0)/4);
+  document.getElementById('league').innerHTML=`
+  <div class="card">
+    <h2>Have the refs always called it like this?</h2>
+    <p class="sub">Fouls called per game, league-wide (both teams), by season.</p>
+    <div class="kpis">
+      <div class="kpi"><div class="v blue">${avg.toFixed(0)}</div><div class="l">2022&ndash;25 average fouls/game</div></div>
+      <div class="kpi"><div class="v red">${last.fouls_per_game}</div><div class="l">2026 fouls/game</div></div>
+      <div class="kpi"><div class="v">+${((last.fouls_per_game/avg-1)*100).toFixed(0)}%</div><div class="l">2026 vs. prior 4-yr avg</div></div>
+    </div>
+    <div class="chartbox"><canvas id="cL"></canvas></div>
+    <p class="note">The league was stable near 36 fouls/game for four years, then jumped in 2026. The whistle is up league-wide, not specific to any one player.</p>
+  </div>
+  <div class="card">
+    <h2>Season detail</h2>
+    <table><thead><tr><th>Season</th><th>Games</th><th>Fouls/game</th><th>FTA/game</th><th>FT rate</th><th>Tech/game</th></tr></thead><tbody>
+    ${lg.map(r=>`<tr><td>${r.season}${r.season==='2026'?' (partial)':''}</td><td>${r.games}</td><td>${r.fouls_per_game}</td><td>${r.fta_per_game}</td><td>${r.fta_fga.toFixed(3)}</td><td>${r.tech_per_game}</td></tr>`).join('')}
+    </tbody></table>
+  </div>`;
+  mk('cL',{type:'bar',data:{labels:lg.map(r=>r.season),datasets:[{data:lg.map(r=>r.fouls_per_game),backgroundColor:lg.map((r,i)=>i===4?C.red:C.gray)}]},
+    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,title:{display:true,text:'Fouls called / game'}}}}});
+}
+
+// ---- CC BY SEASON ----
+function renderCC(){
+  const t=D.cc_trend;
+  const rows=['2024','2025','2026'].map(s=>({s,...t[s]}));
+  document.getElementById('cc').innerHTML=`
+  <div class="card">
+    <h2>Caitlin Clark, season by season</h2>
+    <p class="sub">Games played only. 2025 sample is small (injury-shortened); 2026 is partial.</p>
+    <div class="chartbox"><canvas id="cC"></canvas></div>
+    <table><thead><tr><th>Season</th><th>Games</th><th>FGA/g</th><th>FTA/g</th><th>FT rate</th><th>PF/g</th><th>Fouls drawn/g</th><th>Shooting share</th><th>Tech/g</th></tr></thead><tbody>
+    ${rows.map(r=>`<tr><td>${r.s}${smallFlag(r.g)}</td><td>${r.g}</td><td>${r.fga}</td><td>${r.fta}</td><td>${r.ff.toFixed(3)}</td><td>${r.pf}</td><td>${r.fd}</td><td>${r.shsh}%</td><td>${r.tech}</td></tr>`).join('')}
+    </tbody></table>
+    <p class="note">Note the durable signal: her <b>shooting-foul share</b> sits near 27 to 29% every season, far below most stars (see "Stars compared"). Her total free-throw rate, though, is healthy in 2026.</p>
+  </div>`;
+  mk('cC',{type:'bar',data:{labels:rows.map(r=>r.s),datasets:[
+    {label:'FT rate (FTA/FGA)',data:rows.map(r=>r.ff),backgroundColor:C.feverb,yAxisID:'y'},
+    {label:'Shooting-foul share',data:rows.map(r=>r.shsh/100),backgroundColor:C.fever,yAxisID:'y'}]},
+    options:{scales:{y:{beginAtZero:true,max:0.6,title:{display:true,text:'rate / share'}}}}});
+}
+
+// ---- ROAD ----
+function renderRoad(){
+  const cc=D.cc_homeaway, plum=D.plum_homeaway, hu=D.cc_homeaway_hu;
+  document.getElementById('road').innerHTML=`
+  <div class="card">
+    <h2>The road whistle</h2>
+    <p class="sub">Free-throw rate (FTA/FGA), home vs. road. The 2026 gap is the headline of the whole series.</p>
+    <div class="kpis">
+      <div class="kpi"><div class="v blue">${cc['2026'].home.ff.toFixed(3)}</div><div class="l">Clark 2026 HOME</div></div>
+      <div class="kpi"><div class="v red">${cc['2026'].away.ff.toFixed(3)}</div><div class="l">Clark 2026 ROAD</div></div>
+      <div class="kpi"><div class="v">${hu.away.ff.toFixed(3)}</div><div class="l">Clark ROAD, high-usage only ${smallFlag(hu.away.g)}</div></div>
+    </div>
+    <div class="chartbox"><canvas id="cR"></canvas></div>
+    <p class="note">Clark's home/road gap appeared in 2026. In 2024 it was flat (.319 vs .300). Kelsey Plum, her closest statistical comp, shows almost no gap in any season. Clark 2026 road n=${cc['2026'].away.g}.</p>
+  </div>`;
+  const seasons=['2024','2025','2026'];
+  mk('cR',{type:'bar',data:{labels:seasons,datasets:[
+    {label:'Clark Home',data:seasons.map(s=>cc[s].home.ff),backgroundColor:C.feverb},
+    {label:'Clark Road',data:seasons.map(s=>cc[s].away.ff),backgroundColor:C.fever},
+    {label:'Plum Home',data:seasons.map(s=>plum[s].home.ff),backgroundColor:'#5b5b6e'},
+    {label:'Plum Road',data:seasons.map(s=>plum[s].away.ff),backgroundColor:'#b0b0bd'}]},
+    options:{scales:{y:{beginAtZero:true,title:{display:true,text:'FT rate (FTA/FGA)'}}}}});
+}
+
+// ---- STARS ----
+function renderStars(){
+  let sel=window._starSeason||'2026';
+  const build=()=>{
+    const coh=D.cohort_shsh[sel];
+    const names=Object.keys(coh).sort((a,b)=>coh[b].ff-coh[a].ff);
+    const tbl=names.map(n=>{const r=coh[n];const cc=n==='Caitlin Clark';
+      return `<tr class="${cc?'cc':''}"><td>${n}${smallFlag(r.g)}</td><td>${r.g}</td><td>${r.ff.toFixed(3)}</td><td>${r.shsh}%</td><td>${r.tech}</td></tr>`;}).join('');
+    document.getElementById('stars').innerHTML=`
+    <div class="card">
+      <h2>How the league officiates its stars</h2>
+      <p class="sub">High-usage perimeter stars, &ge;5 games. Caitlin Clark highlighted.</p>
+      <div class="controls">Season:
+        <select id="starSel">${['2024','2025','2026'].map(s=>`<option ${s===sel?'selected':''}>${s}</option>`).join('')}</select>
+        sorted by FT rate
+      </div>
+      <div class="chartbox"><canvas id="cS"></canvas></div>
+      <table><thead><tr><th>Player</th><th>Games</th><th>FT rate</th><th>Shooting share</th><th>Tech/g</th></tr></thead><tbody>${tbl}</tbody></table>
+      <p class="note">Clark's free-throw rate is mid-pack, but her <b>shooting-foul share</b> is consistently near the bottom and her <b>technical rate</b> is at or near the top of the group.</p>
+    </div>`;
+    const sn=names.slice().sort((a,b)=>coh[a].shsh-coh[b].shsh);
+    mk('cS',{type:'bar',data:{labels:sn,datasets:[{label:'Shooting-foul share (%)',data:sn.map(n=>coh[n].shsh),
+      backgroundColor:sn.map(n=>n==='Caitlin Clark'?C.red:C.gray)}]},
+      options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,title:{display:true,text:'shooting-foul share %'}}}}});
+    document.getElementById('starSel').onchange=e=>{window._starSeason=e.target.value;build();};
+  };
+  build();
+}
+
+// ---- LOG ----
+function renderLog(){
+  const log=D.cc_2026_log.slice().sort((a,b)=>b.ff-a.ff);
+  document.getElementById('log').innerHTML=`
+  <div class="card">
+    <h2>Caitlin Clark: 2026 game log</h2>
+    <p class="sub">Sorted by free-throw rate. Note where the road (A) games land, and the two road zeros.</p>
+    <table><thead><tr><th>Date</th><th>H/A</th><th>Opp</th><th>FGA</th><th>FTA</th><th>PF</th><th>FT rate</th><th>Officials</th></tr></thead><tbody>
+    ${log.map(r=>`<tr class="${r.fta===0?'zero':''}"><td>${r.date}</td><td class="${r.loc}">${r.loc}</td><td>${r.opp}</td><td>${r.fga}</td><td>${r.fta}</td><td>${r.pf}</td><td>${r.ff.toFixed(2)}</td><td style="font-size:12px;color:var(--muted)">${r.officials.join(', ')}</td></tr>`).join('')}
+    </tbody></table>
+    <p class="note">Officials rotate across games; the same names appear in both her best and worst nights. Treat this as a record of the road pattern, not a watchlist of individuals.</p>
+  </div>`;
+}
+
+const R={league:renderLeague,cc:renderCC,road:renderRoad,stars:renderStars,log:renderLog};
+document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#nav button').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  const t=b.dataset.t; document.getElementById(t).classList.add('active'); R[t]();
+});
+renderLeague();
+</script>
+</body>
+</html>
