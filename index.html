@@ -4,283 +4,333 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MD Projects</title>
+<meta name="description" content="Marisa Dominguez — UX, AI enablement, and data projects.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230f1117'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-size='14' fill='%23e0e0e6' font-family='Arial,sans-serif'%3EMD%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+:root {
+  --bg: #0f1117;
+  --surface: #161923;
+  --surface-hover: #1b1f2c;
+  --border: #232736;
+  --text: #e0e0e6;
+  --muted: #8b91a3;
+  --faint: #6b7280;
+  --accent: #7c8aff;
+  --accent-soft: rgba(124, 138, 255, 0.12);
+}
+
 body {
   font-family: 'Inter', system-ui, sans-serif;
-  background: #0f1117;
-  color: #e0e0e6;
+  background: var(--bg);
+  color: var(--text);
   min-height: 100vh;
-  padding: 3rem 1.5rem;
+  padding: 3.5rem 1.5rem 5rem;
+  line-height: 1.5;
 }
 
 .container {
-  max-width: 720px;
+  max-width: 960px;
   margin: 0 auto;
 }
 
-h1 {
-  font-size: 1.75rem;
+/* ---- Header ---- */
+header h1 {
+  font-size: 2rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-  margin-bottom: 0.5rem;
 }
 
-.subtitle {
-  color: #888;
-  font-size: 0.9rem;
-  margin-bottom: 2.5rem;
+header .intro {
+  color: var(--muted);
+  font-size: 1rem;
+  max-width: 620px;
+  margin-top: 0.6rem;
 }
 
-.folder {
-  margin-bottom: 2rem;
+/* ---- Sections ---- */
+section {
+  margin-top: 3rem;
 }
 
-.folder-name {
-  font-size: 0.75rem;
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+}
+
+.section-head h2 {
+  font-size: 0.8rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #6b7280;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #1e2028;
-  margin-bottom: 0.5rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  white-space: nowrap;
 }
 
-.file-list {
-  list-style: none;
+.section-head .rule {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
 }
 
-.file-list li {
-  border-bottom: 1px solid #1a1c24;
+.section-head .blurb {
+  display: none;
 }
 
-.file-list a {
+/* ---- Card grid ---- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.25rem 1rem;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+}
+
+.card:hover {
+  background: var(--surface-hover);
+  border-color: #323952;
+  transform: translateY(-2px);
+}
+
+.card-top {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 0.5rem;
-  color: #e0e0e6;
-  text-decoration: none;
-  border-radius: 6px;
-  transition: background 0.15s ease;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
 }
 
-.file-list a:hover {
-  background: #1a1d28;
-}
-
-.file-icon {
-  flex-shrink: 0;
-  width: 32px;
-  height: 32px;
-  background: #1e2230;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.7rem;
+.tag {
+  font-size: 0.68rem;
   font-weight: 600;
-  color: #7c8aff;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  white-space: nowrap;
 }
 
-.file-name {
-  font-size: 0.95rem;
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.card h3 a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.card h3 a:hover {
+  color: var(--accent);
+}
+
+/* Make the whole card clickable via the title link */
+.card { position: relative; }
+.card h3 a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.card .desc {
+  font-size: 0.86rem;
+  color: var(--muted);
+  margin-top: 0.4rem;
+  flex: 1;
+}
+
+.card .facts {
+  font-size: 0.75rem;
+  color: var(--faint);
+  margin-top: 0.75rem;
+}
+
+.card .links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  position: relative;
+  z-index: 1; /* keep sub-links above the stretched card link */
+}
+
+.card .links a {
+  font-size: 0.74rem;
   font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.28rem 0.6rem;
+  transition: color 0.15s ease, border-color 0.15s ease;
 }
 
-.file-title {
-  font-size: 0.78rem;
-  color: #6b7280;
-  margin-top: 2px;
+.card .links a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
-.empty {
-  color: #444;
-  font-size: 0.85rem;
-  font-style: italic;
-  padding: 0.75rem 0.5rem;
+footer {
+  margin-top: 4rem;
+  font-size: 0.8rem;
+  color: var(--faint);
+  text-align: center;
+}
+
+footer a { color: var(--muted); }
+
+@media (max-width: 480px) {
+  body { padding: 2.5rem 1rem 4rem; }
+  .grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>MD Projects</h1>
-  <p class="subtitle">Project directory</p>
 
-  <div class="folder">
-    <div class="folder-name">AI for VA Design</div>
-    <ul class="file-list">
-      <li>
-        <a href="AI%20for%20VA%20Design/va-ai-design-kb.html">
-          <span class="file-icon">HTML</span>
-          <span>
-            <span class="file-name">va-ai-design-kb.html</span>
-            <div class="file-title">AI for VA Design &amp; Research</div>
-          </span>
-        </a>
-      </li>
-      <li>
-        <a href="AI%20for%20VA%20Design/va-ai-environment-setup.html">
-          <span class="file-icon">HTML</span>
-          <span>
-            <span class="file-name">va-ai-environment-setup.html</span>
-            <div class="file-title">VA AI Environment Setup</div>
-          </span>
-        </a>
-      </li>
-    </ul>
-  </div>
+  <header>
+    <h1>Marisa Dominguez</h1>
+    <p class="intro">UX design and research, AI enablement, and data storytelling. A working collection of prototypes, guides, and interactive explorers — each card links straight to the live project.</p>
+  </header>
 
-  <div class="folder">
-    <div class="folder-name">couch-to-5k-va-ux</div>
-    <ul class="file-list">
-      <li>
-        <a href="couch-to-5k-va-ux/blended.html">
-          <span class="file-icon">HTML</span>
-          <span>
-            <span class="file-name">blended.html</span>
-            <div class="file-title">Couch to 5K for AI &mdash; VA UX Edition (Blended)</div>
-          </span>
-        </a>
-      </li>
-      <li>
-        <a href="couch-to-5k-va-ux/landing-only.html">
-          <span class="file-icon">HTML</span>
-          <span>
-            <span class="file-name">landing-only.html</span>
-            <div class="file-title">Couch to 5K for AI &mdash; VA UX Edition (Landing Only)</div>
-          </span>
-        </a>
-      </li>
-      <li>
-        <a href="couch-to-5k-va-ux/UX%20Research%3A%2030-Day.html">
-          <span class="file-icon">HTML</span>
-          <span>
-            <span class="file-name">UX Research: 30-Day.html</span>
-            <div class="file-title">UX Research: 30-Day</div>
-          </span>
-        </a>
-      </li>
-      <li>
-        <a href="couch-to-5k-va-ux/original-va.html">
-          <span class="file-icon">HTML</span>
-          <span>
-            <span class="file-name">original-va.html</span>
-            <div class="file-title">Couch to 5K for AI &mdash; VA UX Edition (Original VA)</div>
-          </span>
-        </a>
-      </li>
-    </ul>
-  </div>
+  <!-- ================= VA & Government UX ================= -->
+  <section>
+    <div class="section-head">
+      <h2>VA &amp; Government UX</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="grid">
 
-  <div class="folder">
-    <div class="folder-name">cst_research_explorer</div>
-    <ul class="file-list">
-      <li>
-        <a href="cst_research_explorer/index.html">
-          <span class="file-icon">HTML</span>
-          <span>
-            <span class="file-name">index.html</span>
-            <div class="file-title">VA Research Explorer &mdash; Claims Status Tool</div>
-          </span>
-        </a>
-      </li>
-    </ul>
-  </div>
+      <div class="card">
+        <div class="card-top">
+          <span class="tag">Knowledge Base</span>
+        </div>
+        <h3><a href="AI%20for%20VA%20Design/va-ai-design-kb.html">AI for VA Design &amp; Research</a></h3>
+        <p class="desc">A searchable, filterable library of practical AI workflows for VA UX designers and researchers — concepts, prompts, and techniques for designing AI for those who served.</p>
+        <div class="links">
+          <a href="AI%20for%20VA%20Design/va-ai-design-kb.html">Knowledge base</a>
+          <a href="AI%20for%20VA%20Design/va-ai-environment-setup.html">Environment setup guide</a>
+        </div>
+      </div>
 
-  <div class="folder">
-    <div class="folder-name">design-comparison-tool</div>
-    <ul class="file-list">
-      <li>
-        <a href="design-comparison-tool/index.html">
-          <span class="file-icon">HTML</span>
-          <span>
-            <span class="file-name">index.html</span>
-            <div class="file-title">Design Comparison Tool</div>
-          </span>
-        </a>
-      </li>
-    </ul>
-  </div>
+      <div class="card">
+        <div class="card-top">
+          <span class="tag">Learning Program</span>
+        </div>
+        <h3><a href="couch-to-5k-va-ux/blended.html">Couch to 5K for AI</a></h3>
+        <p class="desc">30 days of ten-minute exercises that take VA UX designers and researchers from chatting with AI to building with it. Includes the research behind the program.</p>
+        <div class="links">
+          <a href="couch-to-5k-va-ux/blended.html">Full program</a>
+          <a href="couch-to-5k-va-ux/landing-only.html">Landing page</a>
+          <a href="couch-to-5k-va-ux/UX%20Research%3A%2030-Day.html">UX research</a>
+          <a href="couch-to-5k-va-ux/original-va.html">Original VA version</a>
+        </div>
+      </div>
 
-  <div class="folder">
-    <div class="folder-name">va_data_dashboard</div>
-    <ul class="file-list">
-      <li>
-        <a href="va_data_dashboard/index.html">
-          <span class="file-icon">HTML</span>
-          <span>
-            <span class="file-name">index.html</span>
-            <div class="file-title">VA Open Data Analysis Dashboard</div>
-          </span>
-        </a>
-      </li>
-    </ul>
-  </div>
+      <div class="card">
+        <div class="card-top">
+          <span class="tag">Research Synthesis</span>
+        </div>
+        <h3><a href="cst_research_explorer/index.html">VA Research Explorer</a></h3>
+        <p class="desc">An interactive research synthesis template built around the Claims Status Tool — browse research themes and see how findings roll up into roadmap prioritization.</p>
+      </div>
 
-  <div class="folder">
-    <div class="folder-name">AI for Teachers</div>
-    <ul class="file-list">
-      <li>
-        <a href="AI%20for%20Teachers/index.html">
-          <span class="file-icon">HTML</span>
-          <span>
-            <span class="file-name">index.html</span>
-            <div class="file-title">TeacherAI &mdash; 40+ AI Prompts for K-5 Teachers</div>
-          </span>
-        </a>
-      </li>
-    </ul>
-  </div>
+      <div class="card">
+        <div class="card-top">
+          <span class="tag">Data Dashboard</span>
+        </div>
+        <h3><a href="va_data_dashboard/index.html">VA Open Data Analysis</a></h3>
+        <p class="desc">Insights drawn from VA open data across disability benefits, veteran demographics, and healthcare access, presented as a browsable dashboard of key findings.</p>
+      </div>
 
-  <div class="folder">
-    <div class="folder-name">caitlin clark 22</div>
-    <ul class="file-list">
-      <li>
-        <a href="caitlin%20clark%2022/index.html">
-          <span class="file-icon">HTML</span>
-          <span>
-            <span class="file-name">index.html</span>
-            <div class="file-title">Caitlin Clark 22</div>
-          </span>
-        </a>
-      </li>
-    </ul>
-  </div>
+    </div>
+  </section>
 
-  <div class="folder">
-    <div class="folder-name">wnba-fantasy</div>
-    <ul class="file-list">
-      <li>
-        <a href="wnba-fantasy/client/index.html">
-          <span class="file-icon">HTML</span>
-          <span>
-            <span class="file-name">index.html</span>
-            <div class="file-title">WNBA Fantasy Client</div>
-          </span>
-        </a>
-      </li>
-    </ul>
-  </div>
+  <!-- ================= WNBA & Data Storytelling ================= -->
+  <section>
+    <div class="section-head">
+      <h2>WNBA &amp; Data Storytelling</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="grid">
 
-  <div class="folder">
-    <div class="folder-name">wnba-stat-explorer</div>
-    <ul class="file-list">
-      <li>
-        <a href="wnba-stat-explorer/index.html">
-          <span class="file-icon">HTML</span>
-          <span>
-            <span class="file-name">index.html</span>
-            <div class="file-title">Caitlin Clark Officiating Data Explorer</div>
-          </span>
-        </a>
-      </li>
-    </ul>
-  </div>
+      <div class="card">
+        <div class="card-top">
+          <span class="tag">Interactive Explorer</span>
+        </div>
+        <h3><a href="wnba-stat-explorer/index.html">Caitlin Clark Officiating Explorer</a></h3>
+        <p class="desc">How is Caitlin Clark officiated? Explore every WNBA regular-season game from 2022&ndash;2026 — 1,123 games and 41,000+ logged fouls from public play-by-play data.</p>
+        <p class="facts">Descriptive analysis · small samples flagged</p>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <span class="tag">Data Story</span>
+        </div>
+        <h3><a href="caitlin%20clark%2022/index.html">Caitlin Clark — The Record Breaker</a></h3>
+        <p class="desc">A visual, scroll-driven story of Caitlin Clark's record-breaking rookie impact — the Clark Effect on attendance, ratings, and the league at large.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <span class="tag">Web App</span>
+        </div>
+        <h3><a href="wnba-fantasy/client/index.html">WNBA Fantasy Basketball</a></h3>
+        <p class="desc">A fantasy basketball client for the WNBA — draft players, track stats, and manage a roster in a lightweight web app.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= Tools & Education ================= -->
+  <section>
+    <div class="section-head">
+      <h2>Tools &amp; Education</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-top">
+          <span class="tag">Design Tool</span>
+        </div>
+        <h3><a href="design-comparison-tool/index.html">Design Comparison Tool</a></h3>
+        <p class="desc">Put two designs side by side and compare them directly — a quick utility for design reviews and before/after critiques.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <span class="tag">Prompt Library</span>
+        </div>
+        <h3><a href="AI%20for%20Teachers/index.html">TeacherAI Prompts</a></h3>
+        <p class="desc">40+ ready-to-use AI prompts for K&ndash;5 teachers — lesson planning, differentiation, parent communication, and more, organized for quick copy-and-go use.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <p>Built by Marisa Dominguez · <a href="https://github.com/MDomngz/md-projects">View on GitHub</a></p>
+  </footer>
+
 </div>
 </body>
 </html>
