@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creative Brief — The Columbia, PA Heritage Website</title>
+<style>
+  :root{
+    --ink:#1c1814;          /* near-black warm ink */
+    --paper:#f4ecdc;        /* aged paper */
+    --paper-2:#ece0c8;      /* deeper paper */
+    --river:#33576b;        /* susquehanna slate-blue */
+    --river-deep:#1f3a48;
+    --ember:#9c3b21;        /* burning-bridge ember/rust */
+    --gold:#b48a3e;         /* brass/ferry-brass */
+    --moss:#5c6b48;         /* quaker green */
+    --rule:#c9b896;
+    --muted:#6a5f4d;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(900px 500px at 80% -10%, rgba(180,138,62,.10), transparent 60%),
+      radial-gradient(700px 600px at -10% 100%, rgba(51,87,107,.10), transparent 55%),
+      var(--paper);
+    color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    line-height:1.6;
+    font-size:17px;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 28px 96px;}
+
+  /* ---------- Masthead ---------- */
+  header.masthead{
+    text-align:center;
+    padding:64px 28px 40px;
+    border-bottom:3px double var(--rule);
+    position:relative;
+  }
+  .kicker{
+    font-family:"Trade Gothic","Helvetica Neue",Arial,sans-serif;
+    text-transform:uppercase;
+    letter-spacing:.42em;
+    font-size:12px;
+    color:var(--ember);
+    font-weight:700;
+    margin-bottom:18px;
+  }
+  header.masthead h1{
+    font-size:clamp(34px,6vw,58px);
+    line-height:1.04;
+    margin:0 0 10px;
+    font-weight:800;
+    letter-spacing:.5px;
+  }
+  header.masthead h1 .swash{font-style:italic;font-weight:600;color:var(--river-deep);}
+  .dateline{
+    font-family:"Trade Gothic","Helvetica Neue",Arial,sans-serif;
+    text-transform:uppercase;letter-spacing:.28em;font-size:11px;color:var(--muted);
+    margin-top:18px;
+  }
+  .ornament{display:flex;align-items:center;justify-content:center;gap:14px;margin:22px auto 0;color:var(--gold);}
+  .ornament .line{height:1px;width:90px;background:linear-gradient(90deg,transparent,var(--gold));}
+  .ornament .line.r{background:linear-gradient(270deg,transparent,var(--gold));}
+
+  /* ---------- Section frame ---------- */
+  section{margin-top:54px;}
+  .sec-num{
+    font-family:"Trade Gothic","Helvetica Neue",Arial,sans-serif;
+    font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-weight:700;
+  }
+  h2{
+    font-size:clamp(24px,3.5vw,34px);
+    margin:6px 0 18px;
+    line-height:1.12;
+    border-bottom:1px solid var(--rule);
+    padding-bottom:10px;
+  }
+  h3{
+    font-size:19px;margin:30px 0 6px;color:var(--river-deep);
+    font-variant:small-caps;letter-spacing:.04em;
+  }
+  p{margin:0 0 14px;}
+  a{color:var(--river);}
+  strong{color:var(--ink);}
+  em.note{color:var(--muted);}
+
+  .lead{font-size:19px;color:var(--river-deep);font-style:italic;}
+
+  /* ---------- Pull / quote ---------- */
+  blockquote{
+    margin:22px 0;padding:18px 24px;
+    border-left:4px solid var(--ember);
+    background:rgba(156,59,33,.06);
+    font-style:italic;font-size:18px;color:var(--ink);
+  }
+  blockquote cite{display:block;font-style:normal;font-size:13px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);margin-top:10px;font-family:"Trade Gothic",Arial,sans-serif;}
+
+  /* ---------- Cards ---------- */
+  .grid{display:grid;gap:16px;margin:18px 0;}
+  .grid.two{grid-template-columns:1fr 1fr;}
+  .grid.three{grid-template-columns:repeat(3,1fr);}
+  .card{
+    background:rgba(255,255,255,.45);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    padding:18px 18px 16px;
+  }
+  .card h4{margin:0 0 6px;font-size:16px;letter-spacing:.02em;}
+  .card p{font-size:15px;color:var(--muted);margin:0;}
+
+  /* ---------- Audience pills ---------- */
+  .pills{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0;}
+  .pill{
+    font-family:"Trade Gothic",Arial,sans-serif;font-size:12px;letter-spacing:.06em;
+    text-transform:uppercase;padding:7px 14px;border:1px solid var(--river);
+    color:var(--river-deep);border-radius:40px;background:rgba(51,87,107,.06);
+  }
+
+  /* ---------- Palette swatches ---------- */
+  .swatches{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--rule);border-radius:4px;overflow:hidden;margin:16px 0;}
+  .swatch{padding:24px 16px 14px;color:#fff;min-height:104px;display:flex;flex-direction:column;justify-content:flex-end;}
+  .swatch .name{font-family:"Trade Gothic",Arial,sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;}
+  .swatch .hex{font-family:"Trade Gothic",Arial,sans-serif;font-size:11px;opacity:.85;letter-spacing:.06em;}
+  .sw-ink{background:var(--ink);} .sw-paper{background:var(--paper-2);color:var(--ink);}
+  .sw-river{background:var(--river);} .sw-ember{background:var(--ember);}
+  .sw-gold{background:var(--gold);} .sw-moss{background:var(--moss);}
+
+  /* ---------- Type specimen ---------- */
+  .specimen{border:1px solid var(--rule);border-radius:4px;padding:22px;background:rgba(255,255,255,.4);margin:14px 0;}
+  .specimen .display{font-size:40px;line-height:1;margin:0 0 4px;}
+  .specimen .meta{font-family:"Trade Gothic",Arial,sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .specimen .sans{font-family:"Trade Gothic","Helvetica Neue",Arial,sans-serif;}
+
+  /* ---------- Sitemap ---------- */
+  ul.map{list-style:none;padding:0;margin:14px 0;}
+  ul.map > li{padding:12px 0;border-bottom:1px dashed var(--rule);}
+  ul.map > li > .pagename{font-weight:700;font-size:17px;}
+  ul.map .desc{color:var(--muted);font-size:15px;}
+
+  /* lists */
+  ul.tick{list-style:none;padding-left:0;margin:12px 0;}
+  ul.tick li{position:relative;padding-left:26px;margin-bottom:9px;}
+  ul.tick li::before{content:"—";position:absolute;left:0;color:var(--ember);font-weight:700;}
+
+  /* do / don't */
+  .dd{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0;}
+  .dd .do{border-top:3px solid var(--moss);} .dd .dont{border-top:3px solid var(--ember);}
+  .dd .card h4{font-variant:small-caps;letter-spacing:.04em;}
+
+  footer{margin-top:64px;padding-top:24px;border-top:3px double var(--rule);text-align:center;
+    font-family:"Trade Gothic",Arial,sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
+
+  @media (max-width:680px){
+    .grid.two,.grid.three,.dd{grid-template-columns:1fr;}
+    .swatches{grid-template-columns:repeat(2,1fr);}
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="kicker">Website Creative Brief</div>
+  <h1>Columbia, Pennsylvania<br><span class="swash">From Wright's Ferry to the Frontier of Freedom</span></h1>
+  <div class="ornament"><span class="line"></span>✶<span class="line r"></span></div>
+  <div class="dateline">Prepared for the Columbia Heritage Web Project · A Rivertown Story</div>
+</header>
+
+<div class="wrap">
+
+  <section id="overview">
+    <div class="sec-num">Section 01</div>
+    <h2>The Big Idea</h2>
+    <p class="lead">A digital home for one small Susquehanna town that carried an outsized chapter of American history.</p>
+    <p>This site is not a brochure and not a museum placard. It is a <strong>place for a great story about a great community</strong> — told with the texture of the river it sits beside. Columbia's narrative runs from a Quaker ferryman's vision in 1724, through a polymath woman who corresponded with Franklin, across a covered bridge burned to stop an army, and into a present defined by preservation and craft. The website should make a visitor feel they've stepped onto the eastern bank of the Susquehanna and been handed the keys to the whole story.</p>
+    <p>Everything that follows — voice, palette, typography, structure — exists to serve one feeling: <strong>authentic depth</strong>. The design should read like a well-kept town archive that happens to be beautiful, not a tourism template with history poured in.</p>
+    <blockquote>
+      Wright's Ferry was the "gateway to the west" — a place that turned a remote wilderness into the site of permanent civilization.
+      <cite>Source theme — Foundations of a Rivertown</cite>
+    </blockquote>
+  </section>
+
+  <section id="goals">
+    <div class="sec-num">Section 02</div>
+    <h2>Goals &amp; Success</h2>
+    <div class="grid two">
+      <div class="card"><h4>Show breadth</h4><p>Present the full sweep — history, notable residents, the Underground Railroad, the 1834 race riots, the bridge fire, and the modern antique trade — without flattening any of it.</p></div>
+      <div class="card"><h4>Feel authentic</h4><p>The design itself should belong to the content: aged, riverine, hand-kept. No generic "history-site" tropes.</p></div>
+      <div class="card"><h4>Hold complexity honestly</h4><p>Tell the hard parts (the riots, "Mink Slide," the Fugitive Slave Act) with the same care as the triumphs. Truth is the brand.</p></div>
+      <div class="card"><h4>Invite the visit</h4><p>Move a curious reader toward Wright's Ferry Mansion, the antique markets, and the riverfront — turning a click into a trip.</p></div>
+    </div>
+    <h3>What success looks like</h3>
+    <ul class="tick">
+      <li>A first-time visitor can name three things Columbia is known for after five minutes.</li>
+      <li>A researcher trusts the site enough to cite it or dig deeper.</li>
+      <li>A resident feels the town's identity is honored, not packaged.</li>
+      <li>Visitors leave with at least one concrete reason to come in person.</li>
+    </ul>
+  </section>
+
+  <section id="audience">
+    <div class="sec-num">Section 03</div>
+    <h2>Audience</h2>
+    <p>A flagship site serving three readers at once. The design must let each find their level without making the others feel lost.</p>
+    <div class="pills">
+      <span class="pill">Heritage Tourists &amp; Visitors</span>
+      <span class="pill">History Buffs &amp; Researchers</span>
+      <span class="pill">Residents &amp; Local Pride</span>
+    </div>
+    <div class="grid three">
+      <div class="card"><h4>The Visitor</h4><p>Planning a day trip. Wants the highlights, the must-sees, and the practical "how do I get there."</p></div>
+      <div class="card"><h4>The Researcher</h4><p>Hungry for depth, dates, names, primary detail. Rewards credibility and rigor.</p></div>
+      <div class="card"><h4>The Resident</h4><p>Looking for belonging. Wants the town's story told with pride and accuracy.</p></div>
+    </div>
+    <p><em class="note">Design principle: layered reading. Bold, scannable highlights on top; deeper archival detail one click or one scroll beneath. Never force the casual reader through the scholarship, never starve the scholar of it.</em></p>
+  </section>
+
+  <section id="voice">
+    <div class="sec-num">Section 04</div>
+    <h2>Voice &amp; Tone</h2>
+    <p class="lead">Part journalist, part researcher, part historian — a knowledgeable local who can tell a great story straight.</p>
+    <p>Write with the confidence of someone who has walked the riverbank a thousand times and read every deed in the county. Vivid but never purple. Reverent of the past but unafraid of its contradictions. The "burning bridge" and the "frontier of freedom" earn their drama because the facts are true.</p>
+    <div class="dd">
+      <div class="card do"><h4>Do</h4>
+        <ul class="tick" style="margin-top:6px;">
+          <li>Lead with the human moment, then ground it in fact.</li>
+          <li>Use period detail (chalk-numbered wagons, silkworms, 9 shillings a coach).</li>
+          <li>Name names — Susanna Wright, Robert Loney, William Wright.</li>
+          <li>Let hard history sit honestly beside the triumphs.</li>
+        </ul>
+      </div>
+      <div class="card dont"><h4>Don't</h4>
+        <ul class="tick" style="margin-top:6px;">
+          <li>Slip into brochure-speak or chamber-of-commerce gloss.</li>
+          <li>Sanitize the 1834 riots or the racial climate of "The Bottom."</li>
+          <li>Overload casual readers with citations on the surface.</li>
+          <li>Treat the town as a backdrop instead of the protagonist.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="architecture">
+    <div class="sec-num">Section 05</div>
+    <h2>Content Architecture</h2>
+    <p>A spine of chronology, with thematic "deep dive" rooms hanging off it so every audience can wander their own way.</p>
+    <ul class="map">
+      <li><span class="pagename">Home — "A Rivertown Story"</span><br><span class="desc">Cinematic opening on the Susquehanna. The big idea, three doorways (Story · People · Visit), and a teaser of the most arresting moments.</span></li>
+      <li><span class="pagename">The Story (Timeline)</span><br><span class="desc">1724 → today as a scrollable river of dates: founding, the ferry, the bridges, the Civil War fire, modern preservation.</span></li>
+      <li><span class="pagename">People of Columbia</span><br><span class="desc">Susanna Wright as the centerpiece; profiles of William Wright, Robert Loney, the five who burned the bridge.</span></li>
+      <li><span class="pagename">Freedom &amp; the Underground Railroad</span><br><span class="desc">The "beacon of liberty" — safe houses, the Mifflin House, "The Bottom," the Fugitive Slave Act's toll.</span></li>
+      <li><span class="pagename">The 1834 Race Riots</span><br><span class="desc">A standalone, unflinching room. Labor resentment, the firebombing of "The Bottom," and what it means in an abolitionist stronghold.</span></li>
+      <li><span class="pagename">The Burning Bridge (1863)</span><br><span class="desc">June 28, 1863 — the choice that turned an army. A single-moment narrative page.</span></li>
+      <li><span class="pagename">Wright's Ferry &amp; the Gateway West</span><br><span class="desc">Ferry life, fares, the covered bridges, Conestoga wagons waiting days to cross.</span></li>
+      <li><span class="pagename">Visit Today — Antique Capital</span><br><span class="desc">Wright's Ferry Mansion plus the antique destinations; the bridge from 18th-century craft to today's economy.</span></li>
+      <li><span class="pagename">Archive / Sources</span><br><span class="desc">Where researchers go to verify. Signals credibility to the whole site.</span></li>
+    </ul>
+  </section>
+
+  <section id="visual">
+    <div class="sec-num">Section 06</div>
+    <h2>Visual Direction</h2>
+    <p class="lead">A river archive: aged paper, slate water, ferry brass, and a single ember of warning.</p>
+    <p>The mood sits at the meeting of <strong>colonial print culture</strong> and <strong>the Susquehanna itself</strong>. Think letterpress broadsides, surveyor's maps, and silk ledgers — but breathing, with the cool depth of river water underneath. Restraint is the rule; the history supplies the drama.</p>
+
+    <h3>Palette</h3>
+    <div class="swatches">
+      <div class="swatch sw-ink"><span class="name">Old Ink</span><span class="hex">#1C1814</span></div>
+      <div class="swatch sw-paper"><span class="name">Aged Paper</span><span class="hex">#ECE0C8</span></div>
+      <div class="swatch sw-river"><span class="name">Susquehanna Slate</span><span class="hex">#33576B</span></div>
+      <div class="swatch sw-ember"><span class="name">Bridge Ember</span><span class="hex">#9C3B21</span></div>
+      <div class="swatch sw-gold"><span class="name">Ferry Brass</span><span class="hex">#B48A3E</span></div>
+      <div class="swatch sw-moss"><span class="name">Quaker Moss</span><span class="hex">#5C6B48</span></div>
+    </div>
+    <p><em class="note">Paper and ink carry the page. Slate-blue anchors the river and primary navigation. Brass is the accent of craft and ferry-era commerce. Ember is rationed — used only for the moments of consequence (the riots, the bridge fire, key calls-to-action), so its appearance always means something.</em></p>
+
+    <h3>Typography</h3>
+    <div class="specimen">
+      <p class="display">Wright's Ferry</p>
+      <p class="meta">Display / Headlines — a high-contrast old-style serif (e.g. Caslon, Iowan Old Style). Letterpress lineage, set large with generous swash italics for titles.</p>
+    </div>
+    <div class="specimen">
+      <p class="display" style="font-size:24px;">The river carried more than cargo — it carried people toward freedom.</p>
+      <p class="meta">Body — a readable transitional serif at 17–19px, long measure, warm leading. Built for paragraphs of real history.</p>
+    </div>
+    <div class="specimen">
+      <p class="display sans" style="font-size:15px;letter-spacing:.3em;text-transform:uppercase;">Section · Dateline · Label</p>
+      <p class="meta">Accent — a quiet grotesque/gothic sans (e.g. Trade Gothic), all caps with wide tracking, for kickers, datelines, and navigation only.</p>
+    </div>
+
+    <h3>Imagery &amp; Texture</h3>
+    <ul class="tick">
+      <li><strong>Photography:</strong> the living river, stone of Wright's Ferry Mansion, weathered antique-shop interiors, the bridge's surviving piers — shot warm, with shadow and patina.</li>
+      <li><strong>Archival:</strong> period engravings, surveyor's maps, Susanna Wright's poetry and silk, the covered bridge in old prints — treated as treasured artifacts, framed and captioned with care.</li>
+      <li><strong>Texture:</strong> subtle paper grain, double-rule dividers, and map-line ornaments. Texture should whisper, never shout.</li>
+      <li><strong>Motion:</strong> slow and water-like — gentle parallax on the river, timeline that flows on scroll. Nothing flashy; the past does not rush.</li>
+    </ul>
+  </section>
+
+  <section id="signature">
+    <div class="sec-num">Section 07</div>
+    <h2>Signature Moments</h2>
+    <p>Three set-pieces that make the site memorable and prove the design can carry weight.</p>
+    <div class="grid three">
+      <div class="card"><h4>The Burning Bridge</h4><p>A scroll-driven retelling of June 28, 1863 — the ember palette earns its keep here as the longest covered bridge in the world goes up to stop the Confederate advance.</p></div>
+      <div class="card"><h4>Susanna's Desk</h4><p>An interactive room for the polymath — her silk to Queen Charlotte, her proto-feminist verse, her letters to Franklin — staged like an open archive drawer.</p></div>
+      <div class="card"><h4>The River at Night</h4><p>Robert Loney ferrying freedom seekers across in darkness — a quiet, map-led narrative that honors the Underground Railroad without spectacle.</p></div>
+    </div>
+  </section>
+
+  <section id="guardrails">
+    <div class="sec-num">Section 08</div>
+    <h2>Guardrails</h2>
+    <ul class="tick">
+      <li>Distinguish Columbia, <strong>Pennsylvania</strong> from Columbia, Tennessee — the 1834 riots are not the 20th-century Tennessee events.</li>
+      <li>Handle "Mink Slide," "The Bottom," and the riots with historical honesty and human dignity; contextualize derisive period language, never adopt its spirit.</li>
+      <li>Keep facts verifiable; the Archive/Sources page is load-bearing for trust.</li>
+      <li>Accessibility is non-negotiable: strong contrast, real alt text on every archival image, keyboard-navigable timeline.</li>
+    </ul>
+  </section>
+
+  <section id="next">
+    <div class="sec-num">Section 09</div>
+    <h2>Recommended Next Steps</h2>
+    <ul class="tick">
+      <li>Approve direction, palette, and the three signature moments.</li>
+      <li>Commission a moodboard and one hero homepage comp to pressure-test the "river archive" feel.</li>
+      <li>Audit available imagery — what archival material and original photography can be sourced.</li>
+      <li>Lock the sitemap and begin drafting page copy in the agreed voice.</li>
+    </ul>
+  </section>
+
+  <footer>
+    Columbia, Pennsylvania — A Rivertown Story · Website Creative Brief
+  </footer>
+
+</div>
+</body>
+</html>
