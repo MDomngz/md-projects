@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Summer Typing Atlas</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="masthead">
+        <div class="masthead__copy">
+          <p class="eyebrow">Summer Typing Atlas</p>
+          <h1>Daily keyboard quests through history and geography</h1>
+          <p class="intro">
+            Build proper typing habits with two-week adventures, bite-size facts,
+            and practice that feels like collecting stamps in a summer passport.
+          </p>
+        </div>
+        <div class="map-panel" aria-label="Illustrated world travel map">
+          <svg viewBox="0 0 560 320" role="img" aria-labelledby="mapTitle">
+            <title id="mapTitle">A playful atlas map with route lines and landmarks</title>
+            <rect x="0" y="0" width="560" height="320" rx="24" fill="#f8efe0" />
+            <path d="M54 99c42-41 91-43 140-18 49 26 91 5 129-21 36-25 86-21 132 11 31 22 48 50 53 84" fill="none" stroke="#c6764f" stroke-width="5" stroke-linecap="round" stroke-dasharray="10 14" />
+            <path d="M58 224c47-35 95-27 132 8 38 34 85 35 127 8 51-33 96-33 138-5" fill="none" stroke="#577b75" stroke-width="5" stroke-linecap="round" />
+            <path d="M82 98c39-22 82-24 118-5 20 11 25 34 4 45-33 18-69 7-105 20-29 11-58-1-63-26-3-16 12-25 46-34Z" fill="#98b66e" />
+            <path d="M306 92c49-37 120-23 154 19 14 17 11 42-10 50-30 11-49-14-78-5-36 11-70-1-91-25-13-14-6-27 25-39Z" fill="#7aa7a1" />
+            <path d="M220 207c37-20 81-16 113 11 21 17 17 41-8 49-35 12-67-6-103 2-27 6-55-5-60-28-4-17 16-23 58-34Z" fill="#e0a458" />
+            <g class="pin" transform="translate(141 82)">
+              <circle cx="0" cy="0" r="18" fill="#273f54" />
+              <path d="M-8 7h16l-4-18h-8Z" fill="#f8efe0" />
+            </g>
+            <g class="pin" transform="translate(392 115)">
+              <circle cx="0" cy="0" r="18" fill="#a74739" />
+              <path d="M-9 6 0-10 9 6Z" fill="#f8efe0" />
+            </g>
+            <g class="pin" transform="translate(278 231)">
+              <circle cx="0" cy="0" r="18" fill="#315f53" />
+              <path d="M-10 4h20v8h-20Zm4-14h12v14h-12Z" fill="#f8efe0" />
+            </g>
+            <g transform="translate(470 232)">
+              <circle cx="0" cy="0" r="42" fill="#fffaf1" stroke="#273f54" stroke-width="4" />
+              <path d="M0-31 8-5 31 0 8 5 0 31-8 5-31 0-8-5Z" fill="#d45d4b" />
+              <circle cx="0" cy="0" r="5" fill="#273f54" />
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <section class="dashboard">
+        <aside class="side-panel">
+          <div>
+            <p class="label">Choose a 2-week program</p>
+            <div id="programList" class="program-list"></div>
+          </div>
+
+          <div class="passport">
+            <div>
+              <p class="label">Summer passport</p>
+              <h2 id="passportTitle">Ready for day 1</h2>
+            </div>
+            <div class="passport__stats">
+              <span><strong id="totalStars">0</strong> stars</span>
+              <span><strong id="bestStreak">0</strong> day streak</span>
+            </div>
+            <button id="resetProgressBtn" class="reset-link" type="button">Reset passport</button>
+          </div>
+        </aside>
+
+        <section class="mission-board">
+          <div class="mission-header">
+            <div>
+              <p id="programKicker" class="label">Program</p>
+              <h2 id="missionTitle">Mission title</h2>
+              <p id="missionFact" class="fact"></p>
+            </div>
+            <div class="mission-score">
+              <span id="dayBadge">Day 1</span>
+              <strong id="missionStars">0/3</strong>
+            </div>
+          </div>
+
+          <div id="dayGrid" class="day-grid" aria-label="Program days"></div>
+
+          <div class="typing-card">
+            <div class="typing-card__top">
+              <div>
+                <p class="label">Today’s focus</p>
+                <h3 id="focusText">Home row</h3>
+              </div>
+              <div class="mode-toggle" aria-label="Practice mode">
+                <button id="warmupBtn" class="is-active" type="button">Warmup</button>
+                <button id="storyBtn" type="button">Story</button>
+              </div>
+            </div>
+
+            <div id="promptText" class="prompt-text" aria-live="polite"></div>
+
+            <textarea
+              id="typingInput"
+              spellcheck="false"
+              autocomplete="off"
+              autocapitalize="off"
+              aria-label="Typing practice input"
+              placeholder="Start typing here..."
+            ></textarea>
+
+            <div class="metrics">
+              <div><span id="wpmMetric">0</span><small>WPM</small></div>
+              <div><span id="accuracyMetric">100%</span><small>Accuracy</small></div>
+              <div><span id="timeMetric">0:00</span><small>Time</small></div>
+              <div><span id="progressMetric">0%</span><small>Done</small></div>
+            </div>
+
+            <div class="actions">
+              <button id="restartBtn" class="secondary" type="button">Restart</button>
+              <button id="completeBtn" class="primary" type="button" disabled>Stamp passport</button>
+            </div>
+          </div>
+
+          <div class="coach-row">
+            <section class="coach-card">
+              <p class="label">Typing coach</p>
+              <ul id="coachTips"></ul>
+            </section>
+            <section class="keyboard-card">
+              <p class="label">Finger map</p>
+              <div id="keyboard" class="keyboard" aria-label="Keyboard finger guide"></div>
+            </section>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

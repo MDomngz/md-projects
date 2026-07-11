@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RV Trip Finder — 30' Trailer • Home base: Columbia, PA (17512)</title>
+<style>
+  :root{
+    --bg:#0f1720; --panel:#17222e; --panel2:#1e2c3a; --line:#2b3d4f;
+    --text:#e8eef3; --muted:#9db0c0; --accent:#3fb27f; --accent2:#f0a03c;
+    --chip:#26384a; --shadow:0 4px 18px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.45}
+  header{padding:22px 20px 14px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#14202b,#0f1720)}
+  h1{margin:0 0 4px;font-size:22px}
+  .sub{color:var(--muted);font-size:13px}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+  .controls{display:flex;flex-wrap:wrap;gap:18px;padding:16px 0;align-items:flex-end}
+  .group{display:flex;flex-direction:column;gap:6px}
+  .group label.title{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{background:var(--chip);border:1px solid var(--line);color:var(--text);
+    padding:6px 11px;border-radius:20px;font-size:13px;cursor:pointer;user-select:none;transition:.12s}
+  .chip:hover{border-color:var(--accent)}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#07130d;font-weight:600}
+  .chip.hist.on{background:var(--accent2);border-color:var(--accent2);color:#241403}
+  .chip.pet.on{background:#c58bd6;border-color:#c58bd6;color:#1c0a24}
+  input[type=search]{background:var(--panel);border:1px solid var(--line);color:var(--text);
+    padding:9px 12px;border-radius:8px;font-size:14px;min-width:200px}
+  select{background:var(--panel);border:1px solid var(--line);color:var(--text);padding:9px 10px;border-radius:8px;font-size:13px}
+  .bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+    padding:10px 0 16px;border-top:1px solid var(--line);margin-top:4px}
+  .count{color:var(--muted);font-size:13px}
+  .reset{background:none;border:1px solid var(--line);color:var(--muted);padding:7px 12px;border-radius:8px;cursor:pointer;font-size:13px}
+  .reset:hover{color:var(--text);border-color:var(--accent)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;padding-bottom:50px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px}
+  .card h3{margin:0;font-size:16px}
+  .card h3 a{color:var(--text);text-decoration:none;border-bottom:1px dotted var(--muted)}
+  .card h3 a:hover{color:var(--accent)}
+  .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .tag{font-size:11.5px;padding:3px 8px;border-radius:6px;background:var(--panel2);border:1px solid var(--line);color:var(--muted)}
+  .tag.dist{color:#bfe6d3;border-color:#2f6b52;background:#173026}
+  .tag.type{color:#cfe0ef}
+  .tag.hk{color:#241403;background:var(--accent2);border-color:var(--accent2);font-weight:600}
+  .tag.hk.ew{background:#6fb0e0;border-color:#6fb0e0}
+  .tag.price{color:#e8eef3;background:#33465a;border-color:#4a6076;font-weight:600}
+  .tag.pet{color:#e7d3f0;border-color:#6a4a78;background:#301f3a}
+  .loc{color:var(--muted);font-size:13px}
+  .hist{font-size:13px}
+  .hist b{color:var(--accent2);font-weight:600}
+  .rowline{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted)}
+  .rowline b{color:var(--text);font-weight:600}
+  .note{font-size:12.5px;color:var(--muted);font-style:italic}
+  .empty{padding:40px;text-align:center;color:var(--muted)}
+  footer{border-top:1px solid var(--line);padding:16px 20px 40px;color:var(--muted);font-size:12px}
+  a.src{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>🚐 RV Trip Finder — 30′ Pull Trailer</h1>
+    <div class="sub">Home base: <b>Columbia, PA · 17512</b> · Distances are approximate one-way driving miles · Filter by range, hook-ups, type, price, pets, and nearby history.</div>
+  </div>
+</header>
+<div class="wrap">
+  <div class="controls">
+    <div class="group">
+      <label class="title">Distance from home</label>
+      <div class="chips" id="f-dist">
+        <span class="chip" data-v="short">Short · &lt;150 mi</span>
+        <span class="chip" data-v="medium">Medium · 150–400 mi</span>
+        <span class="chip" data-v="long">Long · 400+ mi</span>
+      </div>
+    </div>
+    <div class="group">
+      <label class="title">Hook-ups</label>
+      <div class="chips" id="f-hook">
+        <span class="chip" data-v="full">Full (E/W/S)</span>
+        <span class="chip" data-v="ew">Electric + Water</span>
+      </div>
+    </div>
+    <div class="group">
+      <label class="title">Price / night (full hookup)</label>
+      <div class="chips" id="f-price">
+        <span class="chip" data-v="1">$ · under $45</span>
+        <span class="chip" data-v="2">$$ · $45–75</span>
+        <span class="chip" data-v="3">$$$ · $75+</span>
+      </div>
+    </div>
+    <div class="group">
+      <label class="title">Park type</label>
+      <div class="chips" id="f-type">
+        <span class="chip" data-v="RV Park">RV Park</span>
+        <span class="chip" data-v="Resort">Resort</span>
+        <span class="chip" data-v="State Park">State Park</span>
+        <span class="chip" data-v="National Park">Near National Park</span>
+      </div>
+    </div>
+    <div class="group">
+      <label class="title">Pets</label>
+      <div class="chips" id="f-pet">
+        <span class="chip pet" data-v="1">Pet-friendly</span>
+      </div>
+    </div>
+    <div class="group">
+      <label class="title">Historical themes nearby</label>
+      <div class="chips" id="f-hist">
+        <span class="chip hist" data-v="Civil War">Civil War</span>
+        <span class="chip hist" data-v="Revolution">Revolution / Colonial</span>
+        <span class="chip hist" data-v="Amish">Amish / Heritage</span>
+        <span class="chip hist" data-v="Industrial">Industrial / Canal</span>
+      </div>
+    </div>
+    <div class="group">
+      <label class="title">Search</label>
+      <input type="search" id="q" placeholder="name, town, site…">
+    </div>
+    <div class="group">
+      <label class="title">Sort by</label>
+      <select id="sort">
+        <option value="dist">Distance (near → far)</option>
+        <option value="distR">Distance (far → near)</option>
+        <option value="price">Price (low → high)</option>
+        <option value="priceR">Price (high → low)</option>
+        <option value="name">Name (A→Z)</option>
+      </select>
+    </div>
+  </div>
+  <div class="bar">
+    <span class="count" id="count"></span>
+    <button class="reset" id="reset">Clear all filters</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+<footer>
+  <div class="wrap">
+    Built for a 30′ pull trailer — every site listed accepts rigs of that size or larger; confirm site length &amp; amperage when booking. Prices are typical <b>full-hookup nightly ranges</b> (peak season runs higher; state parks are electric-only and cheaper); reservation/booking fees are extra. Nearly all listed parks are pet-friendly with leash rules — always reconfirm breed/number limits and any pet fees directly. Distances are estimated driving miles from Columbia, PA and rounded.<br><br>
+    Sources:
+    <a class="src" href="https://lancasterpa.com/campgrounds/">LancasterPA.com</a> ·
+    <a class="src" href="https://www.pa.gov/agencies/dcnr/recreation/where-to-go/state-parks/state-park-prices/camping">PA DCNR camping prices</a> ·
+    <a class="src" href="https://www.artilleryridge.com/">Artillery Ridge</a> ·
+    <a class="src" href="https://koa.com/campgrounds/gettysburg/">Gettysburg KOA</a> ·
+    <a class="src" href="https://www.bringfido.com/lodging/campgrounds/city/gettysburg_pa_us/">BringFido (pet policies)</a> ·
+    <a class="src" href="https://www.rivertrail.com/stay-with-us/rv-campground/">River &amp; Trail (Harpers Ferry)</a> ·
+    <a class="src" href="https://www.americanheritagervpark.com/">American Heritage RV Park</a> ·
+    <a class="src" href="https://www.normandyfarms.com/">Normandy Farms</a> ·
+    <a class="src" href="https://www.lakeairerv.com/">Lake Aire RV Park</a>
+  </div>
+</footer>
+<script>
+const DATA = [
+  {name:"Country Acres Campground", type:"RV Park", dist:12, band:"short", hook:["full"], price:"$55–75", tier:2, pet:"Yes · leashed", loc:"Gordonville, PA · Lancaster Co.",
+   hist:[["Amish","Amish Country, Bird-in-Hand, Landis Valley"]],
+   note:"Pull-through full-hookup sites (30/50A, W, S, cable); accepts any size rig.", url:"https://bird-in-hand.com/country-acres-campground/country-acres-campground-details/"},
+  {name:"Muddy Run Park", type:"State Park", dist:14, band:"short", hook:["full"], price:"$35–48", tier:1, pet:"Yes · leashed", loc:"Holtwood, PA · Susquehanna River",
+   hist:[["Industrial","Susquehanna River / Safe Harbor hydro history"]],
+   note:"County/utility park with full-hookup RV loop on a 100-acre lake.", url:"https://muddyruncampground.com/"},
+  {name:"Pinch Pond Family Campground", type:"RV Park", dist:17, band:"short", hook:["full"], price:"$50–70", tier:2, pet:"Yes · leashed", loc:"Manheim, PA · N. Lancaster Co.",
+   hist:[["Amish","Amish Country, Mount Hope Estate"]],
+   note:"Water/electric/sewer + cable; foothills setting.", url:"https://pinchpond.com/"},
+  {name:"Lancaster / New Holland KOA", type:"RV Park", dist:20, band:"short", hook:["full"], price:"$55–85", tier:2, pet:"Yes · leashed", loc:"New Holland, PA",
+   hist:[["Amish","Amish Country, Strasburg Rail Road"]],
+   note:"Sites up to 90′, 20/30/50A, pull-through & back-in.", url:"https://koa.com/campgrounds/lancaster/"},
+  {name:"Spring Gulch Resort Campground", type:"Resort", dist:24, band:"short", hook:["full"], price:"$60–95", tier:3, pet:"Yes · leashed", loc:"New Holland, PA",
+   hist:[["Amish","Amish Country, Ephrata Cloister"]],
+   note:"Full hookups with 50A; resort amenities (pools, activities).", url:"https://www.spring-gulch.com/"},
+  {name:"Sun Valley Campground", type:"RV Park", dist:26, band:"short", hook:["full"], price:"$45–65", tier:2, pet:"Yes · leashed", loc:"Narvon, PA",
+   hist:[["Amish","Amish Country, Churchtown historic village"]],
+   note:"E/W/S sites, open April–November.", url:"https://sunvalleycampground.net/"},
+  {name:"Hersheypark Camping Resort", type:"Resort", dist:30, band:"short", hook:["ew"], price:"$65–110", tier:3, pet:"Yes · leashed", loc:"Hummelstown / Hershey, PA",
+   hist:[["Industrial","Hershey chocolate-town history, Hershey Story museum"]],
+   note:"Electric/water/cable (20/30/50A); shuttle to Hersheypark. Sewer on select sites.", url:"https://www.hersheyparkcampingresort.com/accommodations/rv-sites/"},
+  {name:"Gifford Pinchot State Park", type:"State Park", dist:33, band:"short", hook:["full","ew"], price:"$35–45", tier:1, pet:"Yes · designated sites", loc:"Lewisberry, PA · York Co.",
+   hist:[["Industrial","York, Harrisburg capitol district"]],
+   note:"22 full-hookup + 119 electric sites, rigs to 50′; reserve via PA DCNR.", url:"https://www.pa.gov/agencies/dcnr/recreation/where-to-go/state-parks/find-a-park/gifford-pinchot-state-park/stay"},
+  {name:"French Creek State Park", type:"State Park", dist:38, band:"short", hook:["ew"], price:"$28–40", tier:1, pet:"Yes · designated sites", loc:"Elverson, PA · Berks Co.",
+   hist:[["Industrial","Hopewell Furnace NHS, Daniel Boone Homestead"]],
+   note:"Electric sites (full-hookup being added); wooded lake loops.", url:"https://www.pa.gov/agencies/dcnr/recreation/what-to-do/stay-overnight/rv-and-tent-campsites"},
+  {name:"Codorus State Park", type:"State Park", dist:44, band:"short", hook:["ew"], price:"$28–40", tier:1, pet:"Yes · designated sites", loc:"Hanover, PA · York Co.",
+   hist:[["Civil War","Hanover (first battle north of the Mason-Dixon), near Gettysburg"]],
+   note:"Electric loops on Lake Marburg; full-hookup being added.", url:"https://www.pa.gov/agencies/dcnr/recreation/what-to-do/stay-overnight/rv-and-tent-campsites"},
+  {name:"Brandywine Creek Campground", type:"RV Park", dist:45, band:"short", hook:["full"], price:"$50–75", tier:2, pet:"Yes · leashed", loc:"Downingtown, PA · Chester Co.",
+   hist:[["Revolution","Brandywine Battlefield, Valley Forge, Amish Country"]],
+   note:"Full-hookup sites; central to Valley Forge & Brandywine.", url:"https://www.brandywinecreekcampground.com/"},
+  {name:"Artillery Ridge Campground", type:"RV Park", dist:54, band:"short", hook:["full"], price:"$55–80", tier:2, pet:"Yes · any size, no fee at sites", loc:"Gettysburg, PA",
+   hist:[["Civil War","On the Union Artillery Reserve grounds — walk to Gettysburg NMP"]],
+   note:"Full-hookup sites literally on battlefield ground; horse park.", url:"https://www.artilleryridge.com/"},
+  {name:"Gettysburg / Battlefield KOA Holiday", type:"Resort", dist:55, band:"short", hook:["full"], price:"$60–100", tier:3, pet:"Yes · leashed (6 ft)", loc:"Gettysburg, PA",
+   hist:[["Civil War","Gettysburg National Military Park & museum"]],
+   note:"Back-in & pull-thru full hookups, 30/50A, patios; open year-round.", url:"https://koa.com/campgrounds/gettysburg/"},
+  {name:"Gettysburg Campground", type:"RV Park", dist:56, band:"short", hook:["full"], price:"$50–80", tier:2, pet:"Yes · leashed (breed limits)", loc:"Gettysburg, PA · Marsh Creek",
+   hist:[["Civil War","Gettysburg NMP, Eisenhower NHS"]],
+   note:"Full hookups near the park; creekside sites.", url:"https://www.gettysburgcampground.com/"},
+  {name:"Hagerstown / Antietam Battlefield KOA", type:"Resort", dist:92, band:"short", hook:["full"], price:"$55–85", tier:2, pet:"Yes · leashed", loc:"Williamsport, MD",
+   hist:[["Civil War","Antietam National Battlefield, C&O Canal"]],
+   note:"Full-hookup big-rig sites; gateway to Antietam.", url:"https://koa.com/campgrounds/hagerstown/"},
+  {name:"River & Trail RV Campground", type:"RV Park", dist:105, band:"short", hook:["full","ew"], price:"$45–70", tier:2, pet:"Yes · leashed", loc:"Knoxville, MD · near Harpers Ferry",
+   hist:[["Civil War","Harpers Ferry NHP"],["Industrial","C&O Canal NHP, Antietam"]],
+   note:"62 sites (30/50A), 4 full-hookup; riverfront near Harpers Ferry.", url:"https://www.rivertrail.com/stay-with-us/rv-campground/"},
+  {name:"KOA Harpers Ferry / Civil War Battlefields", type:"Resort", dist:110, band:"short", hook:["full"], price:"$60–95", tier:3, pet:"Yes · leashed", loc:"Harpers Ferry, WV",
+   hist:[["Civil War","Harpers Ferry NHP, Antietam, Manassas day-trips"]],
+   note:"Full-service campground above Harpers Ferry off US-340.", url:"https://koa.com/campgrounds/harpers-ferry/"},
+  {name:"Shenandoah NP area (Big Meadows / Luray)", type:"National Park", dist:180, band:"medium", hook:["ew"], price:"$30–55", tier:1, pet:"Yes · leashed (in-park)", loc:"Luray, VA · Skyline Drive",
+   hist:[["Civil War","Shenandoah Valley Civil War sites, New Market Battlefield"]],
+   note:"In-park sites are no-hookup; nearby Luray private parks offer E/W. Mountain scenery.", url:"https://www.goshenandoah.com/lodging/camping"},
+  {name:"American Heritage RV Park", type:"RV Park", dist:230, band:"medium", hook:["full"], price:"$65–100", tier:3, pet:"Yes · leashed", loc:"Williamsburg, VA",
+   hist:[["Revolution","Colonial Williamsburg, Historic Jamestowne, Yorktown"]],
+   note:"Full-hookup sites & premium patio sites near the Historic Triangle.", url:"https://www.americanheritagervpark.com/"},
+  {name:"Williamsburg RV Camping Resort (Thousand Trails)", type:"Resort", dist:232, band:"medium", hook:["full","ew"], price:"$60–95", tier:3, pet:"Yes · leashed", loc:"Williamsburg, VA",
+   hist:[["Revolution","Colonial Williamsburg, Jamestown Settlement, Yorktown Battlefield"]],
+   note:"180 acres, full & partial hookups, two pools; minutes to the Historic Triangle.", url:"https://rvonthego.com/virginia/williamsburg/"},
+  {name:"Chickahominy Riverfront Park", type:"State Park", dist:235, band:"medium", hook:["full"], price:"$45–70", tier:2, pet:"Yes · leashed", loc:"Williamsburg, VA · James City Co.",
+   hist:[["Revolution","~10 mi to Colonial Williamsburg & Jamestown"]],
+   note:"County-run park, full hookups w/ 30/50A, riverfront.", url:"https://www.jamescitycountyva.gov/234/Chickahominy-Riverfront-Park"},
+  {name:"Spacious Skies Minute Man", type:"Resort", dist:400, band:"long", hook:["full"], price:"$65–100", tier:3, pet:"Yes · leashed", loc:"Littleton, MA · near Boston",
+   hist:[["Revolution","Minute Man NHP, Walden Pond, Boston Freedom Trail day-trip"]],
+   note:"Full hookups (30/50A) in the pines; steps from Revolutionary sites.", url:"https://spaciousskiescampgrounds.com/minute-man/"},
+  {name:"Normandy Farms Campground", type:"Resort", dist:415, band:"long", hook:["full"], price:"$75–130", tier:3, pet:"Yes · leashed", loc:"Foxborough, MA",
+   hist:[["Revolution","Between Boston (Freedom Trail) & Plymouth / Cape Cod"]],
+   note:"400 sites, 50A full hookups, paved big-rig pull-throughs.", url:"https://www.normandyfarms.com/"},
+  {name:"Oak Plantation Campground", type:"RV Park", dist:560, band:"long", hook:["full"], price:"$50–80", tier:2, pet:"Yes · leashed", loc:"Charleston, SC",
+   hist:[["Civil War","Fort Sumter, historic downtown Charleston, plantations"]],
+   note:"30/50A full hookups; family-run, close to the city.", url:"https://www.oakplantationcampground.com/"},
+  {name:"Lake Aire RV Park", type:"RV Park", dist:565, band:"long", hook:["full"], price:"$45–75", tier:2, pet:"Yes · leashed", loc:"Hollywood, SC · near Charleston",
+   hist:[["Civil War","Fort Sumter, Charleston historic district, plantations"]],
+   note:"35 acres, full hookups, ~20 min to downtown Charleston.", url:"https://www.lakeairerv.com/"}
+];
+
+const state={dist:new Set(),hook:new Set(),type:new Set(),hist:new Set(),price:new Set(),pet:new Set(),q:"",sort:"dist"};
+
+function bindChips(id,key){
+  document.querySelectorAll("#"+id+" .chip").forEach(c=>{
+    c.addEventListener("click",()=>{
+      const v=c.dataset.v;
+      if(state[key].has(v)){state[key].delete(v);c.classList.remove("on");}
+      else{state[key].add(v);c.classList.add("on");}
+      render();
+    });
+  });
+}
+bindChips("f-dist","dist");bindChips("f-hook","hook");bindChips("f-type","type");
+bindChips("f-hist","hist");bindChips("f-price","price");bindChips("f-pet","pet");
+document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value.toLowerCase();render();});
+document.getElementById("sort").addEventListener("change",e=>{state.sort=e.target.value;render();});
+document.getElementById("reset").addEventListener("click",()=>{
+  ["dist","hook","type","hist","price","pet"].forEach(k=>state[k].clear());
+  state.q="";state.sort="dist";
+  document.querySelectorAll(".chip.on").forEach(c=>c.classList.remove("on"));
+  document.getElementById("q").value="";document.getElementById("sort").value="dist";render();
+});
+
+function match(d){
+  if(state.dist.size && !state.dist.has(d.band)) return false;
+  if(state.hook.size && !d.hook.some(h=>state.hook.has(h))) return false;
+  if(state.type.size && !state.type.has(d.type)) return false;
+  if(state.price.size && !state.price.has(String(d.tier))) return false;
+  if(state.pet.size && !(d.pet && /^yes/i.test(d.pet))) return false;
+  if(state.hist.size && !d.hist.some(h=>state.hist.has(h[0]))) return false;
+  if(state.q){
+    const hay=(d.name+" "+d.loc+" "+d.note+" "+d.hist.map(h=>h[1]).join(" ")).toLowerCase();
+    if(!hay.includes(state.q)) return false;
+  }
+  return true;
+}
+function render(){
+  let rows=DATA.filter(match);
+  rows.sort((a,b)=>{
+    switch(state.sort){
+      case "name": return a.name.localeCompare(b.name);
+      case "distR": return b.dist-a.dist;
+      case "price": return a.tier-b.tier || a.dist-b.dist;
+      case "priceR": return b.tier-a.tier || a.dist-b.dist;
+      default: return a.dist-b.dist;
+    }
+  });
+  const grid=document.getElementById("grid");
+  document.getElementById("count").textContent=rows.length+" of "+DATA.length+" destinations";
+  if(!rows.length){grid.innerHTML='<div class="empty">No matches — try clearing a filter.</div>';return;}
+  grid.innerHTML=rows.map(d=>{
+    const hk=d.hook.map(h=> h==="full"
+      ? '<span class="tag hk">Full E/W/S</span>'
+      : '<span class="tag hk ew">Electric + Water</span>').join("");
+    const dollars="$".repeat(d.tier);
+    const hist=d.hist.map(h=>'<div class="hist"><b>'+h[0]+':</b> '+h[1]+'</div>').join("");
+    return '<div class="card">'
+      +'<h3><a href="'+d.url+'" target="_blank" rel="noopener">'+d.name+'</a></h3>'
+      +'<div class="meta"><span class="tag dist">📍 '+d.dist+' mi</span>'
+        +'<span class="tag type">'+d.type+'</span>'+hk
+        +'<span class="tag price">'+dollars+' '+d.price+'</span></div>'
+      +'<div class="loc">'+d.loc+'</div>'
+      +hist
+      +'<div class="rowline"><span>🐾 <b>Pets:</b> '+d.pet+'</span></div>'
+      +'<div class="note">'+d.note+'</div>'
+      +'</div>';
+  }).join("");
+}
+render();
+</script>
+</body>
+</html>

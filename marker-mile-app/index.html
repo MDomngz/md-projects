@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#173f3a">
+    <title>Marker Mile</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Marker Mile</p>
+          <h1>Historic road markers</h1>
+        </div>
+        <button class="icon-button" id="resetButton" type="button" aria-label="Reset saved stamps" title="Reset saved stamps">
+          <span aria-hidden="true">↺</span>
+        </button>
+      </header>
+
+      <main>
+        <section class="planner-panel" aria-label="Trip planner">
+          <label>
+            <span>From</span>
+            <select id="originSelect"></select>
+          </label>
+          <button class="swap-button" id="swapButton" type="button" aria-label="Swap origin and destination" title="Swap">
+            <span aria-hidden="true">⇅</span>
+          </button>
+          <label>
+            <span>To</span>
+            <select id="destinationSelect"></select>
+          </label>
+        </section>
+
+        <section class="stats-strip" aria-label="Route summary">
+          <div>
+            <span id="tripMiles">0</span>
+            <small>trip mi</small>
+          </div>
+          <div>
+            <span id="stopCount">0</span>
+            <small>markers</small>
+          </div>
+          <div>
+            <span id="stampCount">0</span>
+            <small>stamps</small>
+          </div>
+        </section>
+
+        <section class="map-panel" aria-label="Route map">
+          <div id="mapCanvas" class="map-canvas"></div>
+        </section>
+
+        <section class="tab-panel" aria-label="Views">
+          <div class="tabs" role="tablist" aria-label="Marker views">
+            <button class="tab active" id="routeTab" type="button" role="tab" aria-selected="true">Route</button>
+            <button class="tab" id="collectionTab" type="button" role="tab" aria-selected="false">Collection</button>
+          </div>
+
+          <div id="routeView">
+            <div class="section-head">
+              <h2>On the way</h2>
+              <span id="corridorText">Within 50 mi</span>
+            </div>
+            <div id="routeStops" class="stop-list"></div>
+          </div>
+
+          <div id="collectionView" class="hidden">
+            <div class="section-head">
+              <h2>Stampbook</h2>
+              <span id="collectionText">0 collected</span>
+            </div>
+            <div id="stampGrid" class="stamp-grid"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="markerDialog" class="marker-dialog">
+      <form method="dialog">
+        <button class="close-button" type="submit" aria-label="Close marker details">×</button>
+      </form>
+      <div id="markerDetail"></div>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>

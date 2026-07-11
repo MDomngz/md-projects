@@ -1,0 +1,17 @@
+{
+  "name": "Marker Mile",
+  "short_name": "Marker Mile",
+  "description": "Plan road trips around American historical markers and collect photo stamps.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fbfaf6",
+  "theme_color": "#173f3a",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
