@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SWS Board Retreat — A Guide to Thinking in Action</title>
+<style>
+  :root{
+    --teal:#1E5B57; --teal-dk:#153f3c; --gold:#B0752A; --ink:#22303a;
+    --paper:#F7F5EF; --card:#ffffff; --line:#e3ddd0; --soft:#EAF1F0; --muted:#6b7680;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Georgia,serif;
+    color:var(--ink); background:var(--paper); line-height:1.6;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:0 22px}
+
+  /* HERO */
+  header.hero{
+    background:linear-gradient(160deg,var(--teal) 0%,var(--teal-dk) 100%);
+    color:#fff;padding:64px 22px 52px;text-align:center;
+  }
+  .hero .eyebrow{letter-spacing:.28em;font-size:.72rem;font-weight:700;color:#d8b98a;text-transform:uppercase;margin-bottom:14px}
+  .hero h1{font-size:2.7rem;margin:0 0 10px;font-weight:800;letter-spacing:-.01em}
+  .hero .sub{font-size:1.15rem;opacity:.92;max-width:640px;margin:0 auto}
+  .hero .tag{margin-top:22px;font-size:.85rem;color:#cfe0dd;font-style:italic}
+
+  /* NAV */
+  nav.jump{
+    position:sticky;top:0;z-index:20;background:rgba(247,245,239,.94);
+    backdrop-filter:blur(6px);border-bottom:1px solid var(--line);
+  }
+  nav.jump .wrap{display:flex;flex-wrap:wrap;gap:6px 18px;padding:12px 22px;justify-content:center}
+  nav.jump a{color:var(--teal);text-decoration:none;font-size:.82rem;font-weight:600;padding:3px 2px;border-bottom:2px solid transparent}
+  nav.jump a:hover{border-bottom-color:var(--gold)}
+
+  section{padding:44px 0 8px}
+  h2{font-size:1.7rem;color:var(--teal);margin:0 0 6px;font-weight:800;letter-spacing:-.01em}
+  .lede{color:var(--muted);font-size:1.02rem;margin:0 0 22px;max-width:720px}
+  h3{font-size:1.12rem;margin:0 0 8px;color:var(--ink)}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 26px;margin:16px 0;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  .card.accent{border-left:5px solid var(--gold)}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+  @media(max-width:720px){.grid2,.grid3{grid-template-columns:1fr}}
+
+  ul.clean{list-style:none;padding:0;margin:8px 0 0}
+  ul.clean li{padding:6px 0 6px 26px;position:relative}
+  ul.clean li::before{content:"";position:absolute;left:4px;top:15px;width:8px;height:8px;border-radius:50%;background:var(--gold)}
+
+  .q{padding:8px 0 8px 26px;position:relative;color:var(--ink)}
+  .q::before{content:"?";position:absolute;left:0;top:6px;color:var(--teal);font-weight:800}
+
+  .pill{display:inline-block;background:var(--soft);color:var(--teal);border-radius:999px;padding:3px 12px;font-size:.75rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+
+  /* anatomy strip */
+  .anatomy{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:14px}
+  @media(max-width:720px){.anatomy{grid-template-columns:1fr 1fr}}
+  .anatomy .step{background:var(--soft);border-radius:10px;padding:14px 12px;text-align:center}
+  .anatomy .step .n{display:block;font-size:1.5rem;font-weight:800;color:var(--gold);line-height:1}
+  .anatomy .step .l{font-size:.85rem;font-weight:700;margin-top:6px;color:var(--teal)}
+  .anatomy .step .d{font-size:.74rem;color:var(--muted);margin-top:4px}
+
+  /* stream cards */
+  .stream{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:16px 0}
+  .stream .head{background:var(--teal);color:#fff;padding:16px 24px;display:flex;align-items:baseline;gap:12px}
+  .stream .head .num{font-size:1.9rem;font-weight:800;color:#d8b98a;line-height:1}
+  .stream .head .ttl{font-size:1.25rem;font-weight:800}
+  .stream .head .aim{font-size:.82rem;opacity:.85;font-weight:400;font-style:italic;margin-top:3px}
+  .stream .bodyc{padding:20px 24px}
+  .stream .lens{background:#fbf6ee;border-top:1px dashed var(--gold);padding:12px 24px;font-size:.9rem}
+  .stream .lens b{color:var(--gold)}
+
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:12px}
+  @media(max-width:720px){.compare{grid-template-columns:1fr}}
+  .compare>div{padding:16px 18px}
+  .compare .weak{background:#fbeeee}
+  .compare .strong{background:#eef6ef}
+  .compare h4{margin:0 0 8px;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+  .compare .weak h4{color:#a23b3b}
+  .compare .strong h4{color:#2f7d3d}
+
+  .trap{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+  .trap:last-child{border-bottom:none}
+  .trap .x{color:#a23b3b;font-weight:800;flex:0 0 auto}
+  .trap b{color:var(--ink)}
+
+  table.gloss{width:100%;border-collapse:collapse;margin-top:10px}
+  table.gloss td{border-bottom:1px solid var(--line);padding:10px 8px;vertical-align:top;font-size:.92rem}
+  table.gloss td.t{font-weight:700;color:var(--teal);width:210px}
+
+  .seam{background:var(--soft);border-radius:10px;padding:12px 16px;margin:8px 0;font-size:.92rem}
+  .seam b{color:var(--teal)}
+
+  footer{background:var(--teal-dk);color:#cfe0dd;text-align:center;padding:34px 22px;margin-top:50px;font-size:.85rem}
+  footer .v{font-style:italic;color:#fff;max-width:560px;margin:0 auto 10px;font-size:1rem}
+
+  @media print{
+    nav.jump{display:none}
+    header.hero{background:var(--teal)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .stream .head,.pill,.anatomy .step{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    section{padding:20px 0}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">Susquehanna Waldorf School · Board Retreat</div>
+  <h1>Thinking in Action</h1>
+  <div class="sub">A guide to help you move from goals to a plan you can actually carry out — for the 2026–2027 strategic year.</div>
+  <div class="tag">This is not a worksheet or a finished plan. It's a way of thinking to bring into the room.</div>
+</header>
+
+<nav class="jump"><div class="wrap">
+  <a href="#why">Why we're here</a>
+  <a href="#action">A good action</a>
+  <a href="#choose">Choosing the few</a>
+  <a href="#streams">The four streams</a>
+  <a href="#deib">The DEIB lens</a>
+  <a href="#seams">The seams</a>
+  <a href="#traps">Traps to avoid</a>
+  <a href="#words">Shared words</a>
+</div></nav>
+
+<div class="wrap">
+
+<!-- WHY -->
+<section id="why">
+  <span class="pill">Start here</span>
+  <h2>What we're actually doing</h2>
+  <p class="lede">Our draft already names <b>where</b> we want to go — five themes, a set of goals, and a long list of "possible" actions. What it doesn't yet have is <b>how</b>: which actions we truly commit to, who carries each one, by when, and how we'll know they worked. That "how" is the work of this retreat.</p>
+  <div class="card accent">
+    <h3>Hold one idea the whole day</h3>
+    <p style="margin:0">A goal is a direction. An <b>action</b> is a first step someone takes on a date. Our draft is full of directions written as <em>"possible"</em> and italicized — gentle, tentative, unowned. Your job today is to make a small number of them <strong>real</strong>: pick them up, put a name and a date on them, and let the rest go for now. A plan that commits to everything commits to nothing.</p>
+  </div>
+</section>
+
+<!-- ANATOMY OF A GOOD ACTION -->
+<section id="action">
+  <span class="pill">The building block</span>
+  <h2>What a strong action looks like</h2>
+  <p class="lede">Before you argue about <em>which</em> actions, agree on what makes one worth committing to. A strong action can answer all five of these in a sentence.</p>
+  <div class="anatomy">
+    <div class="step"><span class="n">1</span><span class="l">Clear</span><span class="d">A specific thing to do, not a theme</span></div>
+    <div class="step"><span class="n">2</span><span class="l">Owned</span><span class="d">One named person accountable</span></div>
+    <div class="step"><span class="n">3</span><span class="l">A first step</span><span class="d">Something that can start in 30 days</span></div>
+    <div class="step"><span class="n">4</span><span class="l">Timed</span><span class="d">A date to check on it</span></div>
+    <div class="step"><span class="n">5</span><span class="l">Measurable</span><span class="d">You'll know if it worked</span></div>
+  </div>
+
+  <div class="compare">
+    <div class="weak">
+      <h4>✕ Still a direction</h4>
+      <p style="margin:0">"Increase Parent Ed opportunities."<br><span style="color:var(--muted);font-size:.85rem">No owner, no first step, no way to know if it happened.</span></p>
+    </div>
+    <div class="strong">
+      <h4>✓ An action you can carry</h4>
+      <p style="margin:0">"<b>Lilia</b> schedules <b>two</b> non-meeting Parent Ed evenings open to the wider community by <b>Nov 1</b>; success = 25+ attendees each."<br><span style="color:var(--muted);font-size:.85rem">Clear, owned, first step, timed, measurable.</span></p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>The draft has no success measures anywhere</h3>
+    <p style="margin:0">That's the biggest gap to fill. For every action you commit to, ask: <em>"A year from now, what would tell us this worked?"</em> A number, a date, or an observable change all count. If you can't name one, the action may not be ready — or may not be worth committing.</p>
+  </div>
+</section>
+
+<!-- CHOOSING -->
+<section id="choose">
+  <span class="pill">Prioritizing</span>
+  <h2>Choosing the vital few</h2>
+  <p class="lede">The draft lists dozens of possible actions. A board of our size can meaningfully move a handful per stream in a year. Use these three lenses to sort — out loud, together.</p>
+  <div class="grid3">
+    <div class="card"><h3>Impact</h3><p style="margin:0">Does this move a goal that matters most this year — enrollment, financial stability, faculty? Prefer actions that serve more than one goal at once.</p></div>
+    <div class="card"><h3>Effort & readiness</h3><p style="margin:0">Can we actually start it now, with the people and money we have? A high-impact action we can't staff is a wish, not a plan.</p></div>
+    <div class="card"><h3>Sequence</h3><p style="margin:0">What has to come first? Some actions unlock others (a facility audit before a capital campaign). Name the order, don't run them in parallel by accident.</p></div>
+  </div>
+  <div class="card accent">
+    <p style="margin:0"><b>A simple rule for the day:</b> for each stream, aim to leave with <b>3–5 committed actions</b> — the ones that are high-impact <em>and</em> ready. Everything else goes to a "later / watch" list, not the trash. Naming what you're <em>not</em> doing this year is as valuable as naming what you are.</p>
+  </div>
+</section>
+
+<!-- STREAMS -->
+<section id="streams">
+  <span class="pill">The terrain</span>
+  <h2>The four work streams</h2>
+  <p class="lede">These are your breakout groupings. For each, the point is not to fill a form — it's to <em>think well</em> about where the real leverage is. The prompts below are ways in, and each carries a belonging (DEIB) question through it rather than treating DEIB as separate.</p>
+
+  <!-- 1 -->
+  <div class="stream">
+    <div class="head"><span class="num">1</span><div><div class="ttl">Accredited Waldorf Education</div><div class="aim">Grow our capacity to give children a fully formed, accredited Waldorf education.</div></div></div>
+    <div class="bodyc">
+      <h3>Ways to think about it</h3>
+      <div class="q">Which single investment in <b>faculty</b> — salary, mentoring, training, or succession — would most protect the education five years out?</div>
+      <div class="q">The <b>Middle School model</b> is the knottiest item: is it a curriculum decision, a financial one, or an enrollment one? (It's all three — decide who owns the whole knot.)</div>
+      <div class="q">What does "support for neurodivergent students" require that we don't have yet — people, training, or space?</div>
+    </div>
+    <div class="lens"><b>Belonging question:</b> Does our faculty pipeline reach beyond the people already in our circle?</div>
+  </div>
+
+  <!-- 2 -->
+  <div class="stream">
+    <div class="head"><span class="num">2</span><div><div class="ttl">Renewal of the Community Spirit</div><div class="aim">Energize the adults working together to educate our children.</div></div></div>
+    <div class="bodyc">
+      <h3>Ways to think about it</h3>
+      <div class="q">If we could only fix <b>one</b> thing about how we communicate and govern, which would build the most trust?</div>
+      <div class="q"><b>Enrollment</b> lives in this stream but is really the whole school's oxygen — who owns a single enrollment-and-retention plan end to end?</div>
+      <div class="q">Where does energy already exist (Parent Guild, alumni) that we could support rather than manufacture?</div>
+    </div>
+    <div class="lens"><b>Belonging question:</b> Do our enrollment and welcome materials speak to families who don't yet see themselves here?</div>
+  </div>
+
+  <!-- 3 -->
+  <div class="stream">
+    <div class="head"><span class="num">3</span><div><div class="ttl">Community Outreach</div><div class="aim">Partner beyond SWS to share our gifts, to the benefit of all.</div></div></div>
+    <div class="bodyc">
+      <h3>Ways to think about it</h3>
+      <div class="q">Of the many partners named (Horn Farm, Lancaster Conservancy, Marietta Borough, Marietta Live, the Food Bank), which <b>two or three</b> deepen the curriculum <em>and</em> raise our visibility? We can't resource all of them.</div>
+      <div class="q">Is outreach here a <b>marketing</b> effort, a <b>service</b> effort, or a <b>relationship</b> effort — and who holds the calendar and budget?</div>
+      <div class="q">What's the smallest visible presence in Marietta that would make us feel like part of the town?</div>
+    </div>
+    <div class="lens"><b>Belonging question:</b> The Susquehannock land statement sits in DEIB but the relationship lives here — should this stream carry it?</div>
+  </div>
+
+  <!-- 4 -->
+  <div class="stream">
+    <div class="head"><span class="num">4</span><div><div class="ttl">Resources</div><div class="aim">Strengthen our human and financial footing to support everything above.</div></div></div>
+    <div class="bodyc">
+      <h3>Ways to think about it</h3>
+      <div class="q">We use three names — <b>emergency fund</b>, <b>Contingency Fund</b>, <b>reserve</b>. Are these one pool or three? Settle the language before deciding dollars.</div>
+      <div class="q">A <b>capital campaign</b> is named several ways. What has to be true (facility plan, development capacity, board readiness) <em>before</em> we could launch one?</div>
+      <div class="q">Which single administrative or facility <b>role</b> would relieve the most pressure if we filled or defined it?</div>
+    </div>
+    <div class="lens"><b>Belonging question:</b> Do our scholarship and financial-aid structures actually widen who can afford to be here?</div>
+  </div>
+</section>
+
+<!-- DEIB -->
+<section id="deib">
+  <span class="pill">The thread</span>
+  <h2>DEIB is a lens, not a stream</h2>
+  <p class="lede">Rather than a separate group, belonging runs through all four streams. As you shape actions, carry these three questions like a thread through the day.</p>
+  <div class="grid3">
+    <div class="card"><h3>Who's missing?</h3><p style="margin:0">In this action, whose voice or presence isn't yet at the table — as a family, a hire, a partner, a board member?</p></div>
+    <div class="card"><h3>Who does it serve?</h3><p style="margin:0">Does this widen access and welcome, or quietly keep things comfortable for those already here?</p></div>
+    <div class="card"><h3>Where does it show?</h3><p style="margin:0">Is our commitment visible in the curriculum, the budget, and the language — or only in our statement?</p></div>
+  </div>
+</section>
+
+<!-- SEAMS -->
+<section id="seams">
+  <span class="pill">Where streams touch</span>
+  <h2>Mind the seams</h2>
+  <p class="lede">The streams aren't independent. The most important decisions live <em>between</em> groups — resolve these together, not inside a single breakout.</p>
+  <div class="seam"><b>Middle School (1) ↔ Enrollment (2):</b> the model's math depends on enrollment growth. One decision, made together.</div>
+  <div class="seam"><b>Enrollment & scholarships (2) ↔ Budget & EITC (4):</b> financial aid and "cost to educate" span community and resources.</div>
+  <div class="seam"><b>Outreach marketing (3) ↔ Internal communications (2):</b> one message, one calendar, one owner — not two.</div>
+  <div class="seam"><b>Staffing, steward & succession (1 &amp; 4) ↔ HR (4):</b> role definitions and evaluation cut across education and resources.</div>
+</section>
+
+<!-- TRAPS -->
+<section id="traps">
+  <span class="pill">Watch for</span>
+  <h2>Traps that turn plans into paper</h2>
+  <div class="card">
+    <div class="trap"><span class="x">✕</span><div><b>Re-writing the goals.</b> The goals are set. Spend your energy on the actions underneath them.</div></div>
+    <div class="trap"><span class="x">✕</span><div><b>Committing to everything.</b> Enthusiasm for all 30 actions means none gets carried. Choose.</div></div>
+    <div class="trap"><span class="x">✕</span><div><b>Actions with no name.</b> "The board will…" is nobody. Every commitment needs one owner.</div></div>
+    <div class="trap"><span class="x">✕</span><div><b>No first step.</b> If nothing happens in the next 30 days, it isn't really committed yet.</div></div>
+    <div class="trap"><span class="x">✕</span><div><b>No way to know.</b> Without a measure, next year we'll debate whether it happened instead of acting.</div></div>
+    <div class="trap"><span class="x">✕</span><div><b>Leaving seams inside one group.</b> Cross-stream calls (enrollment, money, comms) must surface in plenary.</div></div>
+  </div>
+</section>
+
+<!-- GLOSSARY -->
+<section id="words">
+  <span class="pill">So we speak the same way</span>
+  <h2>Shared words for the day</h2>
+  <table class="gloss">
+    <tr><td class="t">Commit / Defer / Cut</td><td>The three fates of any proposed action. Commit = we do it this year with an owner. Defer = later or watch. Cut = not for us right now.</td></tr>
+    <tr><td class="t">Owner</td><td>The one person accountable for an action moving — not the one who does all the work, the one who won't let it stall.</td></tr>
+    <tr><td class="t">First step</td><td>The concrete thing that happens within ~30 days. Proof an action is real.</td></tr>
+    <tr><td class="t">Success measure</td><td>What we'd point to a year from now to say it worked — a number, a date, or a visible change.</td></tr>
+    <tr><td class="t">The vital few</td><td>The 3–5 actions per stream worth our real attention this year.</td></tr>
+    <tr><td class="t">Seam</td><td>A decision that spans two streams and must be resolved together.</td></tr>
+    <tr><td class="t">Cost to Educate</td><td>The true per-student cost — a shared vocabulary for why tuition is underwritten by fundraising.</td></tr>
+  </table>
+</section>
+
+</div>
+
+<footer>
+  <div class="v">"We envision a community where children love to learn and are inspired to live with purpose, compassion, and joy."</div>
+  Susquehanna Waldorf School · Board Retreat · Building the 2026–2027 Strategic Plan
+</footer>
+
+</body>
+</html>
