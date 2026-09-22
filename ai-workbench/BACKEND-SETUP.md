@@ -1,6 +1,6 @@
 # AI Workbench — backend setup (Vercel)
 
-Sign-in by emailed one-time link, per-user profile (kanban board + starred prompts), and a feedback form that writes to a Google Sheet.
+Sign-in against an access list you manage by hand, per-user profile (kanban board + starred prompts), and a feedback form that writes to a Google Sheet.
 
 Opened without the backend (as a local file or on GitHub Pages), the page still works and saves to that browser only.
 
@@ -9,49 +9,47 @@ Opened without the backend (as a local file or on GitHub Pages), the page still 
 |---|---|---|
 | Hosting + API | Vercel (`api/*.js` serverless functions) | Already your host. No framework or build step. |
 | Database | **Upstash Redis** (Vercel Marketplace, free tier) | Each profile is one small JSON document (`profile:<email>`). No schema or migrations. The free tier is far more than 6 users need. |
-| Sign-in email | Resend (free tier) | Sends the magic link. |
 | Feedback | Google Apps Script web app → Google Sheet | One row per submission, ready for analysis. |
 
-There are no npm dependencies. Redis, Resend, and Apps Script are all called over `fetch`.
+There are no npm dependencies. Redis and Apps Script are both called over `fetch`.
 
 ## 1. Vercel project
-1. Import the repo in Vercel. Set **Root Directory** to `AI for VA Design`. Framework preset: **Other**.
+1. Import the repo in Vercel. Set **Root Directory** to `ai-workbench`. Framework preset: **Other**.
+   The folder name must not contain spaces. Vercel names each function after its path in the repo, and a space in that path fails the build.
 2. `vercel.json` rewrites `/` to `ai-workbench-poc.html`.
 
 ## 2. Database
 Vercel dashboard → **Storage → Marketplace → Upstash Redis** → create and connect it to the project. This adds `KV_REST_API_URL` and `KV_REST_API_TOKEN` (or `UPSTASH_REDIS_REST_*`). The code accepts both.
 
-## 3. Email (Resend)
-1. Create a Resend account and an API key.
-2. Verify a sending domain you control, then set `EMAIL_FROM`, e.g. `AI Workbench <workbench@yourdomain.com>`.
-   Without a verified domain, Resend's test sender (`onboarding@resend.dev`) can only send to the email on your own Resend account. That's enough to test yourself, but not the team.
-
-## 4. Feedback sheet
+## 3. Feedback sheet
 Follow the header comment in `google-apps-script/feedback.gs`: create the Sheet, paste the script in, add the `FEEDBACK_SECRET` script property, and deploy it as a web app. Copy the `/exec` URL.
 
-## 5. Environment variables (Vercel → Settings → Environment Variables)
+## 4. Environment variables (Vercel → Settings → Environment Variables)
 | Name | Value |
 |---|---|
 | `ALLOWED_EMAILS` | Comma-separated list of the pilot designers' emails |
 | `SESSION_SECRET` | Random string, 32+ chars (`openssl rand -base64 48`) |
-| `RESEND_API_KEY` | From Resend |
-| `EMAIL_FROM` | Verified sender |
-| `APP_URL` | e.g. `https://ai-workbench.vercel.app` (used in the email link) |
+| `ACCESS_CODE` | *Optional.* A team code everyone must also enter. Leave it unset to sign in with email only |
 | `FEEDBACK_SCRIPT_URL` | Apps Script `/exec` URL |
 | `FEEDBACK_SECRET` | Same value as the script property |
 
 Redeploy after you set them.
 
 ## Managing access
-Edit `ALLOWED_EMAILS` and redeploy. Removing an email revokes that person's access right away, even if their session cookie is still valid.
+The access list is the `ALLOWED_EMAILS` variable. It isn't stored in the repo, because the repo is public.
+
+- **Add someone:** add their email to the list, redeploy, and send them the link.
+- **Remove someone:** delete their email and redeploy. Their access ends right away, even if they're still signed in.
+- **Change the team code:** update `ACCESS_CODE` and redeploy. People who are already signed in stay signed in.
+
+Emails aren't verified. Anyone who knows an address on the list can sign in as that person. Setting `ACCESS_CODE` means they would also need the team code. After 10 failed sign-in attempts, an IP address is blocked for 15 minutes.
 
 ## API
 | Route | Purpose |
 |---|---|
-| `POST /api/auth/request` `{ email }` | Emails a 15-minute, single-use sign-in link (allowlisted emails only) |
-| `GET /api/auth/verify?token=` | Sets a 30-day signed session cookie |
+| `POST /api/auth/login` `{ email, code }` | If the email is on the list (and the code matches, when `ACCESS_CODE` is set), sets a 30-day signed session cookie |
 | `POST /api/auth/logout` | Clears the cookie |
-| `GET /api/me` | `{ email }` or 401 |
+| `GET /api/me` | `{ email }`, or 401 with `{ needsCode }` |
 | `GET / PUT /api/profile` | `{ board: { cards }, favorites }` |
 | `POST /api/feedback` | `{ rating, type, message, view, promptId }` → appended to the Sheet with the signed-in email |
 

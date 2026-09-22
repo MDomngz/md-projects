@@ -18,7 +18,8 @@ export function normalizeEmail(email) {
   return String(email || '').trim().toLowerCase();
 }
 
-// Only the ~6 designers on the pilot can sign in. Comma-separated list in env.
+// The pilot access list: comma-separated emails in the ALLOWED_EMAILS env var, edited by hand
+// in Vercel (Settings → Environment Variables) followed by a redeploy.
 export function isAllowed(email) {
   const list = (process.env.ALLOWED_EMAILS || '').split(',').map(normalizeEmail).filter(Boolean);
   return list.includes(normalizeEmail(email));

@@ -1932,7 +1932,7 @@ export FIGMA_API_KEY="your-token-here"
 
 <!-- SIGN-IN (shown only when served with the /api backend and not signed in) -->
 <div class="login-screen" id="login-screen">
-  <form class="login-card" onsubmit="event.preventDefault(); App.requestLoginLink();">
+  <form class="login-card" onsubmit="event.preventDefault(); App.signIn();">
     <div class="wordmark">
       <div class="wordmark-flag"></div>
       <div>
@@ -1941,10 +1941,14 @@ export FIGMA_API_KEY="your-token-here"
       </div>
     </div>
     <h2>Sign in</h2>
-    <p>Enter your work email and we'll send you a one-time sign-in link. Your board and starred prompts are saved to your profile.</p>
+    <p>Sign in with the work email you were added to the pilot with. Your board and starred prompts are saved to your profile.</p>
     <label for="login-email">Email address</label>
     <input type="email" id="login-email" autocomplete="email" required>
-    <button type="submit" class="btn primary login-submit" id="login-submit">Email me a sign-in link</button>
+    <div id="login-code-wrap" hidden>
+      <label for="login-code">Team access code</label>
+      <input type="password" id="login-code" autocomplete="current-password">
+    </div>
+    <button type="submit" class="btn primary login-submit" id="login-submit">Sign in</button>
     <div class="login-msg" id="login-msg" role="status"></div>
   </form>
 </div>
@@ -2220,7 +2224,10 @@ const Sync = {
     let me = null;
     try {
       const res = await fetch('/api/me', { credentials: 'same-origin' });
-      if (res.status === 401) { Sync.mode = 'signed-out'; App.showLogin(); return; }
+      if (res.status === 401) {
+        const info = await res.json().catch(() => ({}));
+        Sync.mode = 'signed-out'; App.showLogin(!!info.needsCode); return;
+      }
       if (res.ok) me = await res.json();
     } catch (e) { /* no backend */ }
     if (!me || !me.email) { Sync.mode = 'local'; App.renderAccount(); return; }
@@ -2915,12 +2922,11 @@ const App = {
     }
   },
 
-  showLogin() {
+  showLogin(needsCode) {
     document.getElementById('login-screen').classList.add('show');
-    const params = new URLSearchParams(location.search);
-    if (params.get('login') === 'expired') {
-      App.loginMessage('err', 'That sign-in link has expired or was already used. Request a new one below.');
-      history.replaceState(null, '', location.pathname);
+    if (needsCode !== undefined) {
+      document.getElementById('login-code-wrap').hidden = !needsCode;
+      document.getElementById('login-code').required = needsCode;
     }
     setTimeout(() => document.getElementById('login-email').focus(), 50);
   },
@@ -2931,20 +2937,29 @@ const App = {
     el.textContent = text;
   },
 
-  async requestLoginLink() {
+  async signIn() {
     const email = document.getElementById('login-email').value.trim();
     if (!email) return;
     const btn = document.getElementById('login-submit');
     btn.disabled = true;
     try {
-      const res = await fetch('/api/auth/request', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+      const res = await fetch('/api/auth/login', {
+        method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code: document.getElementById('login-code').value })
       });
-      if (!res.ok) throw new Error(res.status);
-      App.loginMessage('ok', `If ${email} is on the pilot list, a sign-in link is on its way. It expires in 15 minutes.`);
+      if (res.ok) { location.reload(); return; }
+      if (res.status === 403) {
+        const needsCode = !document.getElementById('login-code-wrap').hidden;
+        App.loginMessage('err', needsCode
+          ? "That email and access code don't match the pilot list. Check both, or ask the Workbench admin to add you."
+          : "That email isn't on the pilot list yet. Ask the Workbench admin to add you.");
+      } else if (res.status === 429) {
+        App.loginMessage('err', 'Too many attempts. Wait 15 minutes and try again.');
+      } else {
+        throw new Error(res.status);
+      }
     } catch (e) {
-      App.loginMessage('err', 'Something went wrong sending the link. Try again in a minute.');
+      App.loginMessage('err', 'Something went wrong signing in. Try again in a minute.');
     } finally {
       btn.disabled = false;
     }
