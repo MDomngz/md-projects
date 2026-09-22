@@ -1,0 +1,6 @@
+{
+  "name": "ai-workbench-poc",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" }
+}
