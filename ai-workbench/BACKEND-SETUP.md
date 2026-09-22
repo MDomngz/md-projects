@@ -15,7 +15,8 @@ Opened without the backend (as a local file or on GitHub Pages), the page still 
 There are no npm dependencies. Redis, Resend, and Apps Script are all called over `fetch`.
 
 ## 1. Vercel project
-1. Import the repo in Vercel. Set **Root Directory** to `AI for VA Design`. Framework preset: **Other**.
+1. Import the repo in Vercel. Set **Root Directory** to `ai-workbench`. Framework preset: **Other**.
+   The folder name must not contain spaces. Vercel names each function after its path in the repo, and a space in that path fails the build.
 2. `vercel.json` rewrites `/` to `ai-workbench-poc.html`.
 
 ## 2. Database
