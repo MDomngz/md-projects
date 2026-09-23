@@ -9,7 +9,7 @@ Opened without the backend (as a local file or on GitHub Pages), the page still 
 |---|---|---|
 | Hosting + API | Vercel (`api/*.js` serverless functions) | Already your host. No framework or build step. |
 | Database | **Upstash Redis** (Vercel Marketplace, free tier) | Each profile is one small JSON document (`profile:<email>`). No schema or migrations. The free tier is far more than 6 users need. |
-| Feedback | Google Apps Script web app → Google Sheet | One row per submission, ready for analysis. |
+| Feedback | Stored in Redis, then pulled into a Google Sheet by Apps Script every 10 min | One row per submission, ready for analysis. The script is never published, so it works in Workspace domains that block "Anyone" access. |
 
 There are no npm dependencies. Redis and Apps Script are both called over `fetch`.
 
@@ -22,7 +22,12 @@ There are no npm dependencies. Redis and Apps Script are both called over `fetch
 Vercel dashboard → **Storage → Marketplace → Upstash Redis** → create and connect it to the project. This adds `KV_REST_API_URL` and `KV_REST_API_TOKEN` (or `UPSTASH_REDIS_REST_*`). The code accepts both.
 
 ## 3. Feedback sheet
-Follow the header comment in `google-apps-script/feedback.gs`: create the Sheet, paste the script in, add the `FEEDBACK_SECRET` script property, and deploy it as a web app. Copy the `/exec` URL.
+Follow the header comment in `google-apps-script/feedback.gs`:
+1. Create the Sheet and paste the script in.
+2. Add the `FEEDBACK_SECRET` and `WORKBENCH_URL` script properties.
+3. Run `setup` once.
+
+The script doesn't need to be deployed as a web app.
 
 ## 4. Environment variables (Vercel → Settings → Environment Variables)
 | Name | Value |
@@ -30,8 +35,7 @@ Follow the header comment in `google-apps-script/feedback.gs`: create the Sheet,
 | `ALLOWED_EMAILS` | Comma-separated list of the pilot designers' emails |
 | `SESSION_SECRET` | Random string, 32+ chars (`openssl rand -base64 48`) |
 | `ACCESS_CODE` | *Optional.* A team code everyone must also enter. Leave it unset to sign in with email only |
-| `FEEDBACK_SCRIPT_URL` | Apps Script `/exec` URL |
-| `FEEDBACK_SECRET` | Same value as the script property |
+| `FEEDBACK_SECRET` | Random string. Use the same value as the script property. The Sheet uses it to read feedback |
 
 Redeploy after you set them.
 
@@ -51,7 +55,8 @@ Emails aren't verified. Anyone who knows an address on the list can sign in as t
 | `POST /api/auth/logout` | Clears the cookie |
 | `GET /api/me` | `{ email }`, or 401 with `{ needsCode }` |
 | `GET / PUT /api/profile` | `{ board: { cards }, favorites }` |
-| `POST /api/feedback` | `{ rating, type, message, view, promptId }` → appended to the Sheet with the signed-in email |
+| `POST /api/feedback` | `{ rating, type, message, view, promptId }` → stored with the signed-in email |
+| `GET /api/feedback-export?after=<id>` | Feedback rows newer than `id`. Requires `Authorization: Bearer <FEEDBACK_SECRET>`. Used by the Sheet's script |
 
 ## Known POC limits
 - Last write wins. If the same person edits in two tabs at once, the later save overwrites the earlier one.
